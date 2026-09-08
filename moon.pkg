@@ -1,0 +1,11 @@
+import {
+  "oyjh0381/moonmime/model",
+  "oyjh0381/moonmime/parser",
+  "oyjh0381/moonmime/query",
+  "oyjh0381/moonmime/report",
+  "oyjh0381/moonmime/transfer",
+}
+
+import {
+  "moonbitlang/core/encoding/utf8",
+} for "test"
