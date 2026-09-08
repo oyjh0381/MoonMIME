@@ -1,0 +1,27 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime/media"
+
+import {
+  "oyjh0381/moonmime/model",
+}
+
+// Values
+pub fn parse_content_disposition(String, @model.ParseMode, Int) -> @model.ContentDisposition raise @model.MimeError
+
+pub fn parse_media_type(String, @model.ParseMode, Int) -> @model.MediaType raise @model.MimeError
+
+pub fn parse_transfer_encoding(String) -> @model.TransferEncoding
+
+pub fn resolve_disposition(@model.ContentDisposition, @model.ParseMode) -> @model.ContentDisposition raise @model.MimeError
+
+pub fn resolve_media_type(@model.MediaType, @model.ParseMode) -> @model.MediaType raise @model.MimeError
+
+pub fn resolve_parameters(Array[@model.MediaParameter], @model.ParseMode) -> Array[@model.MediaParameter] raise @model.MimeError
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

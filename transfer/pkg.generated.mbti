@@ -1,0 +1,45 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime/transfer"
+
+import {
+  "moonbitlang/core/debug",
+  "oyjh0381/moonmime/model",
+}
+
+// Values
+pub fn decode_base64(Bytes, @model.ParseMode, Int) -> Base64Result raise @model.MimeError
+
+pub fn decode_entity_body(@model.InternetMessage, @model.MimeEntity, @model.ParseMode, max_output? : Int) -> TransferDecodeResult raise @model.MimeError
+
+pub fn decode_q_word(Bytes, Int) -> Bytes raise @model.MimeError
+
+pub fn decode_quoted_printable(Bytes, @model.ParseMode, Int) -> QuotedPrintableResult raise @model.MimeError
+
+pub fn decode_transfer(Bytes, @model.TransferEncoding, @model.ParseMode, Int) -> TransferDecodeResult raise @model.MimeError
+
+// Errors
+
+// Types and methods
+pub(all) struct Base64Result {
+  bytes : Bytes
+  ignored_whitespace : Int
+  unpadded : Bool
+} derive(Eq, @debug.Debug)
+
+pub(all) struct QuotedPrintableResult {
+  bytes : Bytes
+  escaped_octets : Int
+  soft_line_breaks : Int
+  bare_lf_soft_breaks : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) struct TransferDecodeResult {
+  bytes : Bytes
+  encoding : @model.TransferEncoding
+  transformed : Bool
+  compatibility_recovery : Bool
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits

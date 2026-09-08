@@ -1,0 +1,219 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime/model"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+pub(all) suberror MimeError {
+  InvalidArgument(String)
+  InputTooLarge(Int, Int)
+  HeaderSectionTooLarge(Int, Int)
+  HeaderLineTooLong(Int, Int)
+  HeaderCountExceeded(Int, Int)
+  MalformedHeader(Int, String)
+  MissingHeaderTerminator(Int)
+  InvalidMediaType(String)
+  InvalidDisposition(String)
+  InvalidParameter(String)
+  InvalidBoundary(String)
+  MissingBoundary(String)
+  MissingClosingBoundary(String)
+  RecursionLimitExceeded(Int, Int)
+  EntityCountExceeded(Int, Int)
+  LeafBodyTooLarge(Int, Int)
+  DecodedOutputTooLarge(Int, Int)
+  InvalidBase64(Int, String)
+  InvalidQuotedPrintable(Int, String)
+  UnsupportedTransferEncoding(String)
+  UnsupportedCharset(String)
+  InvalidEncodedWord(String)
+  InvalidByteRange(Int, Int, Int)
+  IoFailure(String)
+} derive(Eq, @debug.Debug)
+pub fn MimeError::code(Self) -> String
+pub fn MimeError::exit_code(Self) -> Int
+pub fn MimeError::message(Self) -> String
+
+// Types and methods
+pub(all) struct Attachment {
+  path : Array[Int]
+  filename : String?
+  media_type : String
+  disposition : String?
+  transfer_encoding : String
+  raw_size : Int
+  explicit : Bool
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ByteRange {
+  start : Int
+  end : Int
+} derive(Eq, @debug.Debug)
+pub fn ByteRange::contains(Self, Int) -> Bool
+pub fn ByteRange::is_empty(Self) -> Bool
+pub fn ByteRange::length(Self) -> Int
+pub fn ByteRange::new(Int, Int) -> Self raise MimeError
+pub fn ByteRange::trusted(Int, Int) -> Self
+pub fn ByteRange::validate(Self, Int) -> Unit raise MimeError
+
+pub(all) struct ContentDisposition {
+  kind : String
+  parameters : Array[MediaParameter]
+} derive(Eq, @debug.Debug)
+pub fn ContentDisposition::parameter(Self, StringView) -> String?
+
+pub(all) enum DiagnosticCode {
+  BareLineFeed
+  BareCarriageReturn
+  HeaderWhitespaceBeforeColon
+  HeaderWithoutColon
+  ContinuationWithoutField
+  NonAsciiHeaderName
+  DuplicateSingletonHeader
+  InvalidEncodedWordPreserved
+  UnknownTransferEncodingPreserved
+  InvalidParameterPreserved
+  MissingMultipartPreambleBreak
+  TrailingBytesAfterBoundary
+  MissingClosingBoundaryAccepted
+  UnsupportedCharsetPreserved
+} derive(Eq, @debug.Debug)
+pub fn DiagnosticCode::to_code(Self) -> String
+
+pub(all) enum DiagnosticLevel {
+  Warning
+  Info
+} derive(Eq, @debug.Debug)
+
+pub(all) enum EntityKind {
+  Leaf
+  Multipart
+  EmbeddedMessage
+} derive(Eq, @debug.Debug)
+
+pub(all) struct HeaderBlock {
+  fields : Array[HeaderField]
+  range : ByteRange
+  body_start : Int
+} derive(Eq, @debug.Debug)
+pub fn HeaderBlock::all(Self, StringView) -> Array[HeaderField]
+pub fn HeaderBlock::contains(Self, StringView) -> Bool
+pub fn HeaderBlock::first(Self, StringView) -> HeaderField?
+
+pub(all) struct HeaderField {
+  name : String
+  lower_name : String
+  value : String
+  field_range : ByteRange
+  value_range : ByteRange
+  line_count : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) struct InternetMessage {
+  raw : Bytes
+  root : MimeEntity
+  diagnostics : Array[ParseDiagnostic]
+  stats : ParseStats
+} derive(Eq, @debug.Debug)
+
+pub(all) struct MediaParameter {
+  name : String
+  lower_name : String
+  value : String
+  extended : Bool
+  section : Int?
+  encoded : Bool
+} derive(Eq, @debug.Debug)
+
+pub(all) struct MediaType {
+  top_level : String
+  subtype : String
+  parameters : Array[MediaParameter]
+} derive(Eq, @debug.Debug)
+pub fn MediaType::essence(Self) -> String
+pub fn MediaType::is_message_rfc822(Self) -> Bool
+pub fn MediaType::is_multipart(Self) -> Bool
+pub fn MediaType::parameter(Self, StringView) -> String?
+pub fn MediaType::text_plain() -> Self
+
+pub(all) struct MimeEntity {
+  path : Array[Int]
+  depth : Int
+  headers : HeaderBlock
+  media_type : MediaType
+  disposition : ContentDisposition?
+  transfer_encoding : TransferEncoding
+  kind : EntityKind
+  entity_range : ByteRange
+  body_range : ByteRange
+  preamble_range : ByteRange?
+  epilogue_range : ByteRange?
+  children : Array[MimeEntity]
+} derive(Eq, @debug.Debug)
+pub fn MimeEntity::filename(Self) -> String?
+pub fn MimeEntity::is_explicit_attachment(Self) -> Bool
+
+pub(all) struct ParseDiagnostic {
+  level : DiagnosticLevel
+  code : DiagnosticCode
+  message : String
+  range : ByteRange
+  entity_path : Array[Int]
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ParseMode {
+  Strict
+  Compatible
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ParseStats {
+  entities : Int
+  leaf_entities : Int
+  multipart_entities : Int
+  embedded_messages : Int
+  maximum_depth : Int
+  raw_bytes : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ResourceLimits {
+  max_input_bytes : Int
+  max_header_bytes : Int
+  max_header_line_bytes : Int
+  max_header_count : Int
+  max_depth : Int
+  max_entities : Int
+  max_leaf_body_bytes : Int
+  max_decoded_leaf_bytes : Int
+  max_total_decoded_bytes : Int
+  max_parameter_count : Int
+  max_boundary_bytes : Int
+  max_diagnostics : Int
+} derive(Eq, @debug.Debug)
+pub fn ResourceLimits::edge_defaults() -> Self
+pub fn ResourceLimits::secure_defaults() -> Self
+pub fn ResourceLimits::validate(Self) -> Unit raise MimeError
+
+pub(all) struct TextSelection {
+  path : Array[Int]
+  media_type : String
+  charset : String?
+  text : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum TransferEncoding {
+  SevenBit
+  EightBit
+  Binary
+  Base64
+  QuotedPrintable
+  Extension(String)
+} derive(Eq, @debug.Debug)
+pub fn TransferEncoding::to_string(Self) -> String
+
+// Type aliases
+
+// Traits

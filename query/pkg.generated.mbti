@@ -1,0 +1,25 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime/query"
+
+import {
+  "oyjh0381/moonmime/model",
+}
+
+// Values
+pub fn attachments(@model.InternetMessage) -> Array[@model.Attachment]
+
+pub fn entities(@model.InternetMessage) -> Array[@model.MimeEntity]
+
+pub fn find_entity(@model.InternetMessage, Array[Int]) -> @model.MimeEntity?
+
+pub fn preferred_text(@model.InternetMessage, mode? : @model.ParseMode, max_output_bytes? : Int) -> @model.TextSelection? raise @model.MimeError
+
+pub fn subject(@model.InternetMessage, mode? : @model.ParseMode, max_output_bytes? : Int) -> String? raise @model.MimeError
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

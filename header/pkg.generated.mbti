@@ -1,0 +1,30 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime/header"
+
+import {
+  "moonbitlang/core/debug",
+  "oyjh0381/moonmime/model",
+}
+
+// Values
+pub fn decode_encoded_words(String, @model.ParseMode, Int) -> EncodedHeaderResult raise @model.MimeError
+
+pub fn parse_header_block(Bytes, Int, Int, @model.ParseMode, @model.ResourceLimits, entity_path? : Array[Int]) -> HeaderParseResult raise @model.MimeError
+
+// Errors
+
+// Types and methods
+pub(all) struct EncodedHeaderResult {
+  value : String
+  decoded_words : Int
+  preserved_invalid_words : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) struct HeaderParseResult {
+  block : @model.HeaderBlock
+  diagnostics : Array[@model.ParseDiagnostic]
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits

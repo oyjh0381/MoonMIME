@@ -1,0 +1,29 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime"
+
+import {
+  "oyjh0381/moonmime/model",
+}
+
+// Values
+pub fn decode_body(@model.InternetMessage, Array[Int], mode? : @model.ParseMode, max_output? : Int) -> Bytes raise @model.MimeError
+
+pub fn edge_limits() -> @model.ResourceLimits
+
+pub fn inspect_json(Bytes, mode? : @model.ParseMode, limits? : @model.ResourceLimits) -> String raise @model.MimeError
+
+pub fn inspect_text(Bytes, mode? : @model.ParseMode, limits? : @model.ResourceLimits) -> String raise @model.MimeError
+
+pub fn parse(Bytes) -> @model.InternetMessage raise @model.MimeError
+
+pub fn parse_with(Bytes, @model.ParseMode, @model.ResourceLimits) -> @model.InternetMessage raise @model.MimeError
+
+pub fn secure_limits() -> @model.ResourceLimits
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

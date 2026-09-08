@@ -1,0 +1,31 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime/parser"
+
+import {
+  "moonbitlang/core/debug",
+  "oyjh0381/moonmime/model",
+}
+
+// Values
+pub fn parse_message(Bytes, mode? : @model.ParseMode, limits? : @model.ResourceLimits) -> @model.InternetMessage raise @model.MimeError
+
+pub fn scan_boundaries(Bytes, Int, Int, String) -> BoundaryScan raise @model.MimeError
+
+// Errors
+
+// Types and methods
+pub(all) struct BoundaryDelimiter {
+  line_start : Int
+  line_end : Int
+  full_end : Int
+  closing : Bool
+} derive(Eq, @debug.Debug)
+
+pub(all) struct BoundaryScan {
+  delimiters : Array[BoundaryDelimiter]
+  closed : Bool
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits

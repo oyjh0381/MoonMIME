@@ -1,0 +1,77 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime/internal/bytesutil"
+
+import {
+  "moonbitlang/core/debug",
+  "oyjh0381/moonmime/model",
+}
+
+// Values
+pub fn append_range(Array[Byte], Bytes, Int, Int) -> Unit raise @model.MimeError
+
+pub fn ascii_string(Bytes, Int, Int) -> String raise @model.MimeError
+
+pub fn byte_hex(Byte) -> String
+
+pub fn equals_ascii(Bytes, Int, Int, String) -> Bool
+
+pub fn equals_ascii_ci(Bytes, Int, Int, String) -> Bool
+
+pub fn find(Bytes, Bytes, Int, Int) -> Int?
+
+pub fn hex_value(Byte) -> Int?
+
+pub fn is_alpha(Byte) -> Bool
+
+pub fn is_ascii_space(Byte) -> Bool
+
+pub fn is_digit(Byte) -> Bool
+
+pub fn is_field_name(Byte) -> Bool
+
+pub fn is_token(Byte) -> Bool
+
+pub fn is_wsp(Byte) -> Bool
+
+pub fn latin1_string(Bytes) -> String
+
+pub fn lower_byte(Byte) -> Byte
+
+pub fn lower_string(String) -> String
+
+pub fn next_line(Bytes, Int, Int) -> PhysicalLine?
+
+pub fn slice(Bytes, Int, Int) -> Bytes raise @model.MimeError
+
+pub fn starts_with_at(Bytes, Int, Int, Bytes) -> Bool
+
+pub fn strip_preceding_line_break(Bytes, Int, Int) -> Int
+
+pub fn to_hex(Bytes) -> String
+
+pub fn trim_ascii_space(Bytes, Int, Int) -> (Int, Int)
+
+pub fn trim_wsp(Bytes, Int, Int) -> (Int, Int)
+
+// Errors
+
+// Types and methods
+pub(all) enum LineEnding {
+  CrLf
+  Lf
+  Cr
+  EndOfInput
+} derive(Eq, @debug.Debug)
+
+pub(all) struct PhysicalLine {
+  content_start : Int
+  content_end : Int
+  full_end : Int
+  ending : LineEnding
+} derive(Eq, @debug.Debug)
+pub fn PhysicalLine::content_length(Self) -> Int
+pub fn PhysicalLine::is_empty(Self) -> Bool
+
+// Type aliases
+
+// Traits
