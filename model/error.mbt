@@ -10,6 +10,7 @@ pub(all) suberror MimeError {
   MissingHeaderTerminator(Int)
   InvalidMediaType(String)
   InvalidDisposition(String)
+  InvalidParameter(String)
   InvalidBoundary(String)
   MissingBoundary(String)
   MissingClosingBoundary(String)
@@ -39,6 +40,7 @@ pub fn MimeError::code(self : MimeError) -> String {
     MissingHeaderTerminator(_) => "MOONMIME_HEADER_TERMINATOR"
     InvalidMediaType(_) => "MOONMIME_MEDIA_TYPE"
     InvalidDisposition(_) => "MOONMIME_DISPOSITION"
+    InvalidParameter(_) => "MOONMIME_PARAMETER"
     InvalidBoundary(_) => "MOONMIME_BOUNDARY"
     MissingBoundary(_) => "MOONMIME_BOUNDARY_MISSING"
     MissingClosingBoundary(_) => "MOONMIME_BOUNDARY_UNCLOSED"
@@ -63,6 +65,7 @@ pub fn MimeError::message(self : MimeError) -> String {
     InvalidArgument(message)
     | InvalidMediaType(message)
     | InvalidDisposition(message)
+    | InvalidParameter(message)
     | InvalidBoundary(message)
     | MissingBoundary(message)
     | MissingClosingBoundary(message)
@@ -116,4 +119,3 @@ pub fn MimeError::exit_code(self : MimeError) -> Int {
     _ => 4
   }
 }
-
