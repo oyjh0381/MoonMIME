@@ -1,0 +1,14 @@
+import {
+  "oyjh0381/moonmime/model",
+  "oyjh0381/moonmime/parser",
+  "oyjh0381/moonmime/query",
+  "oyjh0381/moonmime/report",
+  "moonbitlang/async",
+  "moonbitlang/async/fs",
+  "moonbitlang/async/stdio",
+  "moonbitlang/core/env",
+}
+
+supported_targets = "+native"
+
+pkgtype(kind: "executable")
