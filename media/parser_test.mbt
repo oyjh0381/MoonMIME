@@ -33,6 +33,26 @@ test "content disposition normalizes kind" {
 }
 
 ///|
+test "invalid disposition uses disposition error category" {
+  let mut failed = false
+  ignore(parse_content_disposition("; filename=a", @model.Strict, 8)) catch {
+    @model.InvalidDisposition("expected disposition type") => failed = true
+    _ => ()
+  }
+  assert_true(failed)
+}
+
+///|
+test "invalid disposition parameter uses disposition error category" {
+  let mut failed = false
+  ignore(parse_content_disposition("attachment; =a", @model.Strict, 8)) catch {
+    @model.InvalidDisposition("expected parameter name") => failed = true
+    _ => ()
+  }
+  assert_true(failed)
+}
+
+///|
 test "extended parameter names expose section metadata" {
   let disposition = parse_content_disposition(
     "attachment; filename*0*=utf-8''long%20; filename*1=name.txt",

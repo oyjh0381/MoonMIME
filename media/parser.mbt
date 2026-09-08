@@ -14,13 +14,13 @@ pub fn parse_media_type(
 ) -> @model.MediaType raise @model.MimeError {
   let cursor = new_cursor(value)
   skip_wsp(cursor)
-  let top_level = parse_token(cursor, "media top-level type")
+  let top_level = parse_token(cursor, "media top-level type", true)
   skip_wsp(cursor)
   if !consume(cursor, b'/') {
     raise @model.InvalidMediaType("expected '/' between media type and subtype")
   }
   skip_wsp(cursor)
-  let subtype = parse_token(cursor, "media subtype")
+  let subtype = parse_token(cursor, "media subtype", true)
   let parameters = parse_parameters(cursor, mode, max_parameters, true)
   {
     top_level: @bytesutil.lower_string(top_level),
@@ -38,7 +38,7 @@ pub fn parse_content_disposition(
 ) -> @model.ContentDisposition raise @model.MimeError {
   let cursor = new_cursor(value)
   skip_wsp(cursor)
-  let kind = parse_token(cursor, "disposition type")
+  let kind = parse_token(cursor, "disposition type", false)
   let parameters = parse_parameters(cursor, mode, max_parameters, false)
   { kind: @bytesutil.lower_string(kind), parameters, }
 }
@@ -100,7 +100,7 @@ fn parse_parameters(
         "parameter count exceeds configured limit \{max_parameters}",
       )
     }
-    let raw_name = parse_token(cursor, "parameter name")
+    let raw_name = parse_token(cursor, "parameter name", media_error)
     skip_wsp(cursor)
     if !consume(cursor, b'=') {
       fail_parameterized(media_error, "parameter has no equals sign")
@@ -109,7 +109,7 @@ fn parse_parameters(
     let parameter_value = if peek(cursor) == Some(b'"') {
       parse_quoted_string(cursor, media_error)
     } else {
-      parse_token(cursor, "parameter value")
+      parse_token(cursor, "parameter value", media_error)
     }
     let (base_name, section, encoded, extended) = classify_parameter_name(
       raw_name,
@@ -140,6 +140,7 @@ fn parse_parameters(
 fn parse_token(
   cursor : ValueCursor,
   label : String,
+  media_error : Bool,
 ) -> String raise @model.MimeError {
   let start = cursor.offset
   while cursor.offset < cursor.end &&
@@ -147,10 +148,13 @@ fn parse_token(
     cursor.offset = cursor.offset + 1
   }
   if cursor.offset == start {
-    raise @model.InvalidMediaType("expected " + label)
+    fail_parameterized(media_error, "expected " + label)
   }
   @utf8.decode(cursor.bytes[start:cursor.offset]) catch {
-    _ => raise @model.InvalidMediaType(label + " is not valid ASCII")
+    _ => {
+      fail_parameterized(media_error, label + " is not valid ASCII")
+      ""
+    }
   }
 }
 
