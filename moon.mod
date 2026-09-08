@@ -10,7 +10,7 @@ license = "Apache-2.0"
 
 keywords = [ "mime", "email", "eml", "rfc5322", "multipart" ]
 
-preferred_target = "wasm-gc"
+preferred_target = "native"
 
 description = "Byte-preserving recursive MIME message parser for MoonBit"
 

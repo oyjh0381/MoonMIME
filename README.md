@@ -86,7 +86,7 @@ moon fmt --check
 moon info
 ```
 
-The repository includes unit, boundary, recovery, recursive integration, reporting, and CLI smoke coverage. See [docs/TESTING.md](docs/TESTING.md).
+The module defaults to the Native target so API documentation can include the reference CLI. Portable core packages are still checked and tested explicitly on every supported backend. The repository includes unit, boundary, recovery, recursive integration, reporting, and CLI smoke coverage. See [docs/TESTING.md](docs/TESTING.md).
 
 ## Scope and security
 
