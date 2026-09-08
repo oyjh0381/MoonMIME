@@ -1,0 +1,9 @@
+import {
+  "oyjh0381/moonmime/model",
+  "oyjh0381/moonmime/media",
+  "moonbitlang/core/encoding/utf8",
+}
+
+import {
+  "oyjh0381/moonmime/header",
+} for "test"
