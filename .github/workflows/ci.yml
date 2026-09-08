@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  portable:
+    name: Portable core (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: hustcer/setup-moonbit@v1.22
+      - name: Resolve dependencies
+        run: moon update
+      - name: Check formatting
+        run: moon fmt --check
+      - name: Check every supported target
+        run: moon check --target all --deny-warn
+      - name: Test portable core
+        run: moon test --target wasm-gc --deny-warn
+      - name: Verify generated interfaces
+        shell: bash
+        run: |
+          moon info
+          git diff --exit-code
+
+  native-linux:
+    name: Native CLI (Ubuntu)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: hustcer/setup-moonbit@v1.22
+      - run: moon update
+      - name: Native tests and build
+        run: |
+          moon test --target native --deny-warn
+          moon build --target native --deny-warn
+      - name: CLI smoke tests
+        run: |
+          moon run --target native cmd/moonmime -- version
+          moon run --target native cmd/moonmime -- inspect examples/sample.eml --compatible --json
+          moon run --target native cmd/moonmime -- text examples/sample.eml --compatible
+          moon run --target native cmd/moonmime -- attachments examples/sample.eml --compatible
+
+  native-windows:
+    name: Native CLI (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: hustcer/setup-moonbit@v1.22
+      - run: moon update
+      - name: Native tests, build, and CLI
+        shell: cmd
+        run: |
+          call "%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64 -host_arch=amd64
+          moon test --target native --deny-warn
+          moon build --target native --deny-warn
+          moon run --target native cmd/moonmime -- version
+          moon run --target native cmd/moonmime -- inspect examples\sample.eml --compatible --json
+
+  documentation:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: hustcer/setup-moonbit@v1.22
+      - run: moon update
+      - name: Generate API documentation
+        run: moon doc
+      - name: Validate repository links and whitespace
+        run: |
+          test -f README.md
+          test -f README.mbt.md
+          test -f LICENSE
+          test -f THIRD_PARTY_NOTICES.md
+          git diff --check
