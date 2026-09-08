@@ -39,6 +39,6 @@ Bytes
 
 ## Complexity
 
-Header and boundary scans are linear in the bytes of their bounded region. Recursive parsing scans each multipart body once and parses each child once, for expected `O(n)` time in total message bytes and `O(n + e)` retained space for raw bytes, fields, and `e` entities. Query traversal is `O(e)`. Base64 and Quoted-Printable decoding are `O(b)` time and output space for a body of `b` bytes.
+Header and boundary scans are linear in the bytes of their bounded region. Because each nested multipart level scans its own enclosing body, recursive parsing is `O(n * d)` in the worst case for `n` input bytes and nesting depth `d`; the default bound fixes `d <= 16`, so ordinary bounded workloads behave linearly. Retained space is `O(n + e)` for raw bytes, fields, and `e` entities. Query traversal is `O(e)`. Base64 and Quoted-Printable decoding are `O(b)` time and output space for a body of `b` bytes.
 
 The complete input is retained intentionally to guarantee byte ranges. Applications needing streaming multi-GiB processing should not use v0.1.

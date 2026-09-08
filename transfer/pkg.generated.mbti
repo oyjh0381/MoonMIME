@@ -26,6 +26,15 @@ pub(all) struct Base64Result {
   unpadded : Bool
 } derive(Eq, @debug.Debug)
 
+pub(all) struct DecodeBudget {
+  per_leaf_limit : Int
+  total_limit : Int
+  mut consumed : Int
+} derive(Eq, @debug.Debug)
+pub fn DecodeBudget::decode_entity(Self, @model.InternetMessage, @model.MimeEntity, @model.ParseMode) -> TransferDecodeResult raise @model.MimeError
+pub fn DecodeBudget::new(@model.ResourceLimits) -> Self raise @model.MimeError
+pub fn DecodeBudget::remaining(Self) -> Int
+
 pub(all) struct QuotedPrintableResult {
   bytes : Bytes
   escaped_octets : Int
