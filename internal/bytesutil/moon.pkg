@@ -2,4 +2,3 @@ import {
   "oyjh0381/moonmime/model",
   "moonbitlang/core/encoding/utf8",
 }
-

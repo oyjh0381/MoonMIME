@@ -2,7 +2,7 @@ import {
   "oyjh0381/moonmime/model",
   "oyjh0381/moonmime/transfer",
   "oyjh0381/moonmime/header",
-  "oyjh0381/moonmime/internal/bytesutil" @bytesutil,
+  "oyjh0381/moonmime/internal/bytesutil",
   "moonbitlang/core/encoding/utf8",
 }
 

@@ -1,6 +1,6 @@
 import {
   "oyjh0381/moonmime/model",
-  "oyjh0381/moonmime/internal/bytesutil" @bytesutil,
+  "oyjh0381/moonmime/internal/bytesutil",
   "oyjh0381/moonmime/header",
   "oyjh0381/moonmime/entity",
   "moonbitlang/core/encoding/utf8",
