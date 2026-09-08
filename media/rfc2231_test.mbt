@@ -59,16 +59,14 @@ test "Latin-1 extended parameters map bytes losslessly" {
 ///|
 test "strict continuation rejects missing section zero" {
   assert_parameter_failure(
-    "attachment; filename*1=tail.txt",
-    "MOONMIME_PARAMETER",
+    "attachment; filename*1=tail.txt", "MOONMIME_PARAMETER",
   )
 }
 
 ///|
 test "strict continuation rejects gaps" {
   assert_parameter_failure(
-    "attachment; filename*0=first; filename*2=third",
-    "MOONMIME_PARAMETER",
+    "attachment; filename*0=first; filename*2=third", "MOONMIME_PARAMETER",
   )
 }
 
@@ -88,16 +86,14 @@ test "compatible continuation keeps contiguous prefix" {
 ///|
 test "extended parameter rejects invalid percent escape" {
   assert_parameter_failure(
-    "attachment; filename*=utf-8''bad%XZname",
-    "MOONMIME_PARAMETER",
+    "attachment; filename*=utf-8''bad%XZname", "MOONMIME_PARAMETER",
   )
 }
 
 ///|
 test "extended parameter exposes unsupported charset" {
   assert_parameter_failure(
-    "attachment; filename*=shift_jis''abc.txt",
-    "MOONMIME_CHARSET_UNSUPPORTED",
+    "attachment; filename*=shift_jis''abc.txt", "MOONMIME_CHARSET_UNSUPPORTED",
   )
 }
 

@@ -5,7 +5,9 @@ fn report_message(text : String) -> @model.InternetMessage raise {
 
 ///|
 test "summary includes entity table" {
-  let result = render_summary(report_message("Content-Type: text/plain\r\n\r\nhello"))
+  let result = render_summary(
+    report_message("Content-Type: text/plain\r\n\r\nhello"),
+  )
   assert_true(result.contains("MoonMIME message"))
   assert_true(result.contains("text/plain"))
   assert_true(result.contains("leaf"))
@@ -21,9 +23,11 @@ test "json carries stable schema and stats" {
 
 ///|
 test "json renders paths and attachment metadata" {
-  let result = render_json(report_message(
-    "Content-Disposition: attachment; filename=a.txt\r\nContent-Type: text/plain\r\n\r\ndata",
-  ))
+  let result = render_json(
+    report_message(
+      "Content-Disposition: attachment; filename=a.txt\r\nContent-Type: text/plain\r\n\r\ndata",
+    ),
+  )
   assert_true(result.contains("\"path\":[]"))
   assert_true(result.contains("\"filename\":\"a.txt\""))
   assert_true(result.contains("\"explicit\":true"))
@@ -31,7 +35,9 @@ test "json renders paths and attachment metadata" {
 
 ///|
 test "json escapes quote slash and control bytes" {
-  let message = report_message("Content-Disposition: attachment; filename=\"a\\\"b\\\\c\"\r\n\r\ndata")
+  let message = report_message(
+    "Content-Disposition: attachment; filename=\"a\\\"b\\\\c\"\r\n\r\ndata",
+  )
   let result = render_json(message)
   assert_true(result.contains("a\\\"b\\\\c"))
 }

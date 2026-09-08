@@ -28,7 +28,9 @@ pub fn find_entity(
 /// A leaf is considered an attachment when it has an explicit attachment
 /// disposition or a filename/name parameter. Inline named resources therefore
 /// remain discoverable, with `explicit=false` in their metadata.
-pub fn attachments(message : @model.InternetMessage) -> Array[@model.Attachment] {
+pub fn attachments(
+  message : @model.InternetMessage,
+) -> Array[@model.Attachment] {
   let output : Array[@model.Attachment] = []
   for entity in entities(message) {
     if entity.kind != @model.Leaf {

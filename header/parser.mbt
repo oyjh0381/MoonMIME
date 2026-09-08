@@ -46,13 +46,7 @@ pub fn parse_header_block(
         limits.max_header_line_bytes,
       )
     }
-    observe_line_ending(
-      diagnostics,
-      line,
-      mode,
-      limits,
-      entity_path,
-    )
+    observe_line_ending(diagnostics, line, mode, limits, entity_path)
     if line.is_empty() {
       finish_pending(fields, current)
       current = None
@@ -95,13 +89,19 @@ pub fn parse_header_block(
     finish_pending(fields, current)
     current = None
     if fields.length() >= limits.max_header_count {
-      raise @model.HeaderCountExceeded(fields.length() + 1, limits.max_header_count)
+      raise @model.HeaderCountExceeded(
+        fields.length() + 1,
+        limits.max_header_count,
+      )
     }
     let colon = find_colon(input, line.content_start, line.content_end)
     match colon {
       None => {
         if mode == @model.Strict {
-          raise @model.MalformedHeader(line.content_start, "header field has no colon")
+          raise @model.MalformedHeader(
+            line.content_start,
+            "header field has no colon",
+          )
         }
         add_diagnostic(
           diagnostics,
@@ -135,7 +135,10 @@ pub fn parse_header_block(
           )
         }
         if name_start == name_end {
-          raise @model.MalformedHeader(line.content_start, "header field name is empty")
+          raise @model.MalformedHeader(
+            line.content_start,
+            "header field name is empty",
+          )
         }
         validate_field_name(input, name_start, name_end)
         let name = @bytesutil.ascii_string(input, name_start, name_end)
@@ -208,8 +211,7 @@ fn validate_field_name(
   for index in start..<end {
     if !@bytesutil.is_field_name(input[index]) {
       raise @model.MalformedHeader(
-        index,
-        "field name contains a non-printable or non-ASCII byte",
+        index, "field name contains a non-printable or non-ASCII byte",
       )
     }
   }
@@ -218,7 +220,8 @@ fn validate_field_name(
 ///|
 fn decode_value(input : Bytes, start : Int, end : Int) -> String {
   @utf8.decode(input[start:end]) catch {
-    _ => @bytesutil.latin1_string(Bytes::from_array(input[start:end].to_array()))
+    _ =>
+      @bytesutil.latin1_string(Bytes::from_array(input[start:end].to_array()))
   }
 }
 
@@ -234,7 +237,10 @@ fn observe_line_ending(
     @bytesutil.CrLf => ()
     @bytesutil.Lf => {
       if mode == @model.Strict {
-        raise @model.MalformedHeader(line.content_end, "bare line feed in strict mode")
+        raise @model.MalformedHeader(
+          line.content_end,
+          "bare line feed in strict mode",
+        )
       }
       add_diagnostic(
         diagnostics,
@@ -247,7 +253,10 @@ fn observe_line_ending(
     }
     @bytesutil.Cr => {
       if mode == @model.Strict {
-        raise @model.MalformedHeader(line.content_end, "bare carriage return in strict mode")
+        raise @model.MalformedHeader(
+          line.content_end,
+          "bare carriage return in strict mode",
+        )
       }
       add_diagnostic(
         diagnostics,
@@ -281,4 +290,3 @@ fn add_diagnostic(
     })
   }
 }
-

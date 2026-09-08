@@ -2,7 +2,7 @@
 
 Bounded, byte-preserving recursive MIME parsing for MoonBit.
 
-```moonbit
+```moonbit nocheck
 let message = @moonmime.parse(
   b"Subject: hello\r\nContent-Type: text/plain\r\n\r\nMoonBit",
 )

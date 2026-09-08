@@ -20,7 +20,7 @@ pub(all) struct MediaType {
 ///|
 /// Default media type for a MIME entity with no Content-Type field.
 pub fn MediaType::text_plain() -> MediaType {
-  { top_level: "text", subtype: "plain", parameters: [] }
+  { top_level: "text", subtype: "plain", parameters: [], }
 }
 
 ///|

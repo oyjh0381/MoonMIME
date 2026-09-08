@@ -23,8 +23,23 @@ pub fn is_token(value : Byte) -> Bool {
     return false
   }
   match value {
-    b'(' | b')' | b'<' | b'>' | b'@' | b',' | b';' | b':' | b'\\' | b'"'
-    | b'/' | b'[' | b']' | b'?' | b'=' | b'{' | b'}' => false
+    b'('
+    | b')'
+    | b'<'
+    | b'>'
+    | b'@'
+    | b','
+    | b';'
+    | b':'
+    | b'\\'
+    | b'"'
+    | b'/'
+    | b'['
+    | b']'
+    | b'?'
+    | b'='
+    | b'{'
+    | b'}' => false
     _ => true
   }
 }

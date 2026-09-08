@@ -40,7 +40,7 @@ pub fn parse_content_disposition(
   skip_wsp(cursor)
   let kind = parse_token(cursor, "disposition type")
   let parameters = parse_parameters(cursor, mode, max_parameters, false)
-  { kind: @bytesutil.lower_string(kind), parameters }
+  { kind: @bytesutil.lower_string(kind), parameters, }
 }
 
 ///|
@@ -66,7 +66,7 @@ pub fn parse_transfer_encoding(value : String) -> @model.TransferEncoding {
 ///|
 fn new_cursor(value : String) -> ValueCursor {
   let bytes = @utf8.encode(value)
-  { bytes, offset: 0, end: bytes.length() }
+  { bytes, offset: 0, end: bytes.length(), }
 }
 
 ///|
@@ -111,7 +111,9 @@ fn parse_parameters(
     } else {
       parse_token(cursor, "parameter value")
     }
-    let (base_name, section, encoded, extended) = classify_parameter_name(raw_name)
+    let (base_name, section, encoded, extended) = classify_parameter_name(
+      raw_name,
+    )
     parameters.push({
       name: raw_name,
       lower_name: @bytesutil.lower_string(base_name),
@@ -135,9 +137,13 @@ fn parse_parameters(
 }
 
 ///|
-fn parse_token(cursor : ValueCursor, label : String) -> String raise @model.MimeError {
+fn parse_token(
+  cursor : ValueCursor,
+  label : String,
+) -> String raise @model.MimeError {
   let start = cursor.offset
-  while cursor.offset < cursor.end && @bytesutil.is_token(cursor.bytes[cursor.offset]) {
+  while cursor.offset < cursor.end &&
+        @bytesutil.is_token(cursor.bytes[cursor.offset]) {
     cursor.offset = cursor.offset + 1
   }
   if cursor.offset == start {
@@ -169,7 +175,9 @@ fn parse_quoted_string(
         }
         let escaped = cursor.bytes[cursor.offset]
         if escaped == b'\r' || escaped == b'\n' {
-          fail_parameterized(media_error, "quoted-pair cannot escape a line ending")
+          fail_parameterized(
+            media_error, "quoted-pair cannot escape a line ending",
+          )
         }
         output.push(escaped)
         cursor.offset = cursor.offset + 1
@@ -196,9 +204,7 @@ fn classify_parameter_name(name : String) -> (String, Int?, Bool, Bool) {
   if star < 0 {
     return (name, None, false, false)
   }
-  let base = @utf8.decode(bytes[0:star]) catch {
-    _ => name
-  }
+  let base = @utf8.decode(bytes[0:star]) catch { _ => name }
   if star == bytes.length() - 1 {
     return (base, None, true, true)
   }
@@ -224,7 +230,8 @@ fn classify_parameter_name(name : String) -> (String, Int?, Bool, Bool) {
 
 ///|
 fn skip_wsp(cursor : ValueCursor) -> Unit {
-  while cursor.offset < cursor.end && @bytesutil.is_wsp(cursor.bytes[cursor.offset]) {
+  while cursor.offset < cursor.end &&
+        @bytesutil.is_wsp(cursor.bytes[cursor.offset]) {
     cursor.offset = cursor.offset + 1
   }
 }

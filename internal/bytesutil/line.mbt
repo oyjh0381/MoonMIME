@@ -73,7 +73,11 @@ pub fn next_line(input : Bytes, start : Int, end : Int) -> PhysicalLine? {
 
 ///|
 /// Return the start of a CRLF, LF, or CR ending directly before `offset`.
-pub fn strip_preceding_line_break(input : Bytes, start : Int, offset : Int) -> Int {
+pub fn strip_preceding_line_break(
+  input : Bytes,
+  start : Int,
+  offset : Int,
+) -> Int {
   if offset <= start {
     return offset
   }
@@ -89,4 +93,3 @@ pub fn strip_preceding_line_break(input : Bytes, start : Int, offset : Int) -> I
     offset
   }
 }
-

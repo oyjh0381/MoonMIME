@@ -11,7 +11,7 @@ pub fn parse_with(
   mode : @model.ParseMode,
   limits : @model.ResourceLimits,
 ) -> @model.InternetMessage raise @model.MimeError {
-  @parser.parse_message(input, mode=mode, limits=limits)
+  @parser.parse_message(input, mode~, limits~)
 }
 
 ///|
@@ -21,7 +21,7 @@ pub fn inspect_json(
   mode? : @model.ParseMode = @model.Strict,
   limits? : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
 ) -> String raise @model.MimeError {
-  @report.render_json(@parser.parse_message(input, mode=mode, limits=limits))
+  @report.render_json(@parser.parse_message(input, mode~, limits~))
 }
 
 ///|
@@ -31,7 +31,7 @@ pub fn inspect_text(
   mode? : @model.ParseMode = @model.Strict,
   limits? : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
 ) -> String raise @model.MimeError {
-  @report.render_summary(@parser.parse_message(input, mode=mode, limits=limits))
+  @report.render_summary(@parser.parse_message(input, mode~, limits~))
 }
 
 ///|
@@ -49,7 +49,7 @@ pub fn decode_body(
   if entity.kind != @model.Leaf {
     raise @model.InvalidArgument("only leaf entity bodies can be decoded")
   }
-  @transfer.decode_entity_body(message, entity, mode, max_output=max_output).bytes
+  @transfer.decode_entity_body(message, entity, mode, max_output~).bytes
 }
 
 ///|

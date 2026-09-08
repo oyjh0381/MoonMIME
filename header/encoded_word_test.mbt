@@ -7,7 +7,11 @@ test "encoded-word decodes UTF-8 Base64" {
 
 ///|
 test "encoded-word decodes Q underscore and escape" {
-  let result = decode_encoded_words("=?ISO-8859-1?Q?Andr=E9_Caf=E9?=", @model.Strict, 1024)
+  let result = decode_encoded_words(
+    "=?ISO-8859-1?Q?Andr=E9_Caf=E9?=",
+    @model.Strict,
+    1024,
+  )
   assert_eq(result.value, "André Café")
 }
 
@@ -24,7 +28,11 @@ test "adjacent encoded-word whitespace is suppressed" {
 
 ///|
 test "ordinary whitespace after a word remains" {
-  let result = decode_encoded_words("=?US-ASCII?Q?hello?= there", @model.Strict, 1024)
+  let result = decode_encoded_words(
+    "=?US-ASCII?Q?hello?= there",
+    @model.Strict,
+    1024,
+  )
   assert_eq(result.value, "hello there")
 }
 
@@ -37,7 +45,11 @@ test "ordinary UTF-8 text remains unchanged" {
 
 ///|
 test "compatible mode preserves malformed candidate" {
-  let result = decode_encoded_words("before =?UTF-8?X?bad?= after", @model.Compatible, 1024)
+  let result = decode_encoded_words(
+    "before =?UTF-8?X?bad?= after",
+    @model.Compatible,
+    1024,
+  )
   assert_eq(result.value, "before =?UTF-8?X?bad?= after")
   assert_eq(result.preserved_invalid_words, 1)
 }
@@ -45,9 +57,7 @@ test "compatible mode preserves malformed candidate" {
 ///|
 test "strict mode rejects malformed candidate" {
   let mut failed = false
-  try {
-    ignore(decode_encoded_words("=?UTF-8?X?bad?=", @model.Strict, 1024))
-  } catch {
+  ignore(decode_encoded_words("=?UTF-8?X?bad?=", @model.Strict, 1024)) catch {
     @model.InvalidEncodedWord(_) => failed = true
     _ => ()
   }
@@ -57,9 +67,7 @@ test "strict mode rejects malformed candidate" {
 ///|
 test "unsupported charset is structured" {
   let mut failed = false
-  try {
-    ignore(decode_encoded_words("=?KOI8-R?Q?hello?=", @model.Strict, 1024))
-  } catch {
+  ignore(decode_encoded_words("=?KOI8-R?Q?hello?=", @model.Strict, 1024)) catch {
     @model.UnsupportedCharset("koi8-r") => failed = true
     _ => ()
   }
@@ -69,9 +77,7 @@ test "unsupported charset is structured" {
 ///|
 test "output limit applies after charset decoding" {
   let mut failed = false
-  try {
-    ignore(decode_encoded_words("=?US-ASCII?Q?abcd?=", @model.Strict, 3))
-  } catch {
+  ignore(decode_encoded_words("=?US-ASCII?Q?abcd?=", @model.Strict, 3)) catch {
     @model.DecodedOutputTooLarge(4, 3) => failed = true
     _ => ()
   }
@@ -81,9 +87,7 @@ test "output limit applies after charset decoding" {
 ///|
 test "invalid Base64 tail is rejected" {
   let mut failed = false
-  try {
-    ignore(decode_encoded_words("=?UTF-8?B?A===?=", @model.Strict, 1024))
-  } catch {
+  ignore(decode_encoded_words("=?UTF-8?B?A===?=", @model.Strict, 1024)) catch {
     @model.InvalidBase64(_, _) => failed = true
     _ => ()
   }

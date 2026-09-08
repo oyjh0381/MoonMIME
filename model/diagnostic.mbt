@@ -61,4 +61,3 @@ pub fn DiagnosticCode::to_code(self : DiagnosticCode) -> String {
     UnsupportedCharsetPreserved => "unsupported-charset-preserved"
   }
 }
-

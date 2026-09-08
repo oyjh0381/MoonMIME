@@ -42,7 +42,9 @@ pub fn decode_base64(
         None =>
           raise @model.InvalidBase64(
             index,
-            "byte 0x" + @bytesutil.byte_hex(byte) + " is not in the Base64 alphabet",
+            "byte 0x" +
+            @bytesutil.byte_hex(byte) +
+            " is not in the Base64 alphabet",
           )
       }
     }
@@ -66,7 +68,11 @@ pub fn decode_base64(
     unpadded = true
     decode_unpadded(output, quartet, positions, max_output)
   }
-  { bytes: Bytes::from_array(output), ignored_whitespace: whitespace, unpadded }
+  {
+    bytes: Bytes::from_array(output),
+    ignored_whitespace: whitespace,
+    unpadded,
+  }
 }
 
 ///|
@@ -99,14 +105,22 @@ fn decode_quartet(
   let d = quartet[3]
   if a < 0 || b < 0 {
     let offset = if a < 0 { positions[0] } else { positions[1] }
-    raise @model.InvalidBase64(offset, "padding is not permitted in the first two symbols")
+    raise @model.InvalidBase64(
+      offset, "padding is not permitted in the first two symbols",
+    )
   }
   if c < 0 {
     if d >= 0 {
-      raise @model.InvalidBase64(positions[3], "data symbol follows padding in one quantum")
+      raise @model.InvalidBase64(
+        positions[3],
+        "data symbol follows padding in one quantum",
+      )
     }
     if (b & 15) != 0 {
-      raise @model.InvalidBase64(positions[1], "non-zero unused bits in one-byte tail")
+      raise @model.InvalidBase64(
+        positions[1],
+        "non-zero unused bits in one-byte tail",
+      )
     }
     ensure_output(output.length() + 1, max_output)
     output.push(((a << 2) | (b >> 4)).to_byte())
@@ -114,7 +128,10 @@ fn decode_quartet(
   }
   if d < 0 {
     if (c & 3) != 0 {
-      raise @model.InvalidBase64(positions[2], "non-zero unused bits in two-byte tail")
+      raise @model.InvalidBase64(
+        positions[2],
+        "non-zero unused bits in two-byte tail",
+      )
     }
     ensure_output(output.length() + 2, max_output)
     output.push(((a << 2) | (b >> 4)).to_byte())
@@ -136,7 +153,10 @@ fn decode_unpadded(
   max_output : Int,
 ) -> Unit raise @model.MimeError {
   if quartet.length() == 1 {
-    raise @model.InvalidBase64(positions[0], "one symbol cannot encode a complete byte")
+    raise @model.InvalidBase64(
+      positions[0],
+      "one symbol cannot encode a complete byte",
+    )
   }
   for index in 0..<quartet.length() {
     if quartet[index] < 0 {
@@ -147,7 +167,10 @@ fn decode_unpadded(
   let b = quartet[1]
   if quartet.length() == 2 {
     if (b & 15) != 0 {
-      raise @model.InvalidBase64(positions[1], "non-zero unused bits in unpadded tail")
+      raise @model.InvalidBase64(
+        positions[1],
+        "non-zero unused bits in unpadded tail",
+      )
     }
     ensure_output(output.length() + 1, max_output)
     output.push(((a << 2) | (b >> 4)).to_byte())
@@ -155,7 +178,10 @@ fn decode_unpadded(
   }
   let c = quartet[2]
   if (c & 3) != 0 {
-    raise @model.InvalidBase64(positions[2], "non-zero unused bits in unpadded tail")
+    raise @model.InvalidBase64(
+      positions[2],
+      "non-zero unused bits in unpadded tail",
+    )
   }
   ensure_output(output.length() + 2, max_output)
   output.push(((a << 2) | (b >> 4)).to_byte())

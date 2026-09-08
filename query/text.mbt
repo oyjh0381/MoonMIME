@@ -7,9 +7,10 @@ pub fn subject(
 ) -> String? raise @model.MimeError {
   match message.root.headers.first("subject") {
     None => None
-    Some(field) => Some(
-      @header.decode_encoded_words(field.value, mode, max_output_bytes).value,
-    )
+    Some(field) =>
+      Some(
+        @header.decode_encoded_words(field.value, mode, max_output_bytes).value,
+      )
   }
 }
 
@@ -77,7 +78,9 @@ fn decode_text_charset(
     "us-ascii" | "ascii" => {
       for byte in input {
         if byte >= b'\x80' {
-          raise @model.UnsupportedCharset("us-ascii body contains a non-ASCII octet")
+          raise @model.UnsupportedCharset(
+            "us-ascii body contains a non-ASCII octet",
+          )
         }
       }
       @utf8.decode(input) catch {

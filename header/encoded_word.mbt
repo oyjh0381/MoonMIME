@@ -77,7 +77,9 @@ pub fn decode_encoded_words(
       let text = @utf8.decode(bytes[whitespace_start:cursor]) catch {
         _ => raise @model.InvalidEncodedWord("header whitespace is not UTF-8")
       }
-      output_bytes = append_bounded(builder, text, output_bytes, max_output_bytes)
+      output_bytes = append_bounded(
+        builder, text, output_bytes, max_output_bytes,
+      )
       previous_was_word = false
       continue
     }
@@ -92,11 +94,18 @@ pub fn decode_encoded_words(
     cursor = next
     previous_was_word = false
   }
-  { value: builder.to_string(), decoded_words: decoded, preserved_invalid_words: invalid }
+  {
+    value: builder.to_string(),
+    decoded_words: decoded,
+    preserved_invalid_words: invalid,
+  }
 }
 
 ///|
-fn try_decode_word(input : Bytes, start : Int) -> WordDecode? raise @model.MimeError {
+fn try_decode_word(
+  input : Bytes,
+  start : Int,
+) -> WordDecode? raise @model.MimeError {
   if !starts_word(input, start) {
     return None
   }
@@ -127,7 +136,9 @@ fn try_decode_word(input : Bytes, start : Int) -> WordDecode? raise @model.MimeE
   }
   for index in text_start..<end {
     if input[index] <= b' ' || input[index] >= b'\x7f' {
-      raise @model.InvalidEncodedWord("encoded-text must contain printable ASCII without spaces")
+      raise @model.InvalidEncodedWord(
+        "encoded-text must contain printable ASCII without spaces",
+      )
     }
   }
   let charset = @utf8.decode(input[start + 2:charset_end.unwrap()]) catch {
@@ -142,29 +153,38 @@ fn try_decode_word(input : Bytes, start : Int) -> WordDecode? raise @model.MimeE
   let decoded = match encoding {
     "b" => @transfer.decode_base64(encoded, @model.Strict, 1024 * 1024).bytes
     "q" => @transfer.decode_q_word(encoded, 1024 * 1024)
-    other => raise @model.InvalidEncodedWord("unsupported encoded-word encoding " + other)
+    other =>
+      raise @model.InvalidEncodedWord(
+        "unsupported encoded-word encoding " + other,
+      )
   }
-  {
-    value: decode_word_charset(decoded, charset),
-    end: end + 2,
-  } |> Some
+  { value: decode_word_charset(decoded, charset), end: end + 2, } |> Some
 }
 
 ///|
-fn decode_word_charset(input : Bytes, charset : String) -> String raise @model.MimeError {
+fn decode_word_charset(
+  input : Bytes,
+  charset : String,
+) -> String raise @model.MimeError {
   match @bytesutil.lower_string(charset) {
     "utf-8" | "utf8" =>
       @utf8.decode(input) catch {
-        _ => raise @model.InvalidEncodedWord("encoded-word contains malformed UTF-8")
+        _ =>
+          raise @model.InvalidEncodedWord(
+            "encoded-word contains malformed UTF-8",
+          )
       }
     "us-ascii" | "ascii" => {
       for byte in input {
         if byte >= b'\x80' {
-          raise @model.InvalidEncodedWord("US-ASCII encoded-word contains a non-ASCII byte")
+          raise @model.InvalidEncodedWord(
+            "US-ASCII encoded-word contains a non-ASCII byte",
+          )
         }
       }
       @utf8.decode(input) catch {
-        _ => raise @model.InvalidEncodedWord("US-ASCII encoded-word is malformed")
+        _ =>
+          raise @model.InvalidEncodedWord("US-ASCII encoded-word is malformed")
       }
     }
     "iso-8859-1" | "latin1" | "latin-1" => @bytesutil.latin1_string(input)
@@ -174,7 +194,9 @@ fn decode_word_charset(input : Bytes, charset : String) -> String raise @model.M
 
 ///|
 fn starts_word(input : Bytes, offset : Int) -> Bool {
-  offset + 1 < input.length() && input[offset] == b'=' && input[offset + 1] == b'?'
+  offset + 1 < input.length() &&
+  input[offset] == b'=' &&
+  input[offset + 1] == b'?'
 }
 
 ///|

@@ -11,13 +11,13 @@ pub fn ByteRange::new(start : Int, end : Int) -> ByteRange raise MimeError {
   if start < 0 || end < start {
     raise InvalidByteRange(start, end, end)
   }
-  { start, end }
+  { start, end, }
 }
 
 ///|
 /// Construct a range known to have already been validated by the parser.
 pub fn ByteRange::trusted(start : Int, end : Int) -> ByteRange {
-  { start, end }
+  { start, end, }
 }
 
 ///|
@@ -48,4 +48,3 @@ pub fn ByteRange::validate(
     raise InvalidByteRange(self.start, self.end, input_length)
   }
 }
-

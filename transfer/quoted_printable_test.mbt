@@ -26,7 +26,12 @@ test "compatible Quoted-Printable reports bare LF soft breaks" {
 
 ///|
 test "strict Quoted-Printable rejects bare LF soft breaks" {
-  assert_qp_failure(b"one=\ntwo", @model.Strict, 128, "MOONMIME_QUOTED_PRINTABLE")
+  assert_qp_failure(
+    b"one=\ntwo",
+    @model.Strict,
+    128,
+    "MOONMIME_QUOTED_PRINTABLE",
+  )
 }
 
 ///|

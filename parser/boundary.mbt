@@ -51,7 +51,7 @@ pub fn scan_boundaries(
     }
     cursor = line.full_end
   }
-  { delimiters, closed }
+  { delimiters, closed, }
 }
 
 ///|
@@ -70,7 +70,9 @@ fn recognize_delimiter(
   }
   let mut cursor = line.content_start + marker.length()
   let mut closing = false
-  if cursor + 1 < line.content_end && input[cursor] == b'-' && input[cursor + 1] == b'-' {
+  if cursor + 1 < line.content_end &&
+    input[cursor] == b'-' &&
+    input[cursor + 1] == b'-' {
     closing = true
     cursor = cursor + 2
   }

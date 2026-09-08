@@ -40,15 +40,13 @@ pub fn decode_quoted_printable(
         continue
       }
       raise @model.InvalidQuotedPrintable(
-        cursor,
-        "carriage return after equals is not followed by line feed",
+        cursor, "carriage return after equals is not followed by line feed",
       )
     }
     if input[cursor + 1] == b'\n' {
       if mode == @model.Strict {
         raise @model.InvalidQuotedPrintable(
-          cursor,
-          "bare LF soft break is not valid in strict mode",
+          cursor, "bare LF soft break is not valid in strict mode",
         )
       }
       soft = soft + 1
@@ -57,7 +55,9 @@ pub fn decode_quoted_printable(
       continue
     }
     if cursor + 2 >= input.length() {
-      raise @model.InvalidQuotedPrintable(cursor, "incomplete hexadecimal escape")
+      raise @model.InvalidQuotedPrintable(
+        cursor, "incomplete hexadecimal escape",
+      )
     }
     let high = @bytesutil.hex_value(input[cursor + 1])
     let low = @bytesutil.hex_value(input[cursor + 2])
@@ -69,8 +69,7 @@ pub fn decode_quoted_printable(
       }
       _ =>
         raise @model.InvalidQuotedPrintable(
-          cursor,
-          "equals sign must introduce two hexadecimal digits or a soft line break",
+          cursor, "equals sign must introduce two hexadecimal digits or a soft line break",
         )
     }
   }
@@ -113,21 +112,18 @@ pub fn decode_q_word(
           }
           _ =>
             raise @model.InvalidQuotedPrintable(
-              cursor,
-              "invalid hexadecimal Q escape",
+              cursor, "invalid hexadecimal Q escape",
             )
         }
       }
       b'?' =>
         raise @model.InvalidQuotedPrintable(
-          cursor,
-          "question mark must terminate the encoded-word before Q decoding",
+          cursor, "question mark must terminate the encoded-word before Q decoding",
         )
       byte => {
         if byte < b'!' || byte > b'~' {
           raise @model.InvalidQuotedPrintable(
-            cursor,
-            "Q encoded-text contains a non-printable literal",
+            cursor, "Q encoded-text contains a non-printable literal",
           )
         }
         push_bounded(output, byte, max_output)
@@ -156,4 +152,3 @@ fn push_bounded(
   }
   output.push(value)
 }
-

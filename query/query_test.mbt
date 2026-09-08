@@ -91,7 +91,9 @@ test "preferred text ignores explicit text attachment" {
 ///|
 test "preferred text supports Latin-1" {
   let input = Bytes::from_array(
-    @utf8.encode("Content-Type: text/plain; charset=iso-8859-1\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\ncaf=E9").to_array(),
+    @utf8.encode(
+      "Content-Type: text/plain; charset=iso-8859-1\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\ncaf=E9",
+    ).to_array(),
   )
   let message = @parser.parse_message(input)
   assert_eq(preferred_text(message).unwrap().text, "café")
@@ -99,9 +101,11 @@ test "preferred text supports Latin-1" {
 
 ///|
 test "preferred text rejects unsupported charset" {
-  let message = query_message("Content-Type: text/plain; charset=koi8-r\r\n\r\nhello")
+  let message = query_message(
+    "Content-Type: text/plain; charset=koi8-r\r\n\r\nhello",
+  )
   let mut failed = false
-  try { ignore(preferred_text(message)) } catch {
+  ignore(preferred_text(message)) catch {
     @model.UnsupportedCharset("koi8-r") => failed = true
     _ => ()
   }

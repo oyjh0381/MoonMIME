@@ -13,7 +13,9 @@ test "root inspect json API exposes stable schema" {
 
 ///|
 test "root inspect text API exposes media type" {
-  let result = inspect_text(@utf8.encode("Content-Type: application/json\r\n\r\n{}"))
+  let result = inspect_text(
+    @utf8.encode("Content-Type: application/json\r\n\r\n{}"),
+  )
   assert_true(result.contains("application/json"))
 }
 
@@ -30,7 +32,7 @@ test "root decode body selects a leaf by path" {
 test "root decode body rejects missing path" {
   let message = parse(@utf8.encode("\r\nbody"))
   let mut failed = false
-  try { ignore(decode_body(message, [9])) } catch {
+  ignore(decode_body(message, [9])) catch {
     @model.InvalidArgument("entity path does not exist") => failed = true
     _ => ()
   }
@@ -44,8 +46,9 @@ test "root decode body rejects multipart container" {
   )
   let message = parse(raw)
   let mut failed = false
-  try { ignore(decode_body(message, [])) } catch {
-    @model.InvalidArgument("only leaf entity bodies can be decoded") => failed = true
+  ignore(decode_body(message, [])) catch {
+    @model.InvalidArgument("only leaf entity bodies can be decoded") =>
+      failed = true
     _ => ()
   }
   assert_true(failed)

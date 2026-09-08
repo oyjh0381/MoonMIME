@@ -26,7 +26,7 @@ pub fn resolve_media_type(
   media : @model.MediaType,
   mode : @model.ParseMode,
 ) -> @model.MediaType raise @model.MimeError {
-  { ..media, parameters: resolve_parameters(media.parameters, mode) }
+  { ..media, parameters: resolve_parameters(media.parameters, mode), }
 }
 
 ///|
@@ -35,7 +35,10 @@ pub fn resolve_disposition(
   disposition : @model.ContentDisposition,
   mode : @model.ParseMode,
 ) -> @model.ContentDisposition raise @model.MimeError {
-  { ..disposition, parameters: resolve_parameters(disposition.parameters, mode) }
+  {
+    ..disposition,
+    parameters: resolve_parameters(disposition.parameters, mode),
+  }
 }
 
 ///|
@@ -56,13 +59,12 @@ fn resolve_one(
   for parameter in matching {
     match parameter.section {
       Some(_) => continuations.push(parameter)
-      None => {
+      None =>
         if parameter.encoded {
           singles.push(parameter)
         } else {
           plains.push(parameter)
         }
-      }
     }
   }
   if !continuations.is_empty() {
@@ -84,14 +86,7 @@ fn resolved_parameter(
   value : String,
   extended : Bool,
 ) -> @model.MediaParameter {
-  {
-    name,
-    lower_name: name,
-    value,
-    extended,
-    section: None,
-    encoded: false,
-  }
+  { name, lower_name: name, value, extended, section: None, encoded: false, }
 }
 
 ///|
@@ -118,10 +113,14 @@ fn decode_continuations(
     section = section + 1
   }
   if ordered.is_empty() {
-    raise @model.InvalidParameter("parameter continuation does not start at section zero")
+    raise @model.InvalidParameter(
+      "parameter continuation does not start at section zero",
+    )
   }
   if ordered.length() != pieces.length() && mode == @model.Strict {
-    raise @model.InvalidParameter("parameter continuation contains a gap or duplicate")
+    raise @model.InvalidParameter(
+      "parameter continuation contains a gap or duplicate",
+    )
   }
   let output : Array[Byte] = []
   let mut charset : String? = None
@@ -207,10 +206,11 @@ fn append_percent_decoded(
     if cursor + 2 >= bytes.length() {
       raise @model.InvalidParameter("incomplete percent escape")
     }
-    match (
-      @bytesutil.hex_value(bytes[cursor + 1]),
-      @bytesutil.hex_value(bytes[cursor + 2]),
-    ) {
+    match
+      (
+        @bytesutil.hex_value(bytes[cursor + 1]),
+        @bytesutil.hex_value(bytes[cursor + 2]),
+      ) {
       (Some(high), Some(low)) => {
         output.push((high * 16 + low).to_byte())
         cursor = cursor + 3
@@ -221,7 +221,10 @@ fn append_percent_decoded(
 }
 
 ///|
-fn decode_charset(input : Bytes, charset : String) -> String raise @model.MimeError {
+fn decode_charset(
+  input : Bytes,
+  charset : String,
+) -> String raise @model.MimeError {
   let normalized = @bytesutil.lower_string(charset)
   match normalized {
     "utf-8" | "utf8" =>
@@ -231,11 +234,14 @@ fn decode_charset(input : Bytes, charset : String) -> String raise @model.MimeEr
     "us-ascii" | "ascii" => {
       for byte in input {
         if byte >= b'\x80' {
-          raise @model.InvalidParameter("extended US-ASCII value contains non-ASCII byte")
+          raise @model.InvalidParameter(
+            "extended US-ASCII value contains non-ASCII byte",
+          )
         }
       }
       @utf8.decode(input) catch {
-        _ => raise @model.InvalidParameter("extended US-ASCII value is malformed")
+        _ =>
+          raise @model.InvalidParameter("extended US-ASCII value is malformed")
       }
     }
     "iso-8859-1" | "latin1" | "latin-1" => @bytesutil.latin1_string(input)

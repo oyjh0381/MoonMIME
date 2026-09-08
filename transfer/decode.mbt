@@ -43,18 +43,33 @@ pub fn decode_transfer(
     @model.SevenBit => {
       validate_identity(input, max_output)
       validate_seven_bit(input)
-      { bytes: input, encoding, transformed: false, compatibility_recovery: false }
+      {
+        bytes: input,
+        encoding,
+        transformed: false,
+        compatibility_recovery: false,
+      }
     }
     @model.EightBit | @model.Binary => {
       validate_identity(input, max_output)
-      { bytes: input, encoding, transformed: false, compatibility_recovery: false }
+      {
+        bytes: input,
+        encoding,
+        transformed: false,
+        compatibility_recovery: false,
+      }
     }
     @model.Extension(value) => {
       if mode == @model.Strict {
         raise @model.UnsupportedTransferEncoding(value)
       }
       validate_identity(input, max_output)
-      { bytes: input, encoding, transformed: false, compatibility_recovery: true }
+      {
+        bytes: input,
+        encoding,
+        transformed: false,
+        compatibility_recovery: true,
+      }
     }
   }
 }
@@ -74,7 +89,9 @@ pub fn decode_entity_body(
     max_output
   }
   decode_transfer(
-    Bytes::from_array(message.raw[entity.body_range.start:entity.body_range.end].to_array()),
+    Bytes::from_array(
+      message.raw[entity.body_range.start:entity.body_range.end].to_array(),
+    ),
     entity.transfer_encoding,
     mode,
     limit,
@@ -82,7 +99,10 @@ pub fn decode_entity_body(
 }
 
 ///|
-fn validate_identity(input : Bytes, max_output : Int) -> Unit raise @model.MimeError {
+fn validate_identity(
+  input : Bytes,
+  max_output : Int,
+) -> Unit raise @model.MimeError {
   if input.length() > max_output {
     raise @model.DecodedOutputTooLarge(input.length(), max_output)
   }

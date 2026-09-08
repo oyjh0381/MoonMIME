@@ -17,4 +17,3 @@ description = "Byte-preserving recursive MIME message parser for MoonBit"
 import {
   "moonbitlang/async@0.20.6",
 }
-

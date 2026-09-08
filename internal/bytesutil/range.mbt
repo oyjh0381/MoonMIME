@@ -97,12 +97,7 @@ pub fn starts_with_at(
 
 ///|
 /// Find the first exact byte sequence in a bounded range.
-pub fn find(
-  input : Bytes,
-  needle : Bytes,
-  start : Int,
-  end : Int,
-) -> Int? {
+pub fn find(input : Bytes, needle : Bytes, start : Int, end : Int) -> Int? {
   if start < 0 || end < start || end > input.length() || needle.is_empty() {
     return None
   }
@@ -110,7 +105,7 @@ pub fn find(
     return None
   }
   let last = end - needle.length()
-  for offset in start..=last {
+  for offset in start..<=last {
     if starts_with_at(input, offset, end, needle) {
       return Some(offset)
     }

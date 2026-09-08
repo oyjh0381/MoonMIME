@@ -6,7 +6,9 @@ fn scan(text : String, boundary : String) -> BoundaryScan raise {
 
 ///|
 test "boundary scanner recognizes opening and closing lines" {
-  let result = scan("preamble\r\n--outer\r\npart\r\n--outer--\r\nepilogue", "outer")
+  let result = scan(
+    "preamble\r\n--outer\r\npart\r\n--outer--\r\nepilogue", "outer",
+  )
   assert_eq(result.delimiters.length(), 2)
   assert_false(result.delimiters[0].closing)
   assert_true(result.delimiters[1].closing)
@@ -70,7 +72,7 @@ test "boundary scanner handles final line without ending" {
 test "boundary scanner validates source range" {
   let input = @utf8.encode("--x--")
   let mut failed = false
-  try { ignore(scan_boundaries(input, -1, input.length(), "x")) } catch {
+  ignore(scan_boundaries(input, -1, input.length(), "x")) catch {
     @model.InvalidByteRange(_, _, _) => failed = true
     _ => ()
   }

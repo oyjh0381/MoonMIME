@@ -77,7 +77,7 @@ fn parse_entity(
     header_result.block,
     mode,
     limits,
-    path=path,
+    path~,
   )
   append_diagnostics(state, metadata.diagnostics, limits)
   let body_start = header_result.block.body_start
@@ -106,16 +106,25 @@ fn parse_entity(
           let child_path = path.copy()
           child_path.push(0)
           children.push(
-            parse_entity(input, body_start, end, depth + 1, child_path, mode, limits, state),
+            parse_entity(
+              input,
+              body_start,
+              end,
+              depth + 1,
+              child_path,
+              mode,
+              limits,
+              state,
+            ),
           )
         }
-        encoding => {
+        encoding =>
           if mode == @model.Strict {
             raise @model.UnsupportedTransferEncoding(
-              "cannot structurally parse encoded message/rfc822 body using " + encoding.to_string(),
+              "cannot structurally parse encoded message/rfc822 body using " +
+              encoding.to_string(),
             )
           }
-        }
       }
     }
     {
@@ -172,7 +181,9 @@ fn parse_multipart(
   let boundary = metadata.media_type.parameter("boundary").unwrap()
   let scan = scan_boundaries(input, body_start, entity_end, boundary)
   if scan.delimiters.is_empty() || scan.delimiters[0].closing {
-    raise @model.MissingBoundary("no opening delimiter for boundary " + boundary)
+    raise @model.MissingBoundary(
+      "no opening delimiter for boundary " + boundary,
+    )
   }
   if !scan.closed {
     if mode == @model.Strict {
@@ -182,7 +193,10 @@ fn parse_multipart(
       state,
       @model.MissingClosingBoundaryAccepted,
       "accepted multipart body without closing boundary " + boundary,
-      @model.ByteRange::trusted(scan.delimiters[scan.delimiters.length() - 1].line_start, entity_end),
+      @model.ByteRange::trusted(
+        scan.delimiters[scan.delimiters.length() - 1].line_start,
+        entity_end,
+      ),
       path,
       limits,
     )
@@ -202,14 +216,27 @@ fn parse_multipart(
     } else {
       entity_end
     }
-    let child_end = @bytesutil.strip_preceding_line_break(input, child_start, next_start)
+    let child_end = @bytesutil.strip_preceding_line_break(
+      input, child_start, next_start,
+    )
     if child_start >= child_end {
-      raise @model.MalformedHeader(child_start, "multipart contains an empty MIME part")
+      raise @model.MalformedHeader(
+        child_start, "multipart contains an empty MIME part",
+      )
     }
     let child_path = path.copy()
     child_path.push(child_index)
     children.push(
-      parse_entity(input, child_start, child_end, depth + 1, child_path, mode, limits, state),
+      parse_entity(
+        input,
+        child_start,
+        child_end,
+        depth + 1,
+        child_path,
+        mode,
+        limits,
+        state,
+      ),
     )
     child_index = child_index + 1
   }

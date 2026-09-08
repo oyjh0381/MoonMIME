@@ -19,7 +19,10 @@ pub(all) struct HeaderBlock {
 
 ///|
 /// Return the first field whose name matches ASCII case-insensitively.
-pub fn HeaderBlock::first(self : HeaderBlock, lower_name : StringView) -> HeaderField? {
+pub fn HeaderBlock::first(
+  self : HeaderBlock,
+  lower_name : StringView,
+) -> HeaderField? {
   let wanted = lower_name.to_owned()
   for field in self.fields {
     if field.lower_name == wanted {
@@ -47,6 +50,9 @@ pub fn HeaderBlock::all(
 
 ///|
 /// Whether at least one field with the requested normalized name exists.
-pub fn HeaderBlock::contains(self : HeaderBlock, lower_name : StringView) -> Bool {
+pub fn HeaderBlock::contains(
+  self : HeaderBlock,
+  lower_name : StringView,
+) -> Bool {
   self.first(lower_name) is Some(_)
 }

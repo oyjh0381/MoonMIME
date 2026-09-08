@@ -81,4 +81,3 @@ pub(all) struct TextSelection {
   charset : String?
   text : String
 } derive(Debug, Eq)
-

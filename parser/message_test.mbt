@@ -1,6 +1,9 @@
 ///|
-fn parse_text(text : String, mode? : @model.ParseMode = @model.Strict) -> @model.InternetMessage raise {
-  parse_message(@utf8.encode(text), mode=mode)
+fn parse_text(
+  text : String,
+  mode? : @model.ParseMode = @model.Strict,
+) -> @model.InternetMessage raise {
+  parse_message(@utf8.encode(text), mode~)
 }
 
 ///|
@@ -60,9 +63,11 @@ test "message rfc822 creates embedded child" {
 ///|
 test "strict multipart requires closing boundary" {
   let mut failed = false
-  try {
-    ignore(parse_text("Content-Type: multipart/mixed; boundary=x\r\n\r\n--x\r\n\r\nbody"))
-  } catch {
+  ignore(
+    parse_text(
+      "Content-Type: multipart/mixed; boundary=x\r\n\r\n--x\r\n\r\nbody",
+    ),
+  ) catch {
     @model.MissingClosingBoundary("x") => failed = true
     _ => ()
   }
@@ -82,9 +87,9 @@ test "compatible multipart accepts missing closing boundary" {
 ///|
 test "recursion limit is enforced before deep parsing" {
   let text = "Content-Type: message/rfc822\r\n\r\nContent-Type: message/rfc822\r\n\r\n\r\n"
-  let limits = { ..@model.ResourceLimits::secure_defaults(), max_depth: 1 }
+  let limits = { ..@model.ResourceLimits::secure_defaults(), max_depth: 1, }
   let mut failed = false
-  try { ignore(parse_message(@utf8.encode(text), limits=limits)) } catch {
+  ignore(parse_message(@utf8.encode(text), limits~)) catch {
     @model.RecursionLimitExceeded(2, 1) => failed = true
     _ => ()
   }
@@ -94,9 +99,9 @@ test "recursion limit is enforced before deep parsing" {
 ///|
 test "entity count limit is enforced" {
   let text = "Content-Type: multipart/mixed; boundary=x\r\n\r\n--x\r\n\r\na\r\n--x\r\n\r\nb\r\n--x--\r\n"
-  let limits = { ..@model.ResourceLimits::secure_defaults(), max_entities: 2 }
+  let limits = { ..@model.ResourceLimits::secure_defaults(), max_entities: 2, }
   let mut failed = false
-  try { ignore(parse_message(@utf8.encode(text), limits=limits)) } catch {
+  ignore(parse_message(@utf8.encode(text), limits~)) catch {
     @model.EntityCountExceeded(3, 2) => failed = true
     _ => ()
   }
@@ -105,9 +110,14 @@ test "entity count limit is enforced" {
 
 ///|
 test "input size limit is checked before parsing" {
-  let limits = { ..@model.ResourceLimits::secure_defaults(), max_input_bytes: 4, max_header_bytes: 4, max_leaf_body_bytes: 4 }
+  let limits = {
+    ..@model.ResourceLimits::secure_defaults(),
+    max_input_bytes: 4,
+    max_header_bytes: 4,
+    max_leaf_body_bytes: 4,
+  }
   let mut failed = false
-  try { ignore(parse_message(@utf8.encode("A: b\r\n\r\n"), limits=limits)) } catch {
+  ignore(parse_message(@utf8.encode("A: b\r\n\r\n"), limits~)) catch {
     @model.InputTooLarge(_, 4) => failed = true
     _ => ()
   }
@@ -124,9 +134,12 @@ test "boundary prefix in body does not create a child" {
 
 ///|
 test "leaf body size is bounded" {
-  let limits = { ..@model.ResourceLimits::secure_defaults(), max_leaf_body_bytes: 3 }
+  let limits = {
+    ..@model.ResourceLimits::secure_defaults(),
+    max_leaf_body_bytes: 3,
+  }
   let mut failed = false
-  try { ignore(parse_message(@utf8.encode("\r\nabcd"), limits=limits)) } catch {
+  ignore(parse_message(@utf8.encode("\r\nabcd"), limits~)) catch {
     @model.LeafBodyTooLarge(4, 3) => failed = true
     _ => ()
   }
