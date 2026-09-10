@@ -4,3 +4,5 @@
 *.tmp
 *.log
 
+# Competition administration is local-only and may contain personal data.
+/MoonMIME项目申报书.md
