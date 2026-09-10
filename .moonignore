@@ -1,0 +1,12 @@
+# Build products and local dependency caches
+/target/
+/_build/
+/.mooncakes/
+
+# Local development artifacts
+*.tmp
+*.log
+
+# Competition administration contains personal information and must not be
+# included in the Mooncakes distribution archive.
+/MoonMIME项目申报书.md
