@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 - 2026-09-11
+
+- Add a reusable mail-gateway policy adapter and batch JSONL CLI with deterministic allow/quarantine/reject decisions.
+- Add a forensic evidence-manifest adapter with whole-message and encoded attachment-region SHA-256 bindings.
+- Add portable SHA-256 verified against three standard test vectors.
+- Add three protocol-exact integration fixtures and cross-platform end-to-end verification scripts.
+- Document two representative upper-layer workflows, measured outputs, operational boundaries, and reproduction commands.
+
 ## 0.2.0 - 2026-09-11
 
 - Add `audit` API and CLI for parser ambiguity and unsafe extraction metadata.

@@ -1,0 +1,45 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime/integrations/gateway"
+
+import {
+  "moonbitlang/core/debug",
+  "oyjh0381/moonmime/audit",
+  "oyjh0381/moonmime/model",
+}
+
+// Values
+pub fn evaluate(Bytes, String, policy? : GatewayPolicy) -> GatewayDecision raise @model.MimeError
+
+pub fn render_error_json(String, String) -> String
+
+pub fn render_json(GatewayDecision) -> String
+
+// Errors
+
+// Types and methods
+pub(all) enum GatewayAction {
+  Allow
+  Quarantine
+} derive(Eq, @debug.Debug)
+pub fn GatewayAction::to_string(Self) -> String
+
+pub(all) struct GatewayDecision {
+  source_id : String
+  action : GatewayAction
+  raw_bytes : Int
+  entity_count : Int
+  attachment_count : Int
+  triggered_codes : Array[String]
+  audit : @audit.AuditReport
+} derive(Eq, @debug.Debug)
+
+pub(all) struct GatewayPolicy {
+  mode : @model.ParseMode
+  quarantine_on : @audit.AuditSeverity
+  limits : @model.ResourceLimits
+} derive(Eq, @debug.Debug)
+pub fn GatewayPolicy::recommended() -> Self
+
+// Type aliases
+
+// Traits

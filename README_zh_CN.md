@@ -2,11 +2,11 @@
 
 MoonMIME 是一个以 MoonBit 为主要实现语言、面向不可信 `.eml` 的字节保真 MIME 安全检查与协议测试底层库。它在网关、取证工具或差分测试框架解释内容之前，构建递归实体树、保留原始字节和精确来源区间，并暴露可能造成不同解析器视图分歧的结构歧义。
 
-> 状态：v0.2.0。v0.1.0 已发布至 Mooncakes；v0.2 新增安全审计策略层和可复现量化证据。
+> 状态：v0.3.0。v0.3 在 v0.2 可复现安全证据之上新增两个可运行的上层集成。
 
 ## 项目价值与差异
 
-MoonMIME 不再以“又一个通用邮件解析器”为卖点，而是聚焦三类真实接入：邮件导入前的歧义隔离、数字取证的原始证据 sidecar、跨解析器协议差分 oracle。它不做收发信、反病毒或消息生成。场景见 [SECURITY_SCENARIOS.md](docs/SECURITY_SCENARIOS.md)，一手来源与生态边界见 [SECURITY_FORENSICS_EVIDENCE.md](docs/SECURITY_FORENSICS_EVIDENCE.md) 和 [RELATED_WORK.md](docs/RELATED_WORK.md)。
+MoonMIME 不再以“又一个通用邮件解析器”为卖点，而是聚焦不可信邮件进入上层系统前的可审计结构证据。仓库现已交付两个完整、可执行的上层工作流：邮件网关入站隔离和数字取证证据清单。复现过程见 [INTEGRATION_CASES.md](docs/INTEGRATION_CASES.md)，一手来源与生态边界见 [SECURITY_FORENSICS_EVIDENCE.md](docs/SECURITY_FORENSICS_EVIDENCE.md) 和 [RELATED_WORK.md](docs/RELATED_WORK.md)。
 
 外部研究曾报告 237 个 MIME 候选中 180 个实现了绕过，并产生 448 个跨解析器差分样本；这些是论文数据，不是本项目自测。MoonMIME 当前可复现自测为：六类歧义 60/60 命中、正常基线 20/20 无 finding、10 封公开合成语料 `TP=6 TN=4 FP=0 FN=0`，四个 target 各执行 10,000 个确定性变异且无 panic/挂起。测量范围和限制见 [QUANTITATIVE_EVIDENCE.md](docs/QUANTITATIVE_EVIDENCE.md)。
 
@@ -25,11 +25,13 @@ MoonMIME 不再以“又一个通用邮件解析器”为卖点，而是聚焦�
 - 输出稳定的 `moonmime.audit.v1`，每项含严重级别、实体路径和证据字节区间；
 - 检测冲突单例头、路径型/可执行附件名、未展开的编码嵌套邮件与非规范恢复；
 - `audit --fail-on high` 可直接作为 CI/导入隔离策略，不解码、不落盘附件；
+- `integrations/gateway` 提供可复用策略接口和批量 JSONL CLI，输出 allow/quarantine/reject 决策；
+- `integrations/forensics` 生成稳定证据 sidecar，以 SHA-256 绑定整封邮件和每个附件的原始编码区间；
 - 核心包可跨后端检查，参考 CLI 仅使用 Native 文件系统适配器。
 
 ## 快速使用
 
-安装：`moon add oyjh0381/moonmime@0.2.0`。
+安装：`moon add oyjh0381/moonmime@0.3.0`。
 
 ```moonbit
 ///|
@@ -49,6 +51,25 @@ moon run --target native cmd/moonmime -- text examples/sample.eml --compatible
 moon run --target native cmd/moonmime -- attachments examples/sample.eml --compatible
 moon run --target native cmd/moonmime -- audit security-corpus/attack_conflicting_content_type.eml --compatible --json --fail-on high
 ```
+
+## 两个可运行的上层案例
+
+邮件网关入站门禁：
+
+```text
+moon run --target native cmd/moonmime-gateway -- examples/integrations/gateway-clean.eml
+moon run --target native cmd/moonmime-gateway -- examples/integrations/gateway-ambiguous.eml
+```
+
+第一封输出 `allow` 且退出 0；第二封输出 `quarantine` 且退出 3，并给出身份头冲突、路径型附件名和可执行后缀三项证据。
+
+数字取证 sidecar：
+
+```text
+moon run --target native cmd/moonmime-forensics -- CASE-2026-0042 examples/integrations/forensic-case.eml
+```
+
+输出包含原始邮件 SHA-256、案件/来源标识、附件实体路径、精确字节区间、附件原始编码区间 SHA-256 和完整审计结果。运行 `scripts/verify-integrations.ps1` 或 `.sh` 可端到端核对固定决策与哈希。
 
 示例文件以仓库文本格式保存，因此命令显式使用兼容模式；生产环境建议先使用默认严格模式。
 
@@ -85,6 +106,7 @@ moon build --target all
 moon fmt --check
 moon info
 bash scripts/evaluate-security-corpus.sh
+bash scripts/verify-integrations.sh
 moon run --target native --release cmd/moonmime-bench
 ```
 

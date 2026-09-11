@@ -9,8 +9,8 @@ let message = @moonmime.parse(
 inspect(message.root.media_type.essence(), content="text/plain")
 ```
 
-v0.2 adds a deterministic security audit layer over ordered and folded headers, recursive `multipart/*`, direct `message/rfc822`, Base64, Quoted-Printable, RFC 2047 encoded-words, and RFC 2231 extended parameters. Findings identify parser ambiguity and unsafe extraction metadata with a stable code, severity, entity path, and exact source byte range.
+v0.3 adds two runnable upper-layer integrations to the deterministic security audit layer: a mail-gateway policy adapter that emits batch JSONL decisions, and a forensic sidecar that binds the exact message and attachment source regions with SHA-256. Both are portable library packages with Native reference CLIs and cross-platform end-to-end verification.
 
-The parser does no network or filesystem I/O. The separate Native CLI can inspect or audit a local `.eml`; `audit --fail-on high` supports quarantine/CI policy without decoding or extracting attachments.
+The parser and integration packages do no network or filesystem I/O. Separate Native CLIs inspect or audit local `.eml` files, evaluate gateway policy, and emit forensic manifests without decoding or extracting attachments.
 
 See the repository README for the full guide, scope, resource limits, security model, standards matrix, and testing instructions. Licensed under Apache-2.0.

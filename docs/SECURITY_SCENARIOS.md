@@ -21,10 +21,14 @@ is decoded or written by this operation.
 ## 2. Forensic evidence sidecar
 
 An incident-response tool stores the original `.eml` as immutable evidence and
-stores `moonmime.audit.v1` beside it as derived metadata. Every finding contains
-an entity path and half-open source byte range, so an examiner can recover the
-exact evidence slice from `InternetMessage.raw` without reserializing the mail.
-The caller remains responsible for SHA-256, evidence custody, and signatures.
+stores `moonmime.forensics.v1` beside it as derived metadata. The implemented
+adapter binds the whole message and every attachment's original encoded body
+range with SHA-256. Every finding retains an entity path and half-open source
+byte range. The caller remains responsible for acquisition records, evidence
+custody, storage, timestamps, and signatures.
+
+Both the mail gate and forensic sidecar are executable, CI-verified cases. See
+[INTEGRATION_CASES.md](INTEGRATION_CASES.md) for commands and fixed outputs.
 
 ## 3. Parser differential oracle
 
@@ -39,4 +43,3 @@ oracle for malformed MIME; compatible mode shows which recovery occurred.
 MoonMIME flags ambiguity primitives and unsafe extraction metadata. It does not
 claim that a finding proves malicious intent, that no finding proves safety, or
 that its risk score is a probability. Policy belongs to the integrating system.
-

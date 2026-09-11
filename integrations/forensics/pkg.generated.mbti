@@ -1,0 +1,41 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime/integrations/forensics"
+
+import {
+  "moonbitlang/core/debug",
+  "oyjh0381/moonmime/audit",
+  "oyjh0381/moonmime/model",
+}
+
+// Values
+pub fn build_manifest(Bytes, String, String, limits? : @model.ResourceLimits) -> EvidenceManifest raise @model.MimeError
+
+pub fn render_json(EvidenceManifest) -> String
+
+// Errors
+
+// Types and methods
+pub(all) struct EvidenceAttachment {
+  entity_path : Array[Int]
+  filename : String?
+  media_type : String
+  body_start : Int
+  body_end : Int
+  encoded_sha256 : String
+} derive(Eq, @debug.Debug)
+
+pub(all) struct EvidenceManifest {
+  case_id : String
+  source_id : String
+  raw_sha256 : String
+  raw_bytes : Int
+  message_id : String?
+  subject : String?
+  entity_count : Int
+  attachments : Array[EvidenceAttachment]
+  audit : @audit.AuditReport
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits

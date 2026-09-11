@@ -1,0 +1,13 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime/internal/sha256"
+
+// Values
+pub fn digest_hex(Bytes) -> String
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

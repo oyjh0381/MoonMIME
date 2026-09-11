@@ -15,7 +15,7 @@ async fn main {
       "text" => run_text(args)
       "attachments" => run_attachments(args)
       "audit" => run_audit(args)
-      "version" | "--version" | "-V" => @stdio.stdout.write("moonmime 0.2.0\n")
+      "version" | "--version" | "-V" => @stdio.stdout.write("moonmime 0.3.0\n")
       "help" | "--help" | "-h" => print_usage()
       command => raise @model.InvalidArgument("unknown command: " + command)
     }

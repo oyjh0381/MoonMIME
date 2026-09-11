@@ -12,7 +12,8 @@ Bytes
        -> read-only query layer
        -> deterministic report layer
        -> ambiguity and extraction-risk audit layer
-       -> Native CLI adapter
+       -> gateway decision + forensic manifest integration layers
+       -> Native CLI adapters
 ```
 
 ## Packages
@@ -27,8 +28,11 @@ Bytes
 - `query`: depth-first lookup, attachments, subject, and display text.
 - `report`: stable JSON schema and terminal summary.
 - `audit`: deterministic security findings, evidence ranges, severity, and CI policy.
+- `internal/sha256`: portable evidence hashing with standard-vector tests.
+- `integrations/gateway`: mail-ingestion policy decision and JSONL record.
+- `integrations/forensics`: byte-bound evidence manifest and JSON sidecar.
 - root package: small high-level API facade.
-- `cmd/moonmime`: Native filesystem/stdio adapter only.
+- `cmd/*`: Native filesystem/stdio adapters only.
 
 ## Core invariants
 
@@ -39,9 +43,10 @@ Bytes
 5. Strict failures are structured `MimeError` values; compatible recovery is observable.
 6. Entity paths are deterministic child-index arrays and do not depend on filenames.
 7. Audit consumes parsed metadata only; it never decodes or executes content.
+8. Integration packages return data only; transport, queue, and evidence-store mutation stay in caller-owned adapters.
 
 ## Complexity
 
 Header and boundary scans are linear in the bytes of their bounded region. Because each nested multipart level scans its own enclosing body, recursive parsing is `O(n * d)` in the worst case for `n` input bytes and nesting depth `d`; the default bound fixes `d <= 16`, so ordinary bounded workloads behave linearly. Retained space is `O(n + e)` for raw bytes, fields, and `e` entities. Query traversal is `O(e)`. Base64 and Quoted-Printable decoding are `O(b)` time and output space for a body of `b` bytes.
 
-The complete input is retained intentionally to guarantee byte ranges. Applications needing streaming multi-GiB processing should not use v0.2.
+The complete input is retained intentionally to guarantee byte ranges. Applications needing streaming multi-GiB processing should not use v0.3.

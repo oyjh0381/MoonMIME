@@ -2,13 +2,13 @@
 
 MoonMIME is a bounded, byte-preserving MIME security inspection and protocol-test foundation written primarily in MoonBit. It accepts a complete RFC 5322-style message as `Bytes`, builds a recursive MIME entity tree, keeps source ranges into the original input, and surfaces ambiguity before a gateway, forensic tool, or test harness interprets content.
 
-> Status: v0.2.0. The original v0.1.0 is published on Mooncakes; v0.2 adds reproducible security evidence and an audit policy layer.
+> Status: v0.3.0. v0.3 adds two runnable upper-layer integrations over the reproducible security evidence introduced in v0.2.
 
 中文文档：[README_zh_CN.md](README_zh_CN.md)
 
 ## Why MoonMIME
 
-MoonMIME is not another mail-sending or convenience extraction library. It is a pre-interpretation layer for hostile `.eml`: it preserves ordered duplicates and raw byte ranges, rejects or reports parser-differential primitives, and applies independent resource budgets. Three concrete integrations are documented in [security scenarios](docs/SECURITY_SCENARIOS.md); the threat evidence and competitive boundary are recorded in [primary-source evidence](docs/SECURITY_FORENSICS_EVIDENCE.md) and [related work](docs/RELATED_WORK.md).
+MoonMIME is not another mail-sending or convenience extraction library. It is a pre-interpretation layer for hostile `.eml`: it preserves ordered duplicates and raw byte ranges, rejects or reports parser-differential primitives, and applies independent resource budgets. Two complete, executable upper-layer workflows are documented in [integration cases](docs/INTEGRATION_CASES.md); the threat evidence and competitive boundary are recorded in [primary-source evidence](docs/SECURITY_FORENSICS_EVIDENCE.md) and [related work](docs/RELATED_WORK.md).
 
 Published research demonstrates the need for this layer: CCS 2024 reported 180 successful evasions among 237 MIME candidates, while an IEEE SPW 2025 study produced 448 cross-parser differential samples. These are external research results, not MoonMIME measurements. MoonMIME's own reproducible results are 60/60 expected findings across six generated ambiguity classes, 20/20 finding-free controls, a 10-message review corpus with `TP=6 TN=4 FP=0 FN=0`, and 10,000 deterministic mutations on each of four targets with zero panic or hang. See [quantitative evidence](docs/QUANTITATIVE_EVIDENCE.md) for scope and limitations.
 
@@ -27,12 +27,14 @@ Published research demonstrates the need for this layer: CCS 2024 reported 180 s
 - Emits stable `moonmime.audit.v1` findings with severity, entity path, and exact evidence range.
 - Detects conflicting singleton headers, path-bearing or executable attachment names, opaque encoded embedded messages, and non-canonical recovery.
 - Provides CI policy via `audit --fail-on high` without decoding or writing attachments.
+- Provides `integrations/gateway`, a reusable policy adapter plus a batch JSONL CLI for mail-ingestion allow/quarantine decisions.
+- Provides `integrations/forensics`, a deterministic evidence sidecar with message and attachment-region SHA-256 bindings.
 - Provides a portable core and a Native-only reference CLI.
 
 ## Install
 
 ```text
-moon add oyjh0381/moonmime@0.2.0
+moon add oyjh0381/moonmime@0.3.0
 ```
 
 ## Library quick start
@@ -55,6 +57,25 @@ let message = @moonmime.parse_with(raw, @model.Compatible, limits)
 ```
 
 The lower-level packages (`parser`, `header`, `media`, `transfer`, `query`, `report`, and `audit`) remain public for applications that need explicit control.
+
+## Runnable upper-layer integrations
+
+Mail gateway pre-ingestion gate:
+
+```text
+moon run --target native cmd/moonmime-gateway -- examples/integrations/gateway-clean.eml
+moon run --target native cmd/moonmime-gateway -- examples/integrations/gateway-ambiguous.eml
+```
+
+The first input is allowed with exit 0. The second is quarantined with exit 3 and records conflicting identity, unsafe path, and executable-filename evidence.
+
+Forensic evidence sidecar:
+
+```text
+moon run --target native cmd/moonmime-forensics -- CASE-2026-0042 examples/integrations/forensic-case.eml
+```
+
+This emits stable JSON binding the original message and its attachment source region with SHA-256 while retaining entity paths and byte ranges. See [the full case study](docs/INTEGRATION_CASES.md) and run `scripts/verify-integrations.sh` or `scripts/verify-integrations.ps1` for end-to-end assertions.
 
 ## CLI
 
@@ -89,10 +110,11 @@ moon build --target all
 moon fmt --check
 moon info
 bash scripts/evaluate-security-corpus.sh
+bash scripts/verify-integrations.sh
 moon run --target native --release cmd/moonmime-bench
 ```
 
-The module defaults to the Native target so API documentation can include the reference CLI. Portable core packages are checked on every backend. The repository includes unit, boundary, recovery, recursive integration, audit-matrix, deterministic mutation, reporting, corpus, and CLI smoke coverage. See [docs/TESTING.md](docs/TESTING.md).
+The module defaults to the Native target so API documentation can include the reference CLIs. Portable packages, including both integration policy layers and SHA-256, are tested on all four backends. The repository includes unit, boundary, recovery, recursive integration, audit-matrix, deterministic mutation, reporting, corpus, and end-to-end workflow coverage. See [docs/TESTING.md](docs/TESTING.md).
 
 ## Scope and security
 

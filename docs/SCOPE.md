@@ -1,4 +1,4 @@
-# MoonMIME v0.2 Scope
+# MoonMIME v0.3 Scope
 
 ## Included
 
@@ -15,8 +15,10 @@
 - Cross-target core packages plus a Native reference CLI.
 - Ambiguity and unsafe-extraction audit findings with stable JSON and threshold exit policy.
 - Reproducible synthetic security corpus, mutation stress, and multipart scan benchmark.
+- Reusable mail-gateway policy decisions and a batch JSONL reference adapter.
+- Deterministic forensic sidecars with whole-input and attachment-region SHA-256.
 
-## Excluded from v0.2
+## Excluded from v0.3
 
 - SMTP, IMAP, POP3, delivery, mailbox storage, and network fetching.
 - Streaming input or multi-GiB message parsing.
