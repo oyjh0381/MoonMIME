@@ -14,7 +14,10 @@ while IFS=$'\t' read -r file label expected; do
   input="$root/security-corpus/$file"
   # Git stores text with LF. Materialize canonical Internet Message CRLF for
   # every case except the fixture intentionally testing bare LF behavior.
-  if [[ "$file" != "attack_bare_lf.eml" ]]; then
+  if [[ "$file" == "attack_bare_lf.eml" ]]; then
+    tr -d '\r' < "$input" > "$work/$file"
+    input="$work/$file"
+  else
     awk '{ sub(/\r$/, ""); printf "%s\r\n", $0 }' "$input" > "$work/$file"
     input="$work/$file"
   fi

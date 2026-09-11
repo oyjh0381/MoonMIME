@@ -11,13 +11,14 @@ try {
   foreach ($line in $manifest) {
     $file, $label, $expected = $line -split "`t"
     $inputPath = Join-Path $corpusRoot $file
+    $materializedPath = Join-Path $work $file
+    $content = [IO.File]::ReadAllText($inputPath)
+    $content = $content.Replace("`r`n", "`n").Replace("`r", "`n")
     if ($file -ne 'attack_bare_lf.eml') {
-      $canonicalPath = Join-Path $work $file
-      $content = [IO.File]::ReadAllText($inputPath)
-      $content = $content.Replace("`r`n", "`n").Replace("`r", "`n").Replace("`n", "`r`n")
-      [IO.File]::WriteAllText($canonicalPath, $content, [Text.UTF8Encoding]::new($false))
-      $inputPath = $canonicalPath
+      $content = $content.Replace("`n", "`r`n")
     }
+    [IO.File]::WriteAllText($materializedPath, $content, [Text.UTF8Encoding]::new($false))
+    $inputPath = $materializedPath
     $output = moon -C $repoRoot run --target native cmd/moonmime -- audit $inputPath --compatible --json
     if ($LASTEXITCODE -ne 0) { throw "audit command failed for $file" }
     $found = if ($expected -eq 'none') {
