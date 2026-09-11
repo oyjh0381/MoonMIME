@@ -89,12 +89,16 @@ async fn run_audit(args : Array[String]) -> Unit {
 fn parse_fail_threshold(
   args : Array[String],
 ) -> @audit.AuditSeverity? raise @model.MimeError {
+  let mut result : @audit.AuditSeverity? = None
   for index in 3..<args.length() {
     if args[index] == "--fail-on" {
+      if result is Some(_) {
+        raise @model.InvalidArgument("--fail-on may appear only once")
+      }
       if index + 1 >= args.length() {
         raise @model.InvalidArgument("--fail-on requires a severity")
       }
-      return Some(
+      result = Some(
         match args[index + 1] {
           "high" => @audit.High
           "medium" => @audit.Medium
@@ -106,7 +110,7 @@ fn parse_fail_threshold(
       )
     }
   }
-  None
+  result
 }
 
 ///|
@@ -114,6 +118,7 @@ async fn run_inspect(args : Array[String]) -> Unit {
   require_command_args(
     args, "usage: moonmime inspect <message.eml> [--compatible] [--json]",
   )
+  reject_audit_policy(args)
   let mode = parse_mode(args)
   let message = load_message(args[2], mode)
   if has_option(args, "--json") {
@@ -129,6 +134,7 @@ async fn run_text(args : Array[String]) -> Unit {
     args, "usage: moonmime text <message.eml> [--compatible]",
   )
   reject_option(args, "--json", "--json is available only for inspect")
+  reject_audit_policy(args)
   let message = load_message(args[2], parse_mode(args))
   match @query.preferred_text(message, mode=parse_mode(args)) {
     Some(selection) => {
@@ -150,6 +156,7 @@ async fn run_attachments(args : Array[String]) -> Unit {
     args, "usage: moonmime attachments <message.eml> [--compatible]",
   )
   reject_option(args, "--json", "--json is available only for inspect")
+  reject_audit_policy(args)
   let message = load_message(args[2], parse_mode(args))
   let found = @query.attachments(message)
   if found.is_empty() {
@@ -199,15 +206,20 @@ fn parse_mode(args : Array[String]) -> @model.ParseMode raise @model.MimeError {
 fn validate_options(args : Array[String]) -> Unit raise @model.MimeError {
   for index in 3..<args.length() {
     match args[index] {
-      "--compatible"
-      | "--json"
-      | "--fail-on"
-      | "high"
-      | "medium"
-      | "low"
-      | "info" => ()
+      "--compatible" | "--json" | "--fail-on" => ()
+      "high" | "medium" | "low" | "info" =>
+        if index == 3 || args[index - 1] != "--fail-on" {
+          raise @model.InvalidArgument("unexpected severity: " + args[index])
+        }
       option => raise @model.InvalidArgument("unknown option: " + option)
     }
+  }
+}
+
+///|
+fn reject_audit_policy(args : Array[String]) -> Unit raise @model.MimeError {
+  if has_option(args, "--fail-on") {
+    raise @model.InvalidArgument("--fail-on is available only for audit")
   }
 }
 
