@@ -1,0 +1,12 @@
+import {
+  "oyjh0381/moonmime/audit",
+  "oyjh0381/moonmime/parser",
+  "moonbitlang/async",
+  "moonbitlang/async/stdio",
+  "moonbitlang/core/encoding/utf8",
+}
+
+supported_targets = "+native"
+
+pkgtype(kind: "executable")
+
