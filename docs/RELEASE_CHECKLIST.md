@@ -1,16 +1,14 @@
 # Release Checklist
 
-- [ ] Re-run mooncakes.io overlap search and update `docs/RELATED_WORK.md` date.
-- [ ] Confirm `moon.mod` version, repository URL, license, keywords, and README.
-- [ ] Run `moon version --all` and record the toolchain.
-- [ ] Run formatting, all-target check/test/build, API generation, and CLI smoke tests.
-- [ ] Confirm effective MoonBit source exceeds 4,000 lines without generated code.
-- [ ] Confirm more than 15 meaningful commits and a clean worktree.
-- [ ] Review resource-limit, malformed-input, and path-safety tests.
-- [ ] Confirm all fixtures are synthetic and third-party licenses are recorded.
-- [ ] Push to the owner-approved public GitHub repository.
-- [ ] Verify GitHub Actions on the pushed commit.
-- [ ] Create the required Gitlink repository and replace the proposal placeholder.
-- [ ] Publish `oyjh0381/moonmime@0.1.0` to mooncakes.io only after approval.
-- [ ] Verify the public Mooncakes README, API docs, license, example, and install command.
-- [ ] Tag `v0.1.0` and update `CHANGELOG.md` from Unreleased to the release date.
+- [x] Re-run overlap checks and compare mailkit_12314, mbt-email, and MoonPart.
+- [x] Confirm `moon.mod` v0.2.0 metadata, repository, license, keywords, and README.
+- [x] Record toolchain and native benchmark environment.
+- [x] Run formatting, all-target check/test/build, API generation, corpus and CLI gates.
+- [x] Confirm effective MoonBit source exceeds 4,000 lines and history exceeds 15 commits.
+- [x] Confirm all security fixtures are synthetic and inert.
+- [x] Keep the contest application outside Git and Mooncakes archives.
+- [ ] Push v0.2 changes and verify GitHub Actions on the exact commit.
+- [ ] Synchronize the required Gitlink repository and add its exact URL to the application.
+- [ ] Publish `oyjh0381/moonmime@0.2.0` after GitHub CI passes.
+- [ ] Verify clean installation and public Mooncakes docs for v0.2.0.
+- [ ] Update the competition form before 2026-09-24 with the revised application text.
