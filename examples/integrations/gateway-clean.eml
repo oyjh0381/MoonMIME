@@ -1,0 +1,7 @@
+From: sender@example.test
+To: archive@example.test
+Subject: approved invoice
+Message-ID: <clean-001@example.test>
+Content-Type: text/plain; charset=utf-8
+
+This message has one unambiguous plain-text body.

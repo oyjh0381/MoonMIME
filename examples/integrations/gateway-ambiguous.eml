@@ -1,0 +1,18 @@
+From: payroll@example.test
+From: attacker@example.test
+To: employee@example.test
+Subject: parser differential candidate
+Message-ID: <ambiguous-001@example.test>
+Content-Type: multipart/mixed; boundary="outer"
+
+--outer
+Content-Type: text/plain
+
+Review the attached file.
+--outer
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename="../startup.cmd"
+Content-Transfer-Encoding: base64
+
+ZWNobyBub3QgZXhlY3V0ZWQ=
+--outer--

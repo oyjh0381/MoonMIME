@@ -1,0 +1,2 @@
+# MIME fixtures are protocol bytes. Never rewrite their line endings.
+examples/integrations/*.eml -text

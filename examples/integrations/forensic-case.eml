@@ -1,0 +1,17 @@
+From: custodian@example.test
+To: examiner@example.test
+Subject: Evidence acquisition 0042
+Message-ID: <evidence-0042@example.test>
+Content-Type: multipart/mixed; boundary="evidence"
+
+--evidence
+Content-Type: text/plain; charset=utf-8
+
+Preserve this message without rewriting it.
+--evidence
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename="disk-fragment.bin"
+Content-Transfer-Encoding: base64
+
+RVZJREVOLUJZVEVTLTAwNDI=
+--evidence--
