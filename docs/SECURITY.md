@@ -11,6 +11,8 @@ MoonMIME is designed to parse untrusted message bytes without granting those byt
 - Structured strict/compatible behavior instead of silent repair.
 - Attachment filenames remain metadata; the CLI never writes them.
 - Parser core performs no I/O, subprocess execution, HTML rendering, or network access.
+- Audit findings retain entity paths and source ranges, allowing exact evidence review.
+- `--fail-on` supports quarantine policy without treating a score as a probability.
 
 ## Caller responsibilities
 
@@ -23,6 +25,6 @@ MoonMIME is designed to parse untrusted message bytes without granting those byt
 
 ## Known limits
 
-The v0.1 parser is in-memory. Its limits prevent individual oversized inputs but do not implement process-wide admission control. Compatible mode accepts selected non-standard syntax and therefore should not be used when canonical conformance is a security requirement.
+The v0.2 parser is in-memory. Its limits prevent individual oversized inputs but do not implement process-wide admission control. Compatible mode accepts selected non-standard syntax and therefore should not be used when canonical conformance is a security requirement. Audit rules are structural heuristics: a finding does not prove maliciousness and an empty report does not prove safety.
 
 Report vulnerabilities privately to the repository owner after the public repository is available. Do not attach real confidential mail to a public issue; construct a minimal synthetic reproducer.

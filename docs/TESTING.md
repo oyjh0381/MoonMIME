@@ -20,6 +20,10 @@ Native CLI smoke test:
 moon run --target native cmd/moonmime -- inspect examples/sample.eml --compatible
 moon run --target native cmd/moonmime -- text examples/sample.eml --compatible
 moon run --target native cmd/moonmime -- attachments examples/sample.eml --compatible
+moon run --target native cmd/moonmime -- audit security-corpus/attack_conflicting_content_type.eml --compatible --json
+bash scripts/evaluate-security-corpus.sh
+powershell -File scripts/evaluate-security-corpus.ps1
+moon run --target native --release cmd/moonmime-bench
 ```
 
 ## Coverage categories
@@ -30,5 +34,9 @@ moon run --target native cmd/moonmime -- attachments examples/sample.eml --compa
 - Compatibility: bare LF, unpadded Base64, bare-LF soft break, unresolved extension values, missing closing boundary.
 - Adversarial: boundary prefixes, mid-line markers, closing-delimiter suffixes, non-zero Base64 tail bits, range violations.
 - Reporting: deterministic schema, JSON escaping, paths, stats, filenames, and diagnostics.
+- Security matrix: 60 suspicious variants across six classes and 20 benign controls.
+- Corpus: six reviewable attack patterns and four benign `.eml` controls.
+- Robustness: 10,000 deterministic mutations per target, with structured error or success required.
+- Performance: in-process multipart boundary scanning at four input sizes.
 
 The CI matrix runs Ubuntu and Windows checks. Publication acceptance additionally requires a clean worktree, current generated interfaces, more than 4,000 effective MoonBit lines, and more than 15 meaningful commits.

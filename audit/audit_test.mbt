@@ -49,9 +49,9 @@ test "audit reports opaque encoded embedded message" {
     "Content-Type: message/rfc822\r\nContent-Transfer-Encoding: base64\r\n\r\nU3ViamVjdDogWA0KDQpY",
   )
   let report = audit_message(message)
-  assert_true(report.findings.iter().any(fn(f) {
-    f.code == OpaqueEmbeddedMessage
-  }))
+  assert_true(
+    report.findings.iter().any(fn(f) { f.code == OpaqueEmbeddedMessage }),
+  )
 }
 
 ///|
@@ -59,9 +59,9 @@ test "audit maps compatible bare LF recovery" {
   let message = parse_compatible("Subject: x\n\nbody")
   let report = audit_message(message)
   assert_true(report.medium >= 1)
-  assert_true(report.findings.iter().any(fn(f) {
-    f.code == NonCanonicalLineEnding
-  }))
+  assert_true(
+    report.findings.iter().any(fn(f) { f.code == NonCanonicalLineEnding }),
+  )
 }
 
 ///|
@@ -76,9 +76,9 @@ test "clean ordinary message has zero findings" {
 
 ///|
 test "audit renderers expose stable schema and evidence" {
-  let report = audit_message(parse_compatible(
-    "Subject: trusted\r\nSubject: forged\r\n\r\nbody",
-  ))
+  let report = audit_message(
+    parse_compatible("Subject: trusted\r\nSubject: forged\r\n\r\nbody"),
+  )
   let json = render_json(report)
   assert_true(json.has_prefix("{\"schema\":\"moonmime.audit.v1\""))
   assert_true(json.contains("conflicting-singleton-header"))

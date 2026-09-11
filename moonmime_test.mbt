@@ -69,6 +69,7 @@ test "edge limits remain valid" {
   edge_limits().validate()
   assert_true(edge_limits().max_input_bytes < secure_limits().max_input_bytes)
 }
+
 ///|
 test "root audit API exposes stable security report" {
   let result = audit_json(

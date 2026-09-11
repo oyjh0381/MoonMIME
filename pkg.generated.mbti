@@ -2,10 +2,15 @@
 package "oyjh0381/moonmime"
 
 import {
+  "oyjh0381/moonmime/audit",
   "oyjh0381/moonmime/model",
 }
 
 // Values
+pub fn audit(Bytes, mode? : @model.ParseMode, limits? : @model.ResourceLimits) -> @audit.AuditReport raise @model.MimeError
+
+pub fn audit_json(Bytes, mode? : @model.ParseMode, limits? : @model.ResourceLimits) -> String raise @model.MimeError
+
 pub fn decode_body(@model.InternetMessage, Array[Int], mode? : @model.ParseMode, max_output? : Int) -> Bytes raise @model.MimeError
 
 pub fn edge_limits() -> @model.ResourceLimits

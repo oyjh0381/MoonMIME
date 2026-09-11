@@ -63,7 +63,7 @@ pub fn audit_message(message : @model.InternetMessage) -> AuditReport {
           code: ParserRecovery,
           severity: Low,
           message: "compatible parsing recovered non-canonical syntax: " +
-            diagnostic.code.to_code(),
+          diagnostic.code.to_code(),
           entity_path: diagnostic.entity_path.copy(),
           evidence_range: diagnostic.range,
         })
@@ -159,15 +159,8 @@ fn audit_entity(
 ///|
 fn singleton_names() -> Array[String] {
   [
-    "content-type",
-    "content-disposition",
-    "content-transfer-encoding",
-    "mime-version",
-    "subject",
-    "from",
-    "sender",
-    "reply-to",
-    "message-id",
+    "content-type", "content-disposition", "content-transfer-encoding", "mime-version",
+    "subject", "from", "sender", "reply-to", "message-id",
   ]
 }
 
@@ -189,8 +182,16 @@ fn audit_singleton(
     }
   }
   findings.push({
-    code: if conflicting { ConflictingSingletonHeader } else { DuplicateSingletonHeader },
-    severity: if conflicting { High } else { Medium },
+    code: if conflicting {
+      ConflictingSingletonHeader
+    } else {
+      DuplicateSingletonHeader
+    },
+    severity: if conflicting {
+      High
+    } else {
+      Medium
+    },
     message: if conflicting {
       "conflicting " + name + " fields can produce parser disagreement"
     } else {
@@ -210,7 +211,10 @@ fn audit_filename(
   let bytes = @utf8.encode(filename)
   let mut suspicious = filename == "." || filename == ".."
   for byte in bytes {
-    if byte == b'/' || byte == b'\\' || byte == b':' || byte < b' ' ||
+    if byte == b'/' ||
+      byte == b'\\' ||
+      byte == b':' ||
+      byte < b' ' ||
       byte == b'\x7f' {
       suspicious = true
     }
@@ -255,7 +259,9 @@ fn ascii_lower(value : String) -> String {
       output.push(byte)
     }
   }
-  @utf8.decode(Bytes::from_array(output)) catch { _ => value }
+  @utf8.decode(Bytes::from_array(output)) catch {
+    _ => value
+  }
 }
 
 ///|
@@ -267,9 +273,18 @@ fn summarize(findings : Array[AuditFinding]) -> AuditReport {
   let mut score = 0
   for finding in findings {
     match finding.severity {
-      High => { high = high + 1; score = score + 25 }
-      Medium => { medium = medium + 1; score = score + 10 }
-      Low => { low = low + 1; score = score + 3 }
+      High => {
+        high = high + 1
+        score = score + 25
+      }
+      Medium => {
+        medium = medium + 1
+        score = score + 10
+      }
+      Low => {
+        low = low + 1
+        score = score + 3
+      }
       Info => info = info + 1
     }
   }

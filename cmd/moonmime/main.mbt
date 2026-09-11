@@ -15,7 +15,7 @@ async fn main {
       "text" => run_text(args)
       "attachments" => run_attachments(args)
       "audit" => run_audit(args)
-      "version" | "--version" | "-V" => @stdio.stdout.write("moonmime 0.1.0\n")
+      "version" | "--version" | "-V" => @stdio.stdout.write("moonmime 0.2.0\n")
       "help" | "--help" | "-h" => print_usage()
       command => raise @model.InvalidArgument("unknown command: " + command)
     }
@@ -69,8 +69,7 @@ async fn main {
 ///|
 async fn run_audit(args : Array[String]) -> Unit {
   require_command_args(
-    args,
-    "usage: moonmime audit <message.eml> [--compatible] [--json] [--fail-on high|medium|low|info]",
+    args, "usage: moonmime audit <message.eml> [--compatible] [--json] [--fail-on high|medium|low|info]",
   )
   let mode = parse_mode(args)
   let message = load_message(args[2], mode)
@@ -81,10 +80,7 @@ async fn run_audit(args : Array[String]) -> Unit {
     @stdio.stdout.write(@audit.render_summary(audit))
   }
   match parse_fail_threshold(args) {
-    Some(threshold) =>
-      if audit.has_at_least(threshold) {
-        process_exit(3)
-      }
+    Some(threshold) => if audit.has_at_least(threshold) { process_exit(3) }
     None => ()
   }
 }
@@ -98,13 +94,16 @@ fn parse_fail_threshold(
       if index + 1 >= args.length() {
         raise @model.InvalidArgument("--fail-on requires a severity")
       }
-      return Some(match args[index + 1] {
-        "high" => @audit.High
-        "medium" => @audit.Medium
-        "low" => @audit.Low
-        "info" => @audit.Info
-        value => raise @model.InvalidArgument("unknown audit severity: " + value)
-      })
+      return Some(
+        match args[index + 1] {
+          "high" => @audit.High
+          "medium" => @audit.Medium
+          "low" => @audit.Low
+          "info" => @audit.Info
+          value =>
+            raise @model.InvalidArgument("unknown audit severity: " + value)
+        },
+      )
     }
   }
   None
@@ -200,8 +199,13 @@ fn parse_mode(args : Array[String]) -> @model.ParseMode raise @model.MimeError {
 fn validate_options(args : Array[String]) -> Unit raise @model.MimeError {
   for index in 3..<args.length() {
     match args[index] {
-      "--compatible" | "--json" | "--fail-on" |
-      "high" | "medium" | "low" | "info" => ()
+      "--compatible"
+      | "--json"
+      | "--fail-on"
+      | "high"
+      | "medium"
+      | "low"
+      | "info" => ()
       option => raise @model.InvalidArgument("unknown option: " + option)
     }
   }

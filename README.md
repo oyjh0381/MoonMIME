@@ -1,14 +1,16 @@
 # MoonMIME
 
-MoonMIME is a bounded, byte-preserving MIME message parser and inspection toolkit written primarily in MoonBit. It accepts a complete RFC 5322-style message as `Bytes`, builds a recursive MIME entity tree, keeps source ranges into the original input, and performs transfer or character-set decoding only when requested.
+MoonMIME is a bounded, byte-preserving MIME security inspection and protocol-test foundation written primarily in MoonBit. It accepts a complete RFC 5322-style message as `Bytes`, builds a recursive MIME entity tree, keeps source ranges into the original input, and surfaces ambiguity before a gateway, forensic tool, or test harness interprets content.
 
-> Status: v0.1.0 release candidate. GitHub publication and mooncakes.io publication are intentionally pending project-owner approval.
+> Status: v0.2.0. The original v0.1.0 is published on Mooncakes; v0.2 adds reproducible security evidence and an audit policy layer.
 
 中文文档：[README_zh_CN.md](README_zh_CN.md)
 
 ## Why MoonMIME
 
-MoonBit already has HTTP `multipart/form-data` implementations. MoonMIME addresses a different layer: complete Internet messages and recursive MIME entities, including folded headers, `message/rfc822`, Base64, Quoted-Printable, RFC 2047 encoded-words, and RFC 2231 parameter continuations. The evidence and boundary comparison are recorded in [docs/RELATED_WORK.md](docs/RELATED_WORK.md).
+MoonMIME is not another mail-sending or convenience extraction library. It is a pre-interpretation layer for hostile `.eml`: it preserves ordered duplicates and raw byte ranges, rejects or reports parser-differential primitives, and applies independent resource budgets. Three concrete integrations are documented in [security scenarios](docs/SECURITY_SCENARIOS.md); the threat evidence and competitive boundary are recorded in [primary-source evidence](docs/SECURITY_FORENSICS_EVIDENCE.md) and [related work](docs/RELATED_WORK.md).
+
+Published research demonstrates the need for this layer: CCS 2024 reported 180 successful evasions among 237 MIME candidates, while an IEEE SPW 2025 study produced 448 cross-parser differential samples. These are external research results, not MoonMIME measurements. MoonMIME's own reproducible results are 60/60 expected findings across six generated ambiguity classes, 20/20 finding-free controls, a 10-message review corpus with `TP=6 TN=4 FP=0 FN=0`, and 10,000 deterministic mutations on each of four targets with zero panic or hang. See [quantitative evidence](docs/QUANTITATIVE_EVIDENCE.md) for scope and limitations.
 
 ## Capabilities
 
@@ -22,14 +24,15 @@ MoonBit already has HTTP `multipart/form-data` implementations. MoonMIME address
 - Enumerates attachment candidates without trusting or writing filenames.
 - Selects a preferred `text/plain`, then `text/html`, display body.
 - Emits stable `moonmime.inspect.v1` JSON and terminal summaries.
+- Emits stable `moonmime.audit.v1` findings with severity, entity path, and exact evidence range.
+- Detects conflicting singleton headers, path-bearing or executable attachment names, opaque encoded embedded messages, and non-canonical recovery.
+- Provides CI policy via `audit --fail-on high` without decoding or writing attachments.
 - Provides a portable core and a Native-only reference CLI.
 
 ## Install
 
-The package is not published yet. From this repository, use the package path `oyjh0381/moonmime`. After owner-approved publication, installation will be:
-
 ```text
-moon add oyjh0381/moonmime@0.1.0
+moon add oyjh0381/moonmime@0.2.0
 ```
 
 ## Library quick start
@@ -51,7 +54,7 @@ let limits = @moonmime.edge_limits()
 let message = @moonmime.parse_with(raw, @model.Compatible, limits)
 ```
 
-The lower-level packages (`parser`, `header`, `media`, `transfer`, `query`, and `report`) remain public for applications that need explicit control.
+The lower-level packages (`parser`, `header`, `media`, `transfer`, `query`, `report`, and `audit`) remain public for applications that need explicit control.
 
 ## CLI
 
@@ -62,9 +65,10 @@ moon run --target native cmd/moonmime -- inspect examples/sample.eml --compatibl
 moon run --target native cmd/moonmime -- inspect examples/sample.eml --compatible --json
 moon run --target native cmd/moonmime -- text examples/sample.eml --compatible
 moon run --target native cmd/moonmime -- attachments examples/sample.eml --compatible
+moon run --target native cmd/moonmime -- audit security-corpus/attack_conflicting_content_type.eml --compatible --json --fail-on high
 ```
 
-`attachments` reports candidates only. v0.1 never creates files from untrusted attachment names.
+`attachments` reports candidates only. `audit` returns exit code 3 when the configured finding threshold is reached. MoonMIME never creates files from untrusted attachment names.
 
 ## Strict and compatible modes
 
@@ -84,9 +88,11 @@ moon test --target all --deny-warn
 moon build --target all
 moon fmt --check
 moon info
+bash scripts/evaluate-security-corpus.sh
+moon run --target native --release cmd/moonmime-bench
 ```
 
-The module defaults to the Native target so API documentation can include the reference CLI. Portable core packages are still checked and tested explicitly on every supported backend. The repository includes unit, boundary, recovery, recursive integration, reporting, and CLI smoke coverage. See [docs/TESTING.md](docs/TESTING.md).
+The module defaults to the Native target so API documentation can include the reference CLI. Portable core packages are checked on every backend. The repository includes unit, boundary, recovery, recursive integration, audit-matrix, deterministic mutation, reporting, corpus, and CLI smoke coverage. See [docs/TESTING.md](docs/TESTING.md).
 
 ## Scope and security
 

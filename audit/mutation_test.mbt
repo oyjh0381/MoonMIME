@@ -15,7 +15,8 @@ test "10000 deterministic mutations never panic or hang" {
     bytes[position] = alphabet[(state & 0x7fffffff) % alphabet.length()]
     try {
       let message = @parser.parse_message(
-        Bytes::from_array(bytes), mode=@model.Compatible,
+        Bytes::from_array(bytes),
+        mode=@model.Compatible,
       )
       ignore(audit_message(message))
     } catch {

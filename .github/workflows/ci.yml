@@ -49,6 +49,8 @@ jobs:
           moon run --target native cmd/moonmime -- inspect examples/sample.eml --compatible --json
           moon run --target native cmd/moonmime -- text examples/sample.eml --compatible
           moon run --target native cmd/moonmime -- attachments examples/sample.eml --compatible
+          moon run --target native cmd/moonmime -- audit security-corpus/attack_conflicting_content_type.eml --compatible --json
+          bash scripts/evaluate-security-corpus.sh
 
   native-windows:
     name: Native CLI (Windows)
@@ -65,6 +67,7 @@ jobs:
           moon build --target native --deny-warn
           moon run --target native cmd/moonmime -- version
           moon run --target native cmd/moonmime -- inspect examples\sample.eml --compatible --json
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts\evaluate-security-corpus.ps1
 
   documentation:
     name: Documentation

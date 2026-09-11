@@ -3,17 +3,28 @@
 pub fn render_summary(report : AuditReport) -> String {
   let builder = StringBuilder()
   builder.write_string("MoonMIME security audit\n")
-  builder.write_string("risk-score: " + report.risk_score.to_string() + "/100\n")
+  builder.write_string(
+    "risk-score: " + report.risk_score.to_string() + "/100\n",
+  )
   builder.write_string("high: " + report.high.to_string() + "\n")
   builder.write_string("medium: " + report.medium.to_string() + "\n")
   builder.write_string("low: " + report.low.to_string() + "\n")
   builder.write_string("info: " + report.info.to_string() + "\n")
   for finding in report.findings {
     builder.write_string(
-      "[" + finding.severity.to_string() + "] " + finding.code.to_code() +
-      " entity=" + render_path(finding.entity_path) + " bytes=" +
-      finding.evidence_range.start.to_string() + ".." +
-      finding.evidence_range.end.to_string() + " " + finding.message + "\n",
+      "[" +
+      finding.severity.to_string() +
+      "] " +
+      finding.code.to_code() +
+      " entity=" +
+      render_path(finding.entity_path) +
+      " bytes=" +
+      finding.evidence_range.start.to_string() +
+      ".." +
+      finding.evidence_range.end.to_string() +
+      " " +
+      finding.message +
+      "\n",
     )
   }
   builder.to_string()
@@ -90,4 +101,3 @@ fn write_json_text(builder : StringBuilder, value : String) -> Unit {
     }
   }
 }
-

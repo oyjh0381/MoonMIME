@@ -1,0 +1,59 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime/audit"
+
+import {
+  "moonbitlang/core/debug",
+  "oyjh0381/moonmime/model",
+}
+
+// Values
+pub fn audit_message(@model.InternetMessage) -> AuditReport
+
+pub fn render_json(AuditReport) -> String
+
+pub fn render_summary(AuditReport) -> String
+
+// Errors
+
+// Types and methods
+pub(all) enum AuditCode {
+  DuplicateSingletonHeader
+  ConflictingSingletonHeader
+  UnsafeAttachmentFilename
+  ExecutableAttachmentName
+  NestedBoundaryReuse
+  OpaqueEmbeddedMessage
+  ParserRecovery
+  NonCanonicalLineEnding
+} derive(Eq, @debug.Debug)
+pub fn AuditCode::to_code(Self) -> String
+
+pub(all) struct AuditFinding {
+  code : AuditCode
+  severity : AuditSeverity
+  message : String
+  entity_path : Array[Int]
+  evidence_range : @model.ByteRange
+} derive(Eq, @debug.Debug)
+
+pub(all) struct AuditReport {
+  findings : Array[AuditFinding]
+  risk_score : Int
+  high : Int
+  medium : Int
+  low : Int
+  info : Int
+} derive(Eq, @debug.Debug)
+pub fn AuditReport::has_at_least(Self, AuditSeverity) -> Bool
+
+pub(all) enum AuditSeverity {
+  Info
+  Low
+  Medium
+  High
+} derive(Eq, @debug.Debug)
+pub fn AuditSeverity::to_string(Self) -> String
+
+// Type aliases
+
+// Traits

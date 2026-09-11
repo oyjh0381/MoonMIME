@@ -28,9 +28,16 @@ async fn run_case(size : Int, iterations : Int) -> Unit {
   let seconds = elapsed.to_double() / 1000.0
   let throughput = if seconds > 0.0 { total_mib / seconds } else { 0.0 }
   @stdio.stdout.write(
-    size.to_string() + "," + iterations.to_string() + "," +
-    elapsed.to_string() + "," + throughput.to_string() + "," +
-    checksum.to_string() + "\n",
+    size.to_string() +
+    "," +
+    iterations.to_string() +
+    "," +
+    elapsed.to_string() +
+    "," +
+    throughput.to_string() +
+    "," +
+    checksum.to_string() +
+    "\n",
   )
 }
 
