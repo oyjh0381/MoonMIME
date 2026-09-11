@@ -69,3 +69,11 @@ test "edge limits remain valid" {
   edge_limits().validate()
   assert_true(edge_limits().max_input_bytes < secure_limits().max_input_bytes)
 }
+///|
+test "root audit API exposes stable security report" {
+  let result = audit_json(
+    @utf8.encode("Subject: one\r\nSubject: two\r\n\r\nbody"),
+  )
+  assert_true(result.contains("moonmime.audit.v1"))
+  assert_true(result.contains("conflicting-singleton-header"))
+}

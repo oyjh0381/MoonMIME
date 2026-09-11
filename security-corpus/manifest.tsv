@@ -1,0 +1,10 @@
+attack_conflicting_content_type.eml	positive	conflicting-singleton-header
+attack_conflicting_from.eml	positive	conflicting-singleton-header
+attack_path_traversal.eml	positive	unsafe-attachment-filename
+attack_executable_name.eml	positive	executable-attachment-name
+attack_opaque_embedded.eml	positive	opaque-embedded-message
+attack_bare_lf.eml	positive	non-canonical-line-ending
+benign_plain.eml	negative	none
+benign_multipart.eml	negative	none
+benign_text_attachment.eml	negative	none
+benign_encoded_subject.eml	negative	none

@@ -14,6 +14,7 @@ async fn main {
       "inspect" => run_inspect(args)
       "text" => run_text(args)
       "attachments" => run_attachments(args)
+      "audit" => run_audit(args)
       "version" | "--version" | "-V" => @stdio.stdout.write("moonmime 0.1.0\n")
       "help" | "--help" | "-h" => print_usage()
       command => raise @model.InvalidArgument("unknown command: " + command)
@@ -63,6 +64,50 @@ async fn main {
     @model.IoFailure(message) => fail_mime(@model.IoFailure(message))
     error => fail_with("MOONMIME_INTERNAL", "\{error}", 70)
   }
+}
+
+///|
+async fn run_audit(args : Array[String]) -> Unit {
+  require_command_args(
+    args,
+    "usage: moonmime audit <message.eml> [--compatible] [--json] [--fail-on high|medium|low|info]",
+  )
+  let mode = parse_mode(args)
+  let message = load_message(args[2], mode)
+  let audit = @audit.audit_message(message)
+  if has_option(args, "--json") {
+    @stdio.stdout.write(@audit.render_json(audit) + "\n")
+  } else {
+    @stdio.stdout.write(@audit.render_summary(audit))
+  }
+  match parse_fail_threshold(args) {
+    Some(threshold) =>
+      if audit.has_at_least(threshold) {
+        process_exit(3)
+      }
+    None => ()
+  }
+}
+
+///|
+fn parse_fail_threshold(
+  args : Array[String],
+) -> @audit.AuditSeverity? raise @model.MimeError {
+  for index in 3..<args.length() {
+    if args[index] == "--fail-on" {
+      if index + 1 >= args.length() {
+        raise @model.InvalidArgument("--fail-on requires a severity")
+      }
+      return Some(match args[index + 1] {
+        "high" => @audit.High
+        "medium" => @audit.Medium
+        "low" => @audit.Low
+        "info" => @audit.Info
+        value => raise @model.InvalidArgument("unknown audit severity: " + value)
+      })
+    }
+  }
+  None
 }
 
 ///|
@@ -155,7 +200,8 @@ fn parse_mode(args : Array[String]) -> @model.ParseMode raise @model.MimeError {
 fn validate_options(args : Array[String]) -> Unit raise @model.MimeError {
   for index in 3..<args.length() {
     match args[index] {
-      "--compatible" | "--json" => ()
+      "--compatible" | "--json" | "--fail-on" |
+      "high" | "medium" | "low" | "info" => ()
       option => raise @model.InvalidArgument("unknown option: " + option)
     }
   }
@@ -217,6 +263,7 @@ async fn print_usage() -> Unit {
       #|  moonmime inspect <message.eml> [--compatible] [--json]
       #|  moonmime text <message.eml> [--compatible]
       #|  moonmime attachments <message.eml> [--compatible]
+      #|  moonmime audit <message.eml> [--compatible] [--json] [--fail-on severity]
       #|  moonmime version
       #|  moonmime help
       #|

@@ -1,0 +1,5 @@
+From: trusted@example.test
+From: forged@example.test
+Subject: identity ambiguity
+
+harmless synthetic body

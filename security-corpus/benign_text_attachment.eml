@@ -1,0 +1,6 @@
+From: sender@example.test
+Subject: report
+Content-Disposition: attachment; filename="report.txt"
+Content-Type: text/plain
+
+report

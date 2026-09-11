@@ -1,0 +1,5 @@
+From: sender@example.test
+Content-Disposition: attachment; filename="invoice.PS1"
+Content-Type: application/octet-stream
+
+This is inert text, not an executable.

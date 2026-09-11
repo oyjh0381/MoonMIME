@@ -1,0 +1,13 @@
+From: sender@example.test
+Subject: ordinary multipart
+Content-Type: multipart/alternative; boundary=outer-safe
+
+--outer-safe
+Content-Type: text/plain
+
+plain
+--outer-safe
+Content-Type: text/html
+
+<p>html</p>
+--outer-safe--

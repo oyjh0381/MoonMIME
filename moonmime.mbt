@@ -35,6 +35,26 @@ pub fn inspect_text(
 }
 
 ///|
+/// Parse and audit untrusted message structure without decoding attachments.
+pub fn audit(
+  input : Bytes,
+  mode? : @model.ParseMode = @model.Compatible,
+  limits? : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
+) -> @audit.AuditReport raise @model.MimeError {
+  @audit.audit_message(@parser.parse_message(input, mode~, limits~))
+}
+
+///|
+/// Parse and return stable `moonmime.audit.v1` JSON for security pipelines.
+pub fn audit_json(
+  input : Bytes,
+  mode? : @model.ParseMode = @model.Compatible,
+  limits? : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
+) -> String raise @model.MimeError {
+  @audit.render_json(audit(input, mode~, limits~))
+}
+
+///|
 /// Decode a selected entity body after validating its source range.
 pub fn decode_body(
   message : @model.InternetMessage,

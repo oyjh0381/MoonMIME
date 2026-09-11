@@ -73,3 +73,17 @@ test "clean ordinary message has zero findings" {
   assert_eq(report.findings.length(), 0)
   assert_eq(report.risk_score, 0)
 }
+
+///|
+test "audit renderers expose stable schema and evidence" {
+  let report = audit_message(parse_compatible(
+    "Subject: trusted\r\nSubject: forged\r\n\r\nbody",
+  ))
+  let json = render_json(report)
+  assert_true(json.has_prefix("{\"schema\":\"moonmime.audit.v1\""))
+  assert_true(json.contains("conflicting-singleton-header"))
+  assert_true(json.contains("\"start\":"))
+  let text = render_summary(report)
+  assert_true(text.contains("risk-score: 25/100"))
+  assert_true(text.contains("bytes="))
+}
