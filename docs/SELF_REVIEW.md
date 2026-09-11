@@ -8,7 +8,7 @@
 
 正确性门禁为 56 个 `.mbt` 文件、167 项测试在 Wasm/Wasm-GC/JavaScript/Native 各全通过；两个端到端脚本验证固定决策、退出码、finding code、schema 与哈希。主要剩余风险是完整输入驻留内存、有限字符集和 transfer-encoded `message/rfc822` 仅作为 opaque finding；这些边界均公开，不会静默声称覆盖。
 
-本地结论：代码和材料已实质回应“至少一个代表性上层集成”的复审意见，并额外交付两个案例。组委会结论不可由本地测试保证；GitHub CI、Mooncakes 0.3.0、Gitlink 和报名表仍必须完成外部核验。
+结论：代码和材料已实质回应“至少一个代表性上层集成”的复审意见，并额外交付两个案例。GitHub 精确实现提交 CI 全绿，Mooncakes 0.3.0 构建成功且全新消费者安装通过。组委会结论不可由工程测试保证；Gitlink 和报名表仍须完成外部提交。
 
 ## 【2. 算法与性能分析】
 
@@ -41,6 +41,7 @@
 
 - MoonBit 工具链：moon 0.1.20260827、moonc 0.10.11；高于赛事建议最低版本。
 - 规模：约 6,068 行有效 MoonBit、7,070 物理行、56 个 `.mbt` 文件。
-- 历史：本次自审提交完成后为 43 条有效提交，均在 2026-04-29 后；申请人、GitHub owner 和主要提交者一致。
+- 历史：本发布状态提交完成后为 44 条有效提交，均在 2026-04-29 后；申请人、GitHub owner 和主要提交者一致。
+- 发布：GitHub Actions `34619611870` 全部通过；Mooncakes `oyjh0381/moonmime@0.3.0` 为最新非撤回版本且 `build_status=success`。
 - 开源：Apache-2.0；fixture 为公开合成数据；第三方与论文只引用来源，不复制实现。
 - 申报书及复审前备份仅本地保存，由 `.gitignore` 与 `.moonignore` 排除。

@@ -1,4 +1,4 @@
-# MoonMIME 0.3.0 pre-release checklist
+# MoonMIME 0.3.0 release record
 
 - [x] Preserve the rejected-submission baseline in local-only `.private/`.
 - [x] Add two representative upper-layer integrations with public APIs and Native reference CLIs.
@@ -9,9 +9,10 @@
 - [x] Run all-target check/build, formatting, interface generation, corpus, and integration gates.
 - [x] Confirm more than 4,000 effective MoonBit lines and more than 15 meaningful commits.
 - [x] Confirm the application and `.private/` are absent from Git history and the Mooncakes archive.
-- [ ] Push the exact 0.3.0 commit and verify all GitHub Actions jobs.
-- [ ] Publish `oyjh0381/moonmime@0.3.0` and verify a clean consumer installation.
+- [x] Push the exact 0.3.0 implementation commit and verify all GitHub Actions jobs (run `34619611870`).
+- [x] Publish `oyjh0381/moonmime@0.3.0`; registry build succeeded and a clean consumer installation passed.
 - [ ] Synchronize the Gitlink repository and update the competition form before 2026-09-24.
 
-The final publication and competition-form steps are external release actions;
-their result must be checked rather than assumed by the source tree.
+GitHub and Mooncakes release steps were independently checked on 2026-09-12.
+Gitlink synchronization and competition-form resubmission remain contestant
+submission actions and must not be inferred from this repository.
