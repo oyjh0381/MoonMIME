@@ -50,6 +50,21 @@ test "Quoted-Printable enforces decoded output limit" {
 }
 
 ///|
+test "strict Quoted-Printable rejects raw control and high bytes" {
+  for input in [b"a\nb", b"a\rb", b"a\x00b", b"a\x80b"] {
+    assert_qp_failure(input, @model.Strict, 32, "MOONMIME_QUOTED_PRINTABLE")
+  }
+  assert_eq(
+    decode_quoted_printable(b"a\r\nb", @model.Strict, 32).bytes,
+    b"a\r\nb",
+  )
+  assert_eq(
+    decode_quoted_printable(b"a\nb", @model.Compatible, 32).bytes,
+    b"a\nb",
+  )
+}
+
+///|
 test "Q encoded-word maps underscore and hex escapes" {
   assert_eq(decode_q_word(b"Hello_World=21", 64), b"Hello World!")
 }

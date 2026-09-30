@@ -26,6 +26,25 @@ pub fn decode_quoted_printable(
   let mut bare_lf = 0
   while cursor < input.length() {
     if input[cursor] != b'=' {
+      if mode == @model.Strict {
+        let byte = input[cursor]
+        if byte == b'\r' {
+          if cursor + 1 >= input.length() || input[cursor + 1] != b'\n' {
+            raise @model.InvalidQuotedPrintable(
+              cursor, "literal carriage return must be followed by line feed",
+            )
+          }
+          push_bounded(output, b'\r', max_output)
+          push_bounded(output, b'\n', max_output)
+          cursor = cursor + 2
+          continue
+        }
+        if byte != b'\t' && (byte < b' ' || byte > b'~') {
+          raise @model.InvalidQuotedPrintable(
+            cursor, "literal byte is not permitted in strict Quoted-Printable",
+          )
+        }
+      }
       push_bounded(output, input[cursor], max_output)
       cursor = cursor + 1
       continue
