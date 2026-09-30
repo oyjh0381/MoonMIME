@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased - local only, 2026-10-01
+
+- Reject raw control/high bytes and bare line endings in strict Quoted-Printable body decoding; keep compatible-mode inspection behavior.
+- Add regression coverage and moonc 0.10.14 CI compatibility flags.
+
 ## 0.3.0 - 2026-09-11
 
 - Add a reusable mail-gateway policy adapter and batch JSONL CLI with deterministic allow/quarantine/reject decisions.

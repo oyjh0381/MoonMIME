@@ -4,6 +4,8 @@ MoonMIME is a bounded, byte-preserving MIME security inspection and protocol-tes
 
 > Status: v0.3.0. v0.3 adds two runnable upper-layer integrations over the reproducible security evidence introduced in v0.2.
 
+The current post-release changes remain local; see [2026-10-01 verification](docs/LOCAL_VERIFICATION_2026-10-01.md).
+
 中文文档：[README_zh_CN.md](README_zh_CN.md)
 
 ## Why MoonMIME
@@ -93,7 +95,7 @@ moon run --target native cmd/moonmime -- audit security-corpus/attack_conflictin
 
 ## Strict and compatible modes
 
-Strict mode rejects malformed line endings in headers, missing closing multipart boundaries, duplicate singleton MIME fields, unknown transfer encodings, invalid encoded-words, and damaged transfer encodings.
+Strict mode rejects malformed line endings in headers, missing closing multipart boundaries, duplicate singleton MIME fields, unknown transfer encodings, invalid encoded-words, and damaged transfer encodings. Strict Quoted-Printable body decoding also rejects bare line endings and raw control/high bytes; compatible mode preserves them for inspection.
 
 Compatible mode accepts a deliberately small set of common deviations and records structured diagnostics. It does not guess damaged Base64 bytes, repair ambiguous boundaries, or silently replace unsupported character sets.
 
@@ -104,9 +106,9 @@ The secure defaults cap input at 32 MiB, a header section at 256 KiB, a header l
 ## Build and test
 
 ```text
-moon check --target all --deny-warn
-moon test --target all --deny-warn
-moon build --target all
+moon check --target all --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
+moon test --target all --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
+moon build --target all --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
 moon fmt --check
 moon info
 bash scripts/evaluate-security-corpus.sh

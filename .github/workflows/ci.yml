@@ -23,9 +23,9 @@ jobs:
       - name: Check formatting
         run: moon fmt --check
       - name: Check every supported target
-        run: moon check --target all --deny-warn
+        run: moon check --target all --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
       - name: Test portable core
-        run: moon test --target wasm-gc --deny-warn
+        run: moon test --target wasm-gc --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
       - name: Verify generated interfaces
         shell: bash
         run: |
@@ -41,8 +41,8 @@ jobs:
       - run: moon update
       - name: Native tests and build
         run: |
-          moon test --target native --deny-warn
-          moon build --target native --deny-warn
+          moon test --target native --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
+          moon build --target native --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
       - name: CLI smoke tests
         run: |
           moon run --target native cmd/moonmime -- version
@@ -64,8 +64,8 @@ jobs:
         shell: cmd
         run: |
           call "%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64 -host_arch=amd64
-          moon test --target native --deny-warn
-          moon build --target native --deny-warn
+          moon test --target native --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
+          moon build --target native --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
           moon run --target native cmd/moonmime -- version
           moon run --target native cmd/moonmime -- inspect examples\sample.eml --compatible --json
           powershell -NoProfile -ExecutionPolicy Bypass -File scripts\evaluate-security-corpus.ps1
