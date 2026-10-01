@@ -16,3 +16,12 @@
 GitHub and Mooncakes release steps were independently checked on 2026-09-12.
 Gitlink synchronization and competition-form resubmission remain contestant
 submission actions and must not be inferred from this repository.
+
+## 0.3.1 patch release — 2026-10-01
+
+Strict Quoted-Printable decoding now rejects raw control/high bytes and bare
+line endings while compatible mode retains forensic inspection behavior.
+GitHub CI, Mooncakes publication, and independent consumer verification are
+recorded in [the 2026-10-01 release evidence](LOCAL_VERIFICATION_2026-10-01.md).
+The checklist above remains the historical `0.3.0` release record. Gitlink
+synchronization and competition-form status were not changed by this release.
