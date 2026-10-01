@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased - local only, 2026-10-01
+## 0.3.1 - 2026-10-01
 
 - Reject raw control/high bytes and bare line endings in strict Quoted-Printable body decoding; keep compatible-mode inspection behavior.
 - Add regression coverage and moonc 0.10.14 CI compatibility flags.

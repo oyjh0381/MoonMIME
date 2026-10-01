@@ -2,9 +2,9 @@
 
 MoonMIME is a bounded, byte-preserving MIME security inspection and protocol-test foundation written primarily in MoonBit. It accepts a complete RFC 5322-style message as `Bytes`, builds a recursive MIME entity tree, keeps source ranges into the original input, and surfaces ambiguity before a gateway, forensic tool, or test harness interprets content.
 
-> Status: v0.3.0. v0.3 adds two runnable upper-layer integrations over the reproducible security evidence introduced in v0.2.
+> Status: v0.3.1. This patch tightens strict Quoted-Printable decoding; v0.3 added two runnable upper-layer integrations over the reproducible security evidence introduced in v0.2.
 
-The current post-release changes remain local; see [2026-10-01 verification](docs/LOCAL_VERIFICATION_2026-10-01.md).
+For release verification, see [2026-10-01 verification](docs/LOCAL_VERIFICATION_2026-10-01.md).
 
 中文文档：[README_zh_CN.md](README_zh_CN.md)
 
@@ -36,7 +36,7 @@ Published research demonstrates the need for this layer: CCS 2024 reported 180 s
 ## Install
 
 ```text
-moon add oyjh0381/moonmime@0.3.0
+moon add oyjh0381/moonmime@0.3.1
 ```
 
 ## Library quick start
