@@ -2,28 +2,28 @@
 /// Stable error categories exposed by MoonMIME.
 pub(all) suberror MimeError {
   InvalidArgument(String)
-  InputTooLarge(Int, Int)
-  HeaderSectionTooLarge(Int, Int)
-  HeaderLineTooLong(Int, Int)
-  HeaderCountExceeded(Int, Int)
-  MalformedHeader(Int, String)
-  MissingHeaderTerminator(Int)
+  InputTooLarge(Int32, Int32)
+  HeaderSectionTooLarge(Int32, Int32)
+  HeaderLineTooLong(Int32, Int32)
+  HeaderCountExceeded(Int32, Int32)
+  MalformedHeader(Int32, String)
+  MissingHeaderTerminator(Int32)
   InvalidMediaType(String)
   InvalidDisposition(String)
   InvalidParameter(String)
   InvalidBoundary(String)
   MissingBoundary(String)
   MissingClosingBoundary(String)
-  RecursionLimitExceeded(Int, Int)
-  EntityCountExceeded(Int, Int)
-  LeafBodyTooLarge(Int, Int)
-  DecodedOutputTooLarge(Int, Int)
-  InvalidBase64(Int, String)
-  InvalidQuotedPrintable(Int, String)
+  RecursionLimitExceeded(Int32, Int32)
+  EntityCountExceeded(Int32, Int32)
+  LeafBodyTooLarge(Int32, Int32)
+  DecodedOutputTooLarge(Int32, Int32)
+  InvalidBase64(Int32, String)
+  InvalidQuotedPrintable(Int32, String)
   UnsupportedTransferEncoding(String)
   UnsupportedCharset(String)
   InvalidEncodedWord(String)
-  InvalidByteRange(Int, Int, Int)
+  InvalidByteRange(Int32, Int32, Int32)
   IoFailure(String)
 } derive(Debug, Eq)
 
@@ -104,7 +104,7 @@ pub fn MimeError::message(self : MimeError) -> String {
 
 ///|
 /// Process exit status used by the reference command line program.
-pub fn MimeError::exit_code(self : MimeError) -> Int {
+pub fn MimeError::exit_code(self : MimeError) -> Int32 {
   match self {
     InvalidArgument(_) => 2
     IoFailure(_) => 3
@@ -119,3 +119,9 @@ pub fn MimeError::exit_code(self : MimeError) -> Int {
     _ => 4
   }
 }
+
+///|
+pub extend MimeError with @debug.Debug::{to_repr}
+
+///|
+pub extend MimeError with Eq::{not_equal, equal}

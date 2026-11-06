@@ -1,7 +1,7 @@
 ///|
-fn scan(text : String, boundary : String) -> BoundaryScan raise {
+fn scan(text : String, boundary : String) -> @parser.BoundaryScan raise {
   let input = @utf8.encode(text)
-  scan_boundaries(input, 0, input.length(), boundary)
+  @parser.scan_boundaries(input, 0, input.length(), boundary)
 }
 
 ///|
@@ -72,7 +72,7 @@ test "boundary scanner handles final line without ending" {
 test "boundary scanner validates source range" {
   let input = @utf8.encode("--x--")
   let mut failed = false
-  ignore(scan_boundaries(input, -1, input.length(), "x")) catch {
+  ignore(@parser.scan_boundaries(input, -1, input.length(), "x")) catch {
     @model.InvalidByteRange(_, _, _) => failed = true
     _ => ()
   }

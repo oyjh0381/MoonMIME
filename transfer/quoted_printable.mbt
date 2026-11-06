@@ -2,9 +2,9 @@
 /// Details retained from Quoted-Printable body decoding.
 pub(all) struct QuotedPrintableResult {
   bytes : Bytes
-  escaped_octets : Int
-  soft_line_breaks : Int
-  bare_lf_soft_breaks : Int
+  escaped_octets : Int32
+  soft_line_breaks : Int32
+  bare_lf_soft_breaks : Int32
 } derive(Debug, Eq)
 
 ///|
@@ -16,7 +16,7 @@ pub(all) struct QuotedPrintableResult {
 pub fn decode_quoted_printable(
   input : Bytes,
   mode : @model.ParseMode,
-  max_output : Int,
+  max_output : Int32,
 ) -> QuotedPrintableResult raise @model.MimeError {
   validate_limit(max_output)
   let output : Array[Byte] = []
@@ -107,7 +107,7 @@ pub fn decode_quoted_printable(
 /// line breaks are not available inside one encoded-word.
 pub fn decode_q_word(
   input : Bytes,
-  max_output : Int,
+  max_output : Int32,
 ) -> Bytes raise @model.MimeError {
   validate_limit(max_output)
   let output : Array[Byte] = []
@@ -154,7 +154,7 @@ pub fn decode_q_word(
 }
 
 ///|
-fn validate_limit(limit : Int) -> Unit raise @model.MimeError {
+fn validate_limit(limit : Int32) -> Unit raise @model.MimeError {
   if limit <= 0 {
     raise @model.InvalidArgument("max_output must be greater than zero")
   }
@@ -164,10 +164,16 @@ fn validate_limit(limit : Int) -> Unit raise @model.MimeError {
 fn push_bounded(
   output : Array[Byte],
   value : Byte,
-  limit : Int,
+  limit : Int32,
 ) -> Unit raise @model.MimeError {
   if output.length() >= limit {
     raise @model.DecodedOutputTooLarge(output.length() + 1, limit)
   }
   output.push(value)
 }
+
+///|
+pub extend QuotedPrintableResult with @debug.Debug::{to_repr}
+
+///|
+pub extend QuotedPrintableResult with Eq::{not_equal, equal}

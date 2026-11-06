@@ -2,7 +2,9 @@
 
 MoonMIME 是一个以 MoonBit 为主要实现语言、面向不可信 `.eml` 的字节保真 MIME 安全检查与协议测试底层库。它在网关、取证工具或差分测试框架解释内容之前，构建递归实体树、保留原始字节和精确来源区间，并暴露可能造成不同解析器视图分歧的结构歧义。
 
-> 状态：v0.3.1。本补丁版本收紧严格模式的 Quoted-Printable 解码；v0.3 在 v0.2 可复现安全证据之上新增两个可运行的上层集成。
+> 源码状态：**0.4.0，本地开发版，未发布**；注册表版本仍为 0.3.1。本轮新增原文／解码指纹清单、取证复核、自定义网关规则与有总预算的批量决策，并补齐独立解析器对照和独立消费者模块。
+
+新增能力与边界见 [DEEPENING.md](docs/DEEPENING.md)，3–5 分钟复现流程见 [DEMO.md](docs/DEMO.md)。`consumers/mailroom` 是本仓库维护的独立模块示例，不声称已有外部用户采用。
 
 ## 项目价值与差异
 
@@ -28,10 +30,16 @@ MoonMIME 不再以“又一个通用邮件解析器”为卖点，而是聚焦�
 - `integrations/gateway` 提供可复用策略接口和批量 JSONL CLI，输出 allow/quarantine/reject 决策；
 - `integrations/forensics` 生成稳定证据 sidecar，以 SHA-256 绑定整封邮件和每个附件的原始编码区间；
 - 核心包可跨后端检查，参考 CLI 仅使用 Native 文件系统适配器。
+- `evidence` 分离编码原文和解码内容 SHA-256，支持共享解码预算，显式报告未知、失败和未展开状态；
+- `forensics` 从原始字节复核清单，提供严格匹配规范序列化的 sidecar 复核入口；
+- `gateway` 支持声明媒体类型、后缀、附件数量／大小／总大小和解析恢复策略，并为每封输入保留 allow/quarantine/reject 结果；
+- 32 个原创样本与 CPython `email`、MailParser 实际对照：24 个正常样本一致，8 个边界样本逐项审阅，详见 [方法与限制](scripts/oracles/README.md)。
 
 ## 快速使用
 
 安装：`moon add oyjh0381/moonmime@0.3.1`。
+
+该命令安装既有发布版；新增 0.4.0 API 当前通过本地源码与 `moon.work` 使用。
 
 ```moonbit
 ///|

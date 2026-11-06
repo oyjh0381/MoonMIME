@@ -7,7 +7,7 @@ import {
 }
 
 // Values
-pub fn interpret_headers(@model.HeaderBlock, @model.ParseMode, @model.ResourceLimits, path? : Array[Int]) -> EntityMetadata raise @model.MimeError
+pub fn interpret_headers(@model.HeaderBlock, @model.ParseMode, @model.ResourceLimits, path? : Array[Int32]) -> EntityMetadata raise @model.MimeError
 
 // Errors
 
@@ -18,6 +18,9 @@ pub(all) struct EntityMetadata {
   transfer_encoding : @model.TransferEncoding
   diagnostics : Array[@model.ParseDiagnostic]
 } derive(Eq, @debug.Debug)
+pub fn EntityMetadata::equal(Self, Self) -> Bool
+pub fn EntityMetadata::not_equal(Self, Self) -> Bool
+pub fn EntityMetadata::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

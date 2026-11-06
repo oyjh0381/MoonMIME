@@ -3,7 +3,7 @@ test "header parser preserves order and duplicate fields" {
   let input = @utf8.encode(
     "Received: first\r\nSubject: hello\r\nReceived: second\r\n\r\nbody",
   )
-  let result = parse_header_block(
+  let result = @header.parse_header_block(
     input,
     0,
     input.length(),
@@ -21,7 +21,7 @@ test "header parser preserves order and duplicate fields" {
 ///|
 test "header parser unfolds continuation lines with one space" {
   let input = @utf8.encode("Subject: first\r\n\t second  \r\n third\r\n\r\n")
-  let result = parse_header_block(
+  let result = @header.parse_header_block(
     input,
     0,
     input.length(),
@@ -36,7 +36,7 @@ test "header parser unfolds continuation lines with one space" {
 ///|
 test "compatible mode accepts LF and reports every line ending" {
   let input = @utf8.encode("From: a@example.test\nSubject: hi\n\nbody")
-  let result = parse_header_block(
+  let result = @header.parse_header_block(
     input,
     0,
     input.length(),
@@ -60,7 +60,7 @@ test "strict mode rejects LF line endings" {
 ///|
 test "compatible mode ignores a line without colon with diagnostic" {
   let input = @utf8.encode("Broken line\r\nSubject: kept\r\n\r\n")
-  let result = parse_header_block(
+  let result = @header.parse_header_block(
     input,
     0,
     input.length(),
@@ -86,7 +86,7 @@ test "strict mode rejects whitespace before colon" {
 ///|
 test "compatible mode trims whitespace before colon" {
   let input = @utf8.encode("Subject : accepted\r\n\r\n")
-  let result = parse_header_block(
+  let result = @header.parse_header_block(
     input,
     0,
     input.length(),
@@ -104,7 +104,9 @@ test "header parser enforces physical line length" {
   let limits : @model.ResourceLimits = { ..defaults, max_header_line_bytes: 8, }
   let input = @utf8.encode("Subject: too-long\r\n\r\n")
   let mut code : String? = None
-  ignore(parse_header_block(input, 0, input.length(), @model.Strict, limits)) catch {
+  ignore(
+    @header.parse_header_block(input, 0, input.length(), @model.Strict, limits),
+  ) catch {
     error => code = Some(error.code())
   }
   assert_eq(code, Some("MOONMIME_HEADER_LINE_LIMIT"))
@@ -116,7 +118,9 @@ test "header parser enforces field count" {
   let limits : @model.ResourceLimits = { ..defaults, max_header_count: 1, }
   let input = @utf8.encode("A: 1\r\nB: 2\r\n\r\n")
   let mut code : String? = None
-  ignore(parse_header_block(input, 0, input.length(), @model.Strict, limits)) catch {
+  ignore(
+    @header.parse_header_block(input, 0, input.length(), @model.Strict, limits),
+  ) catch {
     error => code = Some(error.code())
   }
   assert_eq(code, Some("MOONMIME_HEADER_COUNT_LIMIT"))
@@ -140,7 +144,7 @@ fn assert_header_failure(
   let input = @utf8.encode(source)
   let mut code : String? = None
   ignore(
-    parse_header_block(
+    @header.parse_header_block(
       input,
       0,
       input.length(),

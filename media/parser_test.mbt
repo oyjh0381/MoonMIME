@@ -1,6 +1,6 @@
 ///|
 test "media type parser normalizes essence and preserves parameters" {
-  let media = parse_media_type(
+  let media = @media.parse_media_type(
     " Text/HTML ; charset=\"utf-8\"; format=flowed ",
     @model.Strict,
     8,
@@ -13,7 +13,7 @@ test "media type parser normalizes essence and preserves parameters" {
 
 ///|
 test "quoted parameter handles quoted-pair" {
-  let media = parse_media_type(
+  let media = @media.parse_media_type(
     "multipart/mixed; boundary=\"a\\\"b\\\\c\"",
     @model.Strict,
     8,
@@ -23,7 +23,7 @@ test "quoted parameter handles quoted-pair" {
 
 ///|
 test "content disposition normalizes kind" {
-  let disposition = parse_content_disposition(
+  let disposition = @media.parse_content_disposition(
     " Attachment; filename=report.pdf ",
     @model.Strict,
     8,
@@ -35,7 +35,7 @@ test "content disposition normalizes kind" {
 ///|
 test "invalid disposition uses disposition error category" {
   let mut failed = false
-  ignore(parse_content_disposition("; filename=a", @model.Strict, 8)) catch {
+  ignore(@media.parse_content_disposition("; filename=a", @model.Strict, 8)) catch {
     @model.InvalidDisposition("expected disposition type") => failed = true
     _ => ()
   }
@@ -45,7 +45,7 @@ test "invalid disposition uses disposition error category" {
 ///|
 test "invalid disposition parameter uses disposition error category" {
   let mut failed = false
-  ignore(parse_content_disposition("attachment; =a", @model.Strict, 8)) catch {
+  ignore(@media.parse_content_disposition("attachment; =a", @model.Strict, 8)) catch {
     @model.InvalidDisposition("expected parameter name") => failed = true
     _ => ()
   }
@@ -54,7 +54,7 @@ test "invalid disposition parameter uses disposition error category" {
 
 ///|
 test "extended parameter names expose section metadata" {
-  let disposition = parse_content_disposition(
+  let disposition = @media.parse_content_disposition(
     "attachment; filename*0*=utf-8''long%20; filename*1=name.txt",
     @model.Strict,
     8,
@@ -68,9 +68,15 @@ test "extended parameter names expose section metadata" {
 
 ///|
 test "transfer encoding recognizes standard tokens" {
-  assert_eq(parse_transfer_encoding(" BASE64 \t"), @model.Base64)
-  assert_eq(parse_transfer_encoding("quoted-printable"), @model.QuotedPrintable)
-  assert_eq(parse_transfer_encoding("X-CUSTOM"), @model.Extension("x-custom"))
+  assert_eq(@media.parse_transfer_encoding(" BASE64 \t"), @model.Base64)
+  assert_eq(
+    @media.parse_transfer_encoding("quoted-printable"),
+    @model.QuotedPrintable,
+  )
+  assert_eq(
+    @media.parse_transfer_encoding("X-CUSTOM"),
+    @model.Extension("x-custom"),
+  )
 }
 
 ///|
@@ -80,7 +86,7 @@ test "strict media parser rejects trailing semicolon" {
 
 ///|
 test "compatible media parser accepts trailing semicolon" {
-  let media = parse_media_type("text/plain;", @model.Compatible, 8)
+  let media = @media.parse_media_type("text/plain;", @model.Compatible, 8)
   assert_eq(media.essence(), "text/plain")
   assert_eq(media.parameters.length(), 0)
 }
@@ -98,7 +104,7 @@ test "media parser rejects unterminated quoted parameter" {
 ///|
 test "parameter parser enforces configured count" {
   let mut code : String? = None
-  ignore(parse_media_type("text/plain; a=1; b=2", @model.Strict, 1)) catch {
+  ignore(@media.parse_media_type("text/plain; a=1; b=2", @model.Strict, 1)) catch {
     error => code = Some(error.code())
   }
   assert_eq(code, Some("MOONMIME_ARGUMENT"))
@@ -107,7 +113,7 @@ test "parameter parser enforces configured count" {
 ///|
 fn assert_media_failure(source : String, expected : String) -> Unit raise {
   let mut code : String? = None
-  ignore(parse_media_type(source, @model.Strict, 16)) catch {
+  ignore(@media.parse_media_type(source, @model.Strict, 16)) catch {
     error => code = Some(error.code())
   }
   assert_eq(code, Some(expected))

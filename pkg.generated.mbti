@@ -11,7 +11,7 @@ pub fn audit(Bytes, mode? : @model.ParseMode, limits? : @model.ResourceLimits) -
 
 pub fn audit_json(Bytes, mode? : @model.ParseMode, limits? : @model.ResourceLimits) -> String raise @model.MimeError
 
-pub fn decode_body(@model.InternetMessage, Array[Int], mode? : @model.ParseMode, max_output? : Int) -> Bytes raise @model.MimeError
+pub fn decode_body(@model.InternetMessage, Array[Int32], mode? : @model.ParseMode, max_output? : Int32) -> Bytes raise @model.MimeError
 
 pub fn edge_limits() -> @model.ResourceLimits
 

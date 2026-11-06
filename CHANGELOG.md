@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0 - Unreleased
+
+- Add a portable encoded/decoded entity fingerprint inventory with shared output budget and explicit unavailable/unsupported/opaque states.
+- Recompute typed forensic manifests and verify canonical v1 sidecars; untrusted ranges never drive slicing.
+- Add caller-owned media/name/size/recovery rules and ordered batch decisions with aggregate input preflight.
+- Add a bounded-read Native evidence CLI, a separate public-API consumer and a reproducible integrity/tampering demo.
+- Add two independent development-only MIME references, 32 original fixtures and exact reviewed boundary-observation baselines.
+- Add full-CLI timing/process-memory probes and document their measurement limits.
+- Migrate explicit trait extensions and qualified blackbox calls for MoonBit 0.10.16; remove compiler warning suppressions from CI.
+- Make compatible QP literal control/high-byte preservation visible in the transfer recovery flag.
+
 ## 0.3.1 - 2026-10-01
 
 - Reject raw control/high bytes and bare line endings in strict Quoted-Printable body decoding; keep compatible-mode inspection behavior.

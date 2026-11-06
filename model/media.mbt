@@ -5,7 +5,7 @@ pub(all) struct MediaParameter {
   lower_name : String
   value : String
   extended : Bool
-  section : Int?
+  section : Int32?
   encoded : Bool
 } derive(Debug, Eq)
 
@@ -103,3 +103,27 @@ pub fn TransferEncoding::to_string(self : TransferEncoding) -> String {
     Extension(value) => value
   }
 }
+
+///|
+pub extend MediaParameter with @debug.Debug::{to_repr}
+
+///|
+pub extend MediaParameter with Eq::{not_equal, equal}
+
+///|
+pub extend MediaType with @debug.Debug::{to_repr}
+
+///|
+pub extend MediaType with Eq::{not_equal, equal}
+
+///|
+pub extend ContentDisposition with @debug.Debug::{to_repr}
+
+///|
+pub extend ContentDisposition with Eq::{not_equal, equal}
+
+///|
+pub extend TransferEncoding with @debug.Debug::{to_repr}
+
+///|
+pub extend TransferEncoding with Eq::{not_equal, equal}

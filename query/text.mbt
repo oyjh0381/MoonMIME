@@ -2,8 +2,8 @@
 /// Decode the first Subject field's RFC 2047 encoded-words.
 pub fn subject(
   message : @model.InternetMessage,
-  mode? : @model.ParseMode = @model.Strict,
-  max_output_bytes? : Int = 256 * 1024,
+  mode~ : @model.ParseMode = @model.Strict,
+  max_output_bytes~ : Int32 = 256 * 1024,
 ) -> String? raise @model.MimeError {
   match message.root.headers.first("subject") {
     None => None
@@ -22,8 +22,8 @@ pub fn subject(
 /// attachment filename to the filesystem.
 pub fn preferred_text(
   message : @model.InternetMessage,
-  mode? : @model.ParseMode = @model.Strict,
-  max_output_bytes? : Int = 16 * 1024 * 1024,
+  mode~ : @model.ParseMode = @model.Strict,
+  max_output_bytes~ : Int32 = 16 * 1024 * 1024,
 ) -> @model.TextSelection? raise @model.MimeError {
   let mut plain : @model.MimeEntity? = None
   let mut html : @model.MimeEntity? = None

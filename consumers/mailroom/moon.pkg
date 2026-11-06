@@ -1,0 +1,7 @@
+import {
+  "oyjh0381/moonmime/evidence",
+  "oyjh0381/moonmime/integrations/forensics",
+  "oyjh0381/moonmime/integrations/gateway",
+}
+
+pkgtype(kind: "executable")

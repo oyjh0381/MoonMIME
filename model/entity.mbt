@@ -9,8 +9,8 @@ pub(all) enum EntityKind {
 ///|
 /// One byte-preserving entity in the recursive MIME tree.
 pub(all) struct MimeEntity {
-  path : Array[Int]
-  depth : Int
+  path : Array[Int32]
+  depth : Int32
   headers : HeaderBlock
   media_type : MediaType
   disposition : ContentDisposition?
@@ -53,31 +53,67 @@ pub(all) struct InternetMessage {
 ///|
 /// Counts accumulated without re-walking the entity tree.
 pub(all) struct ParseStats {
-  entities : Int
-  leaf_entities : Int
-  multipart_entities : Int
-  embedded_messages : Int
-  maximum_depth : Int
-  raw_bytes : Int
+  entities : Int32
+  leaf_entities : Int32
+  multipart_entities : Int32
+  embedded_messages : Int32
+  maximum_depth : Int32
+  raw_bytes : Int32
 } derive(Debug, Eq)
 
 ///|
 /// Metadata returned when enumerating attachment candidates.
 pub(all) struct Attachment {
-  path : Array[Int]
+  path : Array[Int32]
   filename : String?
   media_type : String
   disposition : String?
   transfer_encoding : String
-  raw_size : Int
+  raw_size : Int32
   explicit : Bool
 } derive(Debug, Eq)
 
 ///|
 /// Selected display-body candidate.
 pub(all) struct TextSelection {
-  path : Array[Int]
+  path : Array[Int32]
   media_type : String
   charset : String?
   text : String
 } derive(Debug, Eq)
+
+///|
+pub extend EntityKind with @debug.Debug::{to_repr}
+
+///|
+pub extend EntityKind with Eq::{not_equal, equal}
+
+///|
+pub extend MimeEntity with @debug.Debug::{to_repr}
+
+///|
+pub extend MimeEntity with Eq::{not_equal, equal}
+
+///|
+pub extend InternetMessage with @debug.Debug::{to_repr}
+
+///|
+pub extend InternetMessage with Eq::{not_equal, equal}
+
+///|
+pub extend ParseStats with @debug.Debug::{to_repr}
+
+///|
+pub extend ParseStats with Eq::{not_equal, equal}
+
+///|
+pub extend Attachment with @debug.Debug::{to_repr}
+
+///|
+pub extend Attachment with Eq::{not_equal, equal}
+
+///|
+pub extend TextSelection with @debug.Debug::{to_repr}
+
+///|
+pub extend TextSelection with Eq::{not_equal, equal}

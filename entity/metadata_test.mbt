@@ -12,7 +12,7 @@ fn parsed_headers(text : String) -> @model.HeaderBlock raise {
 
 ///|
 test "metadata applies MIME defaults" {
-  let result = interpret_headers(
+  let result = @entity.interpret_headers(
     parsed_headers("Subject: hello\r\n\r\nbody"),
     @model.Strict,
     @model.ResourceLimits::secure_defaults(),
@@ -27,7 +27,7 @@ test "metadata resolves extended filenames" {
   let headers = parsed_headers(
     "Content-Disposition: attachment; filename*=UTF-8''%E6%B5%8B%E8%AF%95.txt\r\n\r\n",
   )
-  let result = interpret_headers(
+  let result = @entity.interpret_headers(
     headers,
     @model.Strict,
     @model.ResourceLimits::secure_defaults(),
@@ -41,7 +41,7 @@ test "metadata resolves extended filenames" {
 ///|
 test "metadata normalizes transfer encoding" {
   let headers = parsed_headers("Content-Transfer-Encoding: BASE64\r\n\r\n")
-  let result = interpret_headers(
+  let result = @entity.interpret_headers(
     headers,
     @model.Strict,
     @model.ResourceLimits::secure_defaults(),
@@ -54,7 +54,7 @@ test "multipart requires boundary" {
   let headers = parsed_headers("Content-Type: multipart/mixed\r\n\r\n")
   let mut failed = false
   ignore(
-    interpret_headers(
+    @entity.interpret_headers(
       headers,
       @model.Strict,
       @model.ResourceLimits::secure_defaults(),
@@ -76,7 +76,7 @@ test "boundary length is bounded" {
     max_boundary_bytes: 8,
   }
   let mut failed = false
-  ignore(interpret_headers(headers, @model.Strict, limits)) catch {
+  ignore(@entity.interpret_headers(headers, @model.Strict, limits)) catch {
     @model.InvalidBoundary(_) => failed = true
     _ => ()
   }
@@ -90,7 +90,7 @@ test "strict mode rejects duplicate singleton fields" {
   )
   let mut failed = false
   ignore(
-    interpret_headers(
+    @entity.interpret_headers(
       headers,
       @model.Strict,
       @model.ResourceLimits::secure_defaults(),
@@ -107,7 +107,7 @@ test "compatible mode reports duplicate singleton fields" {
   let headers = parsed_headers(
     "Content-Type: text/plain\r\nContent-Type: text/html\r\n\r\n",
   )
-  let result = interpret_headers(
+  let result = @entity.interpret_headers(
     headers,
     @model.Compatible,
     @model.ResourceLimits::secure_defaults(),
@@ -122,7 +122,7 @@ test "strict mode rejects unknown transfer encoding" {
   let headers = parsed_headers("Content-Transfer-Encoding: x-custom\r\n\r\n")
   let mut failed = false
   ignore(
-    interpret_headers(
+    @entity.interpret_headers(
       headers,
       @model.Strict,
       @model.ResourceLimits::secure_defaults(),
@@ -137,7 +137,7 @@ test "strict mode rejects unknown transfer encoding" {
 ///|
 test "compatible mode preserves unknown transfer encoding" {
   let headers = parsed_headers("Content-Transfer-Encoding: x-custom\r\n\r\n")
-  let result = interpret_headers(
+  let result = @entity.interpret_headers(
     headers,
     @model.Compatible,
     @model.ResourceLimits::secure_defaults(),
@@ -149,7 +149,7 @@ test "compatible mode preserves unknown transfer encoding" {
 ///|
 test "compatible mode defaults malformed content type" {
   let headers = parsed_headers("Content-Type: not-a-type\r\n\r\n")
-  let result = interpret_headers(
+  let result = @entity.interpret_headers(
     headers,
     @model.Compatible,
     @model.ResourceLimits::secure_defaults(),

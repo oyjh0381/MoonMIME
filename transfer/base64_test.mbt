@@ -11,14 +11,22 @@ test "Base64 decodes the RFC 4648 short vectors" {
   ]
   for item in vectors {
     let (encoded, expected) = item
-    let result = decode_base64(@utf8.encode(encoded), @model.Strict, 1024)
+    let result = @transfer.decode_base64(
+      @utf8.encode(encoded),
+      @model.Strict,
+      1024,
+    )
     assert_eq(result.bytes, @utf8.encode(expected))
   }
 }
 
 ///|
 test "MIME whitespace is ignored and reported" {
-  let result = decode_base64(@utf8.encode(" Zm9v\r\nYmFy\t"), @model.Strict, 64)
+  let result = @transfer.decode_base64(
+    @utf8.encode(" Zm9v\r\nYmFy\t"),
+    @model.Strict,
+    64,
+  )
   assert_eq(result.bytes, b"foobar")
   assert_eq(result.ignored_whitespace, 4)
   assert_false(result.unpadded)
@@ -26,8 +34,8 @@ test "MIME whitespace is ignored and reported" {
 
 ///|
 test "compatible mode accepts canonical unpadded tails" {
-  let one = decode_base64(b"Zg", @model.Compatible, 8)
-  let two = decode_base64(b"Zm8", @model.Compatible, 8)
+  let one = @transfer.decode_base64(b"Zg", @model.Compatible, 8)
+  let two = @transfer.decode_base64(b"Zm8", @model.Compatible, 8)
   assert_eq(one.bytes, b"f")
   assert_eq(two.bytes, b"fo")
   assert_true(one.unpadded)
@@ -68,11 +76,11 @@ test "Base64 enforces output limit before growth" {
 fn assert_base64_failure(
   input : Bytes,
   mode : @model.ParseMode,
-  limit : Int,
+  limit : Int32,
   code : String,
 ) -> Unit raise {
   let mut observed : String? = None
-  ignore(decode_base64(input, mode, limit)) catch {
+  ignore(@transfer.decode_base64(input, mode, limit)) catch {
     error => observed = Some(error.code())
   }
   assert_eq(observed, Some(code))

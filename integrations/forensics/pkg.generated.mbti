@@ -12,29 +12,58 @@ pub fn build_manifest(Bytes, String, String, limits? : @model.ResourceLimits) ->
 
 pub fn render_json(EvidenceManifest) -> String
 
+pub fn verification_json(ManifestVerification) -> String
+
+pub fn verify_manifest(Bytes, EvidenceManifest, limits? : @model.ResourceLimits) -> ManifestVerification raise @model.MimeError
+
+pub fn verify_sidecar(Bytes, String, String, String, limits? : @model.ResourceLimits) -> ManifestVerification raise @model.MimeError
+
 // Errors
 
 // Types and methods
 pub(all) struct EvidenceAttachment {
-  entity_path : Array[Int]
+  entity_path : Array[Int32]
   filename : String?
   media_type : String
-  body_start : Int
-  body_end : Int
+  body_start : Int32
+  body_end : Int32
   encoded_sha256 : String
 } derive(Eq, @debug.Debug)
+pub fn EvidenceAttachment::equal(Self, Self) -> Bool
+pub fn EvidenceAttachment::not_equal(Self, Self) -> Bool
+pub fn EvidenceAttachment::to_repr(Self) -> @debug.Repr
 
 pub(all) struct EvidenceManifest {
   case_id : String
   source_id : String
   raw_sha256 : String
-  raw_bytes : Int
+  raw_bytes : Int32
   message_id : String?
   subject : String?
-  entity_count : Int
+  entity_count : Int32
   attachments : Array[EvidenceAttachment]
   audit : @audit.AuditReport
 } derive(Eq, @debug.Debug)
+pub fn EvidenceManifest::equal(Self, Self) -> Bool
+pub fn EvidenceManifest::not_equal(Self, Self) -> Bool
+pub fn EvidenceManifest::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ManifestIssue {
+  code : String
+  attachment_index : Int32?
+} derive(Eq, @debug.Debug)
+pub fn ManifestIssue::equal(Self, Self) -> Bool
+pub fn ManifestIssue::not_equal(Self, Self) -> Bool
+pub fn ManifestIssue::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ManifestVerification {
+  valid : Bool
+  checked_attachments : Int32
+  issues : Array[ManifestIssue]
+} derive(Eq, @debug.Debug)
+pub fn ManifestVerification::equal(Self, Self) -> Bool
+pub fn ManifestVerification::not_equal(Self, Self) -> Bool
+pub fn ManifestVerification::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

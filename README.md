@@ -2,7 +2,9 @@
 
 MoonMIME is a bounded, byte-preserving MIME security inspection and protocol-test foundation written primarily in MoonBit. It accepts a complete RFC 5322-style message as `Bytes`, builds a recursive MIME entity tree, keeps source ranges into the original input, and surfaces ambiguity before a gateway, forensic tool, or test harness interprets content.
 
-> Status: v0.3.1. This patch tightens strict Quoted-Printable decoding; v0.3 added two runnable upper-layer integrations over the reproducible security evidence introduced in v0.2.
+> Source status: **0.4.0, local/unpublished**. The registry release remains 0.3.1. This revision adds raw/decoded inventories, manifest verification, caller-owned gateway rules, quota-checked batch decisions and independent parser/consumer validation.
+
+Start with the [new capability guide](docs/DEEPENING.md), [3–5 minute demo](docs/DEMO.md) and [independent consumer](consumers/mailroom/README.md). No external adoption or complete mail-platform claim is made.
 
 For release verification, see [2026-10-01 verification](docs/LOCAL_VERIFICATION_2026-10-01.md).
 
@@ -32,12 +34,19 @@ Published research demonstrates the need for this layer: CCS 2024 reported 180 s
 - Provides `integrations/gateway`, a reusable policy adapter plus a batch JSONL CLI for mail-ingestion allow/quarantine decisions.
 - Provides `integrations/forensics`, a deterministic evidence sidecar with message and attachment-region SHA-256 bindings.
 - Provides a portable core and a Native-only reference CLI.
+- Inventories encoded source and decoded leaf SHA-256 separately, with shared decode budgets and explicit incomplete/opaque status.
+- Rechecks forensic manifests against original bytes, including a canonical v1 sidecar verifier.
+- Adds exact declared-media and filename rules, attachment quotas and ordered batch allow/quarantine/reject decisions.
+- Runs 32 original fixtures through CPython `email` and MailParser: 24 normal agreements and 8 reviewed boundary observations; see [methodology](scripts/oracles/README.md).
 
 ## Install
 
 ```text
 moon add oyjh0381/moonmime@0.3.1
 ```
+
+This installs the existing published API. New 0.4.0 APIs currently require this
+checkout; `moon.work` connects the independent consumer module locally.
 
 ## Library quick start
 

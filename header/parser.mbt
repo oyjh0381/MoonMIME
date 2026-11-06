@@ -10,21 +10,21 @@ priv struct PendingHeader {
   name : String
   lower_name : String
   parts : Array[String]
-  start : Int
-  value_start : Int
-  mut end : Int
-  mut lines : Int
+  start : Int32
+  value_start : Int32
+  mut end : Int32
+  mut lines : Int32
 }
 
 ///|
 /// Parse one RFC 5322-style header section inside a bounded entity range.
 pub fn parse_header_block(
   input : Bytes,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
   mode : @model.ParseMode,
   limits : @model.ResourceLimits,
-  entity_path? : Array[Int] = [],
+  entity_path~ : Array[Int32] = [],
 ) -> HeaderParseResult raise @model.MimeError {
   if start < 0 || end < start || end > input.length() {
     raise @model.InvalidByteRange(start, end, input.length())
@@ -33,7 +33,7 @@ pub fn parse_header_block(
   let diagnostics : Array[@model.ParseDiagnostic] = []
   let mut current : PendingHeader? = None
   let mut cursor = start
-  let mut body_start : Int? = None
+  let mut body_start : Int32? = None
   while cursor < end {
     let line = @bytesutil.next_line(input, cursor, end).unwrap()
     let header_bytes = line.full_end - start
@@ -193,7 +193,7 @@ fn finish_pending(
 }
 
 ///|
-fn find_colon(input : Bytes, start : Int, end : Int) -> Int? {
+fn find_colon(input : Bytes, start : Int32, end : Int32) -> Int32? {
   for index in start..<end {
     if input[index] == b':' {
       return Some(index)
@@ -205,8 +205,8 @@ fn find_colon(input : Bytes, start : Int, end : Int) -> Int? {
 ///|
 fn validate_field_name(
   input : Bytes,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
 ) -> Unit raise @model.MimeError {
   for index in start..<end {
     if !@bytesutil.is_field_name(input[index]) {
@@ -218,7 +218,7 @@ fn validate_field_name(
 }
 
 ///|
-fn decode_value(input : Bytes, start : Int, end : Int) -> String {
+fn decode_value(input : Bytes, start : Int32, end : Int32) -> String {
   @utf8.decode(input[start:end]) catch {
     _ =>
       @bytesutil.latin1_string(Bytes::from_array(input[start:end].to_array()))
@@ -231,7 +231,7 @@ fn observe_line_ending(
   line : @bytesutil.PhysicalLine,
   mode : @model.ParseMode,
   limits : @model.ResourceLimits,
-  path : Array[Int],
+  path : Array[Int32],
 ) -> Unit raise @model.MimeError {
   match line.ending {
     @bytesutil.CrLf => ()
@@ -277,7 +277,7 @@ fn add_diagnostic(
   code : @model.DiagnosticCode,
   message : String,
   range : @model.ByteRange,
-  path : Array[Int],
+  path : Array[Int32],
   limits : @model.ResourceLimits,
 ) -> Unit {
   if diagnostics.length() < limits.max_diagnostics {
@@ -290,3 +290,9 @@ fn add_diagnostic(
     })
   }
 }
+
+///|
+pub extend HeaderParseResult with @debug.Debug::{to_repr}
+
+///|
+pub extend HeaderParseResult with Eq::{not_equal, equal}

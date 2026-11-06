@@ -12,7 +12,7 @@ async fn main {
 }
 
 ///|
-async fn run_case(size : Int, iterations : Int) -> Unit {
+async fn run_case(size : Int32, iterations : Int32) -> Unit {
   let input = make_message(size)
   // Warm the generated code and allocator before timing.
   ignore(@audit.audit_message(@parser.parse_message(input)))
@@ -42,7 +42,7 @@ async fn run_case(size : Int, iterations : Int) -> Unit {
 }
 
 ///|
-fn make_message(size : Int) -> Bytes {
+fn make_message(size : Int32) -> Bytes {
   let prefix = @utf8.encode(
     "From: benchmark@example.test\r\nSubject: deterministic throughput probe\r\nContent-Type: multipart/mixed; boundary=bench\r\n\r\n--bench\r\nContent-Type: text/plain\r\n\r\n",
   )

@@ -1,9 +1,9 @@
 ///|
 /// One recognized MIME delimiter line.
 pub(all) struct BoundaryDelimiter {
-  line_start : Int
-  line_end : Int
-  full_end : Int
+  line_start : Int32
+  line_end : Int32
+  full_end : Int32
   closing : Bool
 } derive(Debug, Eq)
 
@@ -21,8 +21,8 @@ pub(all) struct BoundaryScan {
 /// optional space/tab padding may follow the boundary token or closing `--`.
 pub fn scan_boundaries(
   input : Bytes,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
   boundary : String,
 ) -> BoundaryScan raise @model.MimeError {
   if start < 0 || end < start || end > input.length() {
@@ -89,3 +89,15 @@ fn recognize_delimiter(
     closing,
   })
 }
+
+///|
+pub extend BoundaryDelimiter with @debug.Debug::{to_repr}
+
+///|
+pub extend BoundaryDelimiter with Eq::{not_equal, equal}
+
+///|
+pub extend BoundaryScan with @debug.Debug::{to_repr}
+
+///|
+pub extend BoundaryScan with Eq::{not_equal, equal}

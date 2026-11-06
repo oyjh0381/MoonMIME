@@ -1,0 +1,4 @@
+members = [
+  ".",
+  "./consumers/mailroom",
+]

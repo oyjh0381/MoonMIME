@@ -1,6 +1,6 @@
 ///|
 test "secure resource defaults are internally valid" {
-  let limits = ResourceLimits::secure_defaults()
+  let limits = @model.ResourceLimits::secure_defaults()
   limits.validate()
   assert_eq(limits.max_depth, 16)
   assert_eq(limits.max_entities, 1000)
@@ -9,8 +9,8 @@ test "secure resource defaults are internally valid" {
 
 ///|
 test "edge defaults are stricter than secure defaults" {
-  let secure = ResourceLimits::secure_defaults()
-  let edge = ResourceLimits::edge_defaults()
+  let secure = @model.ResourceLimits::secure_defaults()
+  let edge = @model.ResourceLimits::edge_defaults()
   edge.validate()
   assert_true(edge.max_input_bytes < secure.max_input_bytes)
   assert_true(edge.max_entities < secure.max_entities)
@@ -18,7 +18,7 @@ test "edge defaults are stricter than secure defaults" {
 
 ///|
 test "byte ranges use half-open bounds" {
-  let range = ByteRange::new(2, 5)
+  let range = @model.ByteRange::new(2, 5)
   assert_eq(range.length(), 3)
   assert_true(range.contains(2))
   assert_true(range.contains(4))
@@ -28,25 +28,25 @@ test "byte ranges use half-open bounds" {
 
 ///|
 test "header lookup preserves duplicates and order" {
-  let first : HeaderField = {
+  let first : @model.HeaderField = {
     name: "Received",
     lower_name: "received",
     value: "one",
-    field_range: ByteRange::trusted(0, 10),
-    value_range: ByteRange::trusted(9, 10),
+    field_range: @model.ByteRange::trusted(0, 10),
+    value_range: @model.ByteRange::trusted(9, 10),
     line_count: 1,
   }
-  let second : HeaderField = {
+  let second : @model.HeaderField = {
     name: "received",
     lower_name: "received",
     value: "two",
-    field_range: ByteRange::trusted(11, 21),
-    value_range: ByteRange::trusted(20, 21),
+    field_range: @model.ByteRange::trusted(11, 21),
+    value_range: @model.ByteRange::trusted(20, 21),
     line_count: 1,
   }
-  let block : HeaderBlock = {
+  let block : @model.HeaderBlock = {
     fields: [first, second],
-    range: ByteRange::trusted(0, 23),
+    range: @model.ByteRange::trusted(0, 23),
     body_start: 23,
   }
   assert_eq(block.first("received").unwrap().value, "one")
@@ -55,7 +55,7 @@ test "header lookup preserves duplicates and order" {
 
 ///|
 test "media helpers expose normalized semantics" {
-  let media : MediaType = {
+  let media : @model.MediaType = {
     top_level: "multipart",
     subtype: "mixed",
     parameters: [
@@ -76,7 +76,7 @@ test "media helpers expose normalized semantics" {
 
 ///|
 test "error categories remain machine stable" {
-  let error : MimeError = InvalidBase64(12, "bad alphabet")
+  let error : @model.MimeError = InvalidBase64(12, "bad alphabet")
   assert_eq(error.code(), "MOONMIME_BASE64")
   assert_eq(error.exit_code(), 4)
   assert_true(error.message().contains("byte 12"))

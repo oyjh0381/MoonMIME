@@ -8,7 +8,15 @@ import {
 }
 
 // Values
+pub fn assessment_json(GatewayAssessment) -> String
+
+pub fn batch_json(GatewayBatch) -> String
+
 pub fn evaluate(Bytes, String, policy? : GatewayPolicy) -> GatewayDecision raise @model.MimeError
+
+pub fn evaluate_batch(Array[GatewayInput], GatewayRules, policy? : GatewayPolicy, max_messages? : Int32, max_total_input_bytes? : Int64) -> GatewayBatch raise @model.MimeError
+
+pub fn evaluate_with_rules(Bytes, String, GatewayRules, policy? : GatewayPolicy) -> GatewayAssessment raise @model.MimeError
 
 pub fn render_error_json(String, String) -> String
 
@@ -17,28 +25,89 @@ pub fn render_json(GatewayDecision) -> String
 // Errors
 
 // Types and methods
+pub(all) struct BatchDecision {
+  source_id : String
+  assessment : GatewayAssessment?
+  error_code : String?
+  error_message : String?
+}
+
 pub(all) enum GatewayAction {
   Allow
   Quarantine
 } derive(Eq, @debug.Debug)
+pub fn GatewayAction::equal(Self, Self) -> Bool
+pub fn GatewayAction::not_equal(Self, Self) -> Bool
+pub fn GatewayAction::to_repr(Self) -> @debug.Repr
 pub fn GatewayAction::to_string(Self) -> String
+
+pub(all) struct GatewayAssessment {
+  decision : GatewayDecision
+  policy_findings : Array[PolicyFinding]
+} derive(Eq, @debug.Debug)
+pub fn GatewayAssessment::equal(Self, Self) -> Bool
+pub fn GatewayAssessment::not_equal(Self, Self) -> Bool
+pub fn GatewayAssessment::to_repr(Self) -> @debug.Repr
+
+pub(all) struct GatewayBatch {
+  results : Array[BatchDecision]
+  allowed : Int32
+  quarantined : Int32
+  rejected : Int32
+  input_bytes : Int64
+}
 
 pub(all) struct GatewayDecision {
   source_id : String
   action : GatewayAction
-  raw_bytes : Int
-  entity_count : Int
-  attachment_count : Int
+  raw_bytes : Int32
+  entity_count : Int32
+  attachment_count : Int32
   triggered_codes : Array[String]
   audit : @audit.AuditReport
 } derive(Eq, @debug.Debug)
+pub fn GatewayDecision::equal(Self, Self) -> Bool
+pub fn GatewayDecision::not_equal(Self, Self) -> Bool
+pub fn GatewayDecision::to_repr(Self) -> @debug.Repr
+
+pub(all) struct GatewayInput {
+  source_id : String
+  input : Bytes
+}
 
 pub(all) struct GatewayPolicy {
   mode : @model.ParseMode
   quarantine_on : @audit.AuditSeverity
   limits : @model.ResourceLimits
 } derive(Eq, @debug.Debug)
+pub fn GatewayPolicy::equal(Self, Self) -> Bool
+pub fn GatewayPolicy::not_equal(Self, Self) -> Bool
 pub fn GatewayPolicy::recommended() -> Self
+pub fn GatewayPolicy::to_repr(Self) -> @debug.Repr
+
+pub(all) struct GatewayRules {
+  allowed_media_types : Array[String]?
+  blocked_media_types : Array[String]
+  blocked_filename_suffixes : Array[String]
+  max_attachments : Int32
+  max_attachment_wire_bytes : Int32
+  max_total_attachment_wire_bytes : Int32
+  require_attachment_names : Bool
+  quarantine_on_recovery : Bool
+} derive(Eq, @debug.Debug)
+pub fn GatewayRules::default() -> Self
+pub fn GatewayRules::equal(Self, Self) -> Bool
+pub fn GatewayRules::not_equal(Self, Self) -> Bool
+pub fn GatewayRules::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PolicyFinding {
+  code : String
+  entity_path : Array[Int32]
+  evidence_range : @model.ByteRange
+} derive(Eq, @debug.Debug)
+pub fn PolicyFinding::equal(Self, Self) -> Bool
+pub fn PolicyFinding::not_equal(Self, Self) -> Bool
+pub fn PolicyFinding::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

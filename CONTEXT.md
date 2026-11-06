@@ -53,3 +53,15 @@ _Avoid_: Error log, warning string
 A structured reason that prevents the parser from returning a trustworthy Internet Message.
 _Avoid_: Panic, generic error
 
+**Payload Inventory**:
+A byte-bound account of MIME entities with distinct encoded-region and decoded-content fingerprints; unavailable decoding remains explicit rather than implying empty or safe content.
+_Avoid_: Extracted attachments, malware verdict
+
+**Manifest Verification**:
+Rechecking a supplied evidence manifest against its original message bytes, entity locations and derived metadata; it does not authenticate the acquisition or case identity.
+_Avoid_: Signature verification, chain-of-custody certification
+
+**Gateway Rule**:
+A caller-owned restriction on declared attachment metadata or parser recovery, distinct from observations about syntax and content.
+_Avoid_: MIME validity rule, antivirus signature
+

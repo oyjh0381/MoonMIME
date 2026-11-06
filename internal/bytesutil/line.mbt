@@ -10,15 +10,15 @@ pub(all) enum LineEnding {
 ///|
 /// One physical line with content excluding and range including its ending.
 pub(all) struct PhysicalLine {
-  content_start : Int
-  content_end : Int
-  full_end : Int
+  content_start : Int32
+  content_end : Int32
+  full_end : Int32
   ending : LineEnding
 } derive(Debug, Eq)
 
 ///|
 /// Length of the physical line content in bytes.
-pub fn PhysicalLine::content_length(self : PhysicalLine) -> Int {
+pub fn PhysicalLine::content_length(self : PhysicalLine) -> Int32 {
   self.content_end - self.content_start
 }
 
@@ -30,7 +30,7 @@ pub fn PhysicalLine::is_empty(self : PhysicalLine) -> Bool {
 
 ///|
 /// Read one physical line bounded by `end`.
-pub fn next_line(input : Bytes, start : Int, end : Int) -> PhysicalLine? {
+pub fn next_line(input : Bytes, start : Int32, end : Int32) -> PhysicalLine? {
   if start < 0 || start >= end || end > input.length() {
     return None
   }
@@ -75,9 +75,9 @@ pub fn next_line(input : Bytes, start : Int, end : Int) -> PhysicalLine? {
 /// Return the start of a CRLF, LF, or CR ending directly before `offset`.
 pub fn strip_preceding_line_break(
   input : Bytes,
-  start : Int,
-  offset : Int,
-) -> Int {
+  start : Int32,
+  offset : Int32,
+) -> Int32 {
   if offset <= start {
     return offset
   }
@@ -93,3 +93,15 @@ pub fn strip_preceding_line_break(
     offset
   }
 }
+
+///|
+pub extend LineEnding with @debug.Debug::{to_repr}
+
+///|
+pub extend LineEnding with Eq::{not_equal, equal}
+
+///|
+pub extend PhysicalLine with @debug.Debug::{to_repr}
+
+///|
+pub extend PhysicalLine with Eq::{not_equal, equal}

@@ -1,0 +1,14 @@
+import {
+  "oyjh0381/moonmime/evidence",
+  "oyjh0381/moonmime/integrations/forensics",
+  "oyjh0381/moonmime/model",
+  "moonbitlang/async",
+  "moonbitlang/async/fs",
+  "moonbitlang/async/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/core/encoding/utf8",
+}
+
+supported_targets = "+native"
+
+pkgtype(kind: "executable")

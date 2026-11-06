@@ -1,10 +1,10 @@
 ///|
 priv struct ParseState {
-  mut entities : Int
-  mut leaves : Int
-  mut multiparts : Int
-  mut embedded : Int
-  mut maximum_depth : Int
+  mut entities : Int32
+  mut leaves : Int32
+  mut multiparts : Int32
+  mut embedded : Int32
+  mut maximum_depth : Int32
   diagnostics : Array[@model.ParseDiagnostic]
 }
 
@@ -12,8 +12,8 @@ priv struct ParseState {
 /// Parse an Internet Message into a byte-range-preserving MIME entity tree.
 pub fn parse_message(
   input : Bytes,
-  mode? : @model.ParseMode = @model.Strict,
-  limits? : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
+  mode~ : @model.ParseMode = @model.Strict,
+  limits~ : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
 ) -> @model.InternetMessage raise @model.MimeError {
   limits.validate()
   if input.length() > limits.max_input_bytes {
@@ -46,10 +46,10 @@ pub fn parse_message(
 ///|
 fn parse_entity(
   input : Bytes,
-  start : Int,
-  end : Int,
-  depth : Int,
-  path : Array[Int],
+  start : Int32,
+  end : Int32,
+  depth : Int32,
+  path : Array[Int32],
   mode : @model.ParseMode,
   limits : @model.ResourceLimits,
   state : ParseState,
@@ -167,11 +167,11 @@ fn parse_entity(
 ///|
 fn parse_multipart(
   input : Bytes,
-  entity_start : Int,
-  entity_end : Int,
-  body_start : Int,
-  depth : Int,
-  path : Array[Int],
+  entity_start : Int32,
+  entity_end : Int32,
+  body_start : Int32,
+  depth : Int32,
+  path : Array[Int32],
   headers : @model.HeaderBlock,
   metadata : @entity.EntityMetadata,
   mode : @model.ParseMode,
@@ -282,7 +282,7 @@ fn add_diagnostic(
   code : @model.DiagnosticCode,
   message : String,
   range : @model.ByteRange,
-  path : Array[Int],
+  path : Array[Int32],
   limits : @model.ResourceLimits,
 ) -> Unit {
   if state.diagnostics.length() < limits.max_diagnostics {

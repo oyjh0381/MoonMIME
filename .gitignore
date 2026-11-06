@@ -7,3 +7,7 @@
 # Competition administration is local-only and may contain personal data.
 /MoonMIME项目申报书.md
 /.private/
+/scripts/oracles/node_modules/
+/consumers/mailroom/_build/
+/consumers/mailroom/.mooncakes/
+/consumers/mailroom/moon.work

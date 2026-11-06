@@ -30,6 +30,21 @@ moon run --target native --release cmd/moonmime-bench
 
 ## Coverage categories
 
+The 0.4.0 public workflow checks additionally run with:
+
+```sh
+npm ci --prefix scripts/oracles --ignore-scripts --no-audit --no-fund
+python scripts/validate.py
+```
+
+This checks an independent consumer on Wasm-GC/Native, evidence preservation and
+tampering rejection, two independent parser observations, and a process-level
+resource probe. Details: [demo](DEMO.md), [oracle methodology](../scripts/oracles/README.md).
+Generated reports remain local in `.private/`. New interface tests cover decode
+budget exhaustion, unknown/opaque content, forged ranges, canonical sidecars,
+rule composition, batch quotas and duplicate IDs. Compiler warning suppressions
+are no longer required with the pinned 0.10.16 toolchain.
+
 - Normal: plain, Base64, Quoted-Printable, nested multipart, embedded message, Unicode filename.
 - Boundary: empty ranges, exact output caps, header and boundary length caps, depth/entity caps.
 - Invalid: broken headers, duplicate singletons, invalid Base64/QP, unknown charset/encoding, malformed RFC 2231 and RFC 2047 forms.

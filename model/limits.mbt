@@ -1,18 +1,18 @@
 ///|
 /// Resource limits applied before allocating or recursively parsing content.
 pub(all) struct ResourceLimits {
-  max_input_bytes : Int
-  max_header_bytes : Int
-  max_header_line_bytes : Int
-  max_header_count : Int
-  max_depth : Int
-  max_entities : Int
-  max_leaf_body_bytes : Int
-  max_decoded_leaf_bytes : Int
-  max_total_decoded_bytes : Int
-  max_parameter_count : Int
-  max_boundary_bytes : Int
-  max_diagnostics : Int
+  max_input_bytes : Int32
+  max_header_bytes : Int32
+  max_header_line_bytes : Int32
+  max_header_count : Int32
+  max_depth : Int32
+  max_entities : Int32
+  max_leaf_body_bytes : Int32
+  max_decoded_leaf_bytes : Int32
+  max_total_decoded_bytes : Int32
+  max_parameter_count : Int32
+  max_boundary_bytes : Int32
+  max_diagnostics : Int32
 } derive(Debug, Eq)
 
 ///|
@@ -88,3 +88,9 @@ pub fn ResourceLimits::validate(self : ResourceLimits) -> Unit raise MimeError {
     )
   }
 }
+
+///|
+pub extend ResourceLimits with @debug.Debug::{to_repr}
+
+///|
+pub extend ResourceLimits with Eq::{not_equal, equal}

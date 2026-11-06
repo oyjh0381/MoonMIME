@@ -2,7 +2,7 @@
 /// Details retained from MIME Base64 transfer decoding.
 pub(all) struct Base64Result {
   bytes : Bytes
-  ignored_whitespace : Int
+  ignored_whitespace : Int32
   unpadded : Bool
 } derive(Debug, Eq)
 
@@ -15,14 +15,14 @@ pub(all) struct Base64Result {
 pub fn decode_base64(
   input : Bytes,
   mode : @model.ParseMode,
-  max_output : Int,
+  max_output : Int32,
 ) -> Base64Result raise @model.MimeError {
   if max_output <= 0 {
     raise @model.InvalidArgument("max_output must be greater than zero")
   }
   let output : Array[Byte] = []
-  let quartet : Array[Int] = []
-  let positions : Array[Int] = []
+  let quartet : Array[Int32] = []
+  let positions : Array[Int32] = []
   let mut whitespace = 0
   let mut saw_padding = false
   for index in 0..<input.length() {
@@ -76,7 +76,7 @@ pub fn decode_base64(
 }
 
 ///|
-fn base64_value(byte : Byte) -> Int? {
+fn base64_value(byte : Byte) -> Int32? {
   if byte >= b'A' && byte <= b'Z' {
     Some(byte.to_int() - b'A'.to_int())
   } else if byte >= b'a' && byte <= b'z' {
@@ -95,9 +95,9 @@ fn base64_value(byte : Byte) -> Int? {
 ///|
 fn decode_quartet(
   output : Array[Byte],
-  quartet : Array[Int],
-  positions : Array[Int],
-  max_output : Int,
+  quartet : Array[Int32],
+  positions : Array[Int32],
+  max_output : Int32,
 ) -> Bool raise @model.MimeError {
   let a = quartet[0]
   let b = quartet[1]
@@ -148,9 +148,9 @@ fn decode_quartet(
 ///|
 fn decode_unpadded(
   output : Array[Byte],
-  quartet : Array[Int],
-  positions : Array[Int],
-  max_output : Int,
+  quartet : Array[Int32],
+  positions : Array[Int32],
+  max_output : Int32,
 ) -> Unit raise @model.MimeError {
   if quartet.length() == 1 {
     raise @model.InvalidBase64(
@@ -189,8 +189,14 @@ fn decode_unpadded(
 }
 
 ///|
-fn ensure_output(actual : Int, limit : Int) -> Unit raise @model.MimeError {
+fn ensure_output(actual : Int32, limit : Int32) -> Unit raise @model.MimeError {
   if actual > limit {
     raise @model.DecodedOutputTooLarge(actual, limit)
   }
 }
+
+///|
+pub extend Base64Result with @debug.Debug::{to_repr}
+
+///|
+pub extend Base64Result with Eq::{not_equal, equal}

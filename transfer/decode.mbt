@@ -16,7 +16,7 @@ pub fn decode_transfer(
   input : Bytes,
   encoding : @model.TransferEncoding,
   mode : @model.ParseMode,
-  max_output : Int,
+  max_output : Int32,
 ) -> TransferDecodeResult raise @model.MimeError {
   if max_output <= 0 {
     raise @model.InvalidArgument("max_output must be greater than zero")
@@ -37,7 +37,8 @@ pub fn decode_transfer(
         bytes: result.bytes,
         encoding,
         transformed: true,
-        compatibility_recovery: result.bare_lf_soft_breaks > 0,
+        compatibility_recovery: result.bare_lf_soft_breaks > 0 ||
+        (mode == @model.Compatible && has_noncanonical_qp_literal(input)),
       }
     }
     @model.SevenBit => {
@@ -75,12 +76,32 @@ pub fn decode_transfer(
 }
 
 ///|
+// Compatible QP retains literal octets that strict decoding rejects. Make this
+// preservation observable through the same result flag as soft-break recovery.
+fn has_noncanonical_qp_literal(input : Bytes) -> Bool {
+  for index, byte in input {
+    if byte == b'\r' {
+      if index + 1 >= input.length() || input[index + 1] != b'\n' {
+        return true
+      }
+    } else if byte == b'\n' {
+      if index == 0 || input[index - 1] != b'\r' {
+        return true
+      }
+    } else if byte != b'\t' && (byte < b' ' || byte > b'~') {
+      return true
+    }
+  }
+  false
+}
+
+///|
 /// Slice and decode one entity body from its owning Internet Message.
 pub fn decode_entity_body(
   message : @model.InternetMessage,
   entity : @model.MimeEntity,
   mode : @model.ParseMode,
-  max_output? : Int = -1,
+  max_output~ : Int32 = -1,
 ) -> TransferDecodeResult raise @model.MimeError {
   entity.body_range.validate(message.raw.length())
   let limit = if max_output < 0 {
@@ -101,7 +122,7 @@ pub fn decode_entity_body(
 ///|
 fn validate_identity(
   input : Bytes,
-  max_output : Int,
+  max_output : Int32,
 ) -> Unit raise @model.MimeError {
   if input.length() > max_output {
     raise @model.DecodedOutputTooLarge(input.length(), max_output)
@@ -118,3 +139,9 @@ fn validate_seven_bit(input : Bytes) -> Unit raise @model.MimeError {
     }
   }
 }
+
+///|
+pub extend TransferDecodeResult with @debug.Debug::{to_repr}
+
+///|
+pub extend TransferDecodeResult with Eq::{not_equal, equal}

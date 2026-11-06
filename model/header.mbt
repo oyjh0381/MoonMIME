@@ -6,7 +6,7 @@ pub(all) struct HeaderField {
   value : String
   field_range : ByteRange
   value_range : ByteRange
-  line_count : Int
+  line_count : Int32
 } derive(Debug, Eq)
 
 ///|
@@ -14,7 +14,7 @@ pub(all) struct HeaderField {
 pub(all) struct HeaderBlock {
   fields : Array[HeaderField]
   range : ByteRange
-  body_start : Int
+  body_start : Int32
 } derive(Debug, Eq)
 
 ///|
@@ -56,3 +56,15 @@ pub fn HeaderBlock::contains(
 ) -> Bool {
   self.first(lower_name) is Some(_)
 }
+
+///|
+pub extend HeaderField with @debug.Debug::{to_repr}
+
+///|
+pub extend HeaderField with Eq::{not_equal, equal}
+
+///|
+pub extend HeaderBlock with @debug.Debug::{to_repr}
+
+///|
+pub extend HeaderBlock with Eq::{not_equal, equal}

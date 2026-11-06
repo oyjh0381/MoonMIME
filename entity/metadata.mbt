@@ -13,7 +13,7 @@ pub fn interpret_headers(
   headers : @model.HeaderBlock,
   mode : @model.ParseMode,
   limits : @model.ResourceLimits,
-  path? : Array[Int] = [],
+  path~ : Array[Int32] = [],
 ) -> EntityMetadata raise @model.MimeError {
   let diagnostics : Array[@model.ParseDiagnostic] = []
   observe_duplicates(headers, "content-type", mode, diagnostics, limits, path)
@@ -38,7 +38,7 @@ fn read_media_type(
   mode : @model.ParseMode,
   limits : @model.ResourceLimits,
   diagnostics : Array[@model.ParseDiagnostic],
-  path : Array[Int],
+  path : Array[Int32],
 ) -> @model.MediaType raise @model.MimeError {
   match headers.first("content-type") {
     None => @model.MediaType::text_plain()
@@ -114,7 +114,7 @@ fn read_disposition(
   mode : @model.ParseMode,
   limits : @model.ResourceLimits,
   diagnostics : Array[@model.ParseDiagnostic],
-  path : Array[Int],
+  path : Array[Int32],
 ) -> @model.ContentDisposition? raise @model.MimeError {
   match headers.first("content-disposition") {
     None => None
@@ -179,7 +179,7 @@ fn read_transfer_encoding(
   mode : @model.ParseMode,
   limits : @model.ResourceLimits,
   diagnostics : Array[@model.ParseDiagnostic],
-  path : Array[Int],
+  path : Array[Int32],
 ) -> @model.TransferEncoding raise @model.MimeError {
   match headers.first("content-transfer-encoding") {
     None => @model.SevenBit
@@ -246,7 +246,7 @@ fn observe_duplicates(
   mode : @model.ParseMode,
   diagnostics : Array[@model.ParseDiagnostic],
   limits : @model.ResourceLimits,
-  path : Array[Int],
+  path : Array[Int32],
 ) -> Unit raise @model.MimeError {
   let matches = headers.all(name)
   if matches.length() <= 1 {
@@ -274,7 +274,7 @@ fn add_diagnostic(
   code : @model.DiagnosticCode,
   message : String,
   range : @model.ByteRange,
-  path : Array[Int],
+  path : Array[Int32],
   limits : @model.ResourceLimits,
 ) -> Unit {
   if diagnostics.length() < limits.max_diagnostics {
@@ -287,3 +287,9 @@ fn add_diagnostic(
     })
   }
 }
+
+///|
+pub extend EntityMetadata with @debug.Debug::{to_repr}
+
+///|
+pub extend EntityMetadata with Eq::{not_equal, equal}

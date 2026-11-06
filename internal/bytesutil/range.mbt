@@ -2,8 +2,8 @@
 /// Copy a validated half-open range from immutable bytes.
 pub fn slice(
   input : Bytes,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
 ) -> Bytes raise @model.MimeError {
   if start < 0 || end < start || end > input.length() {
     raise @model.InvalidByteRange(start, end, input.length())
@@ -16,8 +16,8 @@ pub fn slice(
 pub fn append_range(
   output : Array[Byte],
   input : Bytes,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
 ) -> Unit raise @model.MimeError {
   if start < 0 || end < start || end > input.length() {
     raise @model.InvalidByteRange(start, end, input.length())
@@ -31,8 +31,8 @@ pub fn append_range(
 /// Compare a byte range with an ASCII string exactly.
 pub fn equals_ascii(
   input : Bytes,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
   expected : String,
 ) -> Bool {
   if start < 0 || end < start || end > input.length() {
@@ -54,8 +54,8 @@ pub fn equals_ascii(
 /// Compare a byte range with an ASCII string case-insensitively.
 pub fn equals_ascii_ci(
   input : Bytes,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
   expected : String,
 ) -> Bool {
   if start < 0 || end < start || end > input.length() {
@@ -77,8 +77,8 @@ pub fn equals_ascii_ci(
 /// Whether `needle` occurs at `offset` without reading past `end`.
 pub fn starts_with_at(
   input : Bytes,
-  offset : Int,
-  end : Int,
+  offset : Int32,
+  end : Int32,
   needle : Bytes,
 ) -> Bool {
   if offset < 0 || end < offset || end > input.length() {
@@ -97,7 +97,12 @@ pub fn starts_with_at(
 
 ///|
 /// Find the first exact byte sequence in a bounded range.
-pub fn find(input : Bytes, needle : Bytes, start : Int, end : Int) -> Int? {
+pub fn find(
+  input : Bytes,
+  needle : Bytes,
+  start : Int32,
+  end : Int32,
+) -> Int32? {
   if start < 0 || end < start || end > input.length() || needle.is_empty() {
     return None
   }
@@ -115,7 +120,7 @@ pub fn find(input : Bytes, needle : Bytes, start : Int, end : Int) -> Int? {
 
 ///|
 /// Trim ASCII space and horizontal tab around a range.
-pub fn trim_wsp(input : Bytes, start : Int, end : Int) -> (Int, Int) {
+pub fn trim_wsp(input : Bytes, start : Int32, end : Int32) -> (Int32, Int32) {
   let mut left = start
   let mut right = end
   while left < right && is_wsp(input[left]) {
@@ -129,7 +134,11 @@ pub fn trim_wsp(input : Bytes, start : Int, end : Int) -> (Int, Int) {
 
 ///|
 /// Trim ASCII space, tab, CR, and LF around a range.
-pub fn trim_ascii_space(input : Bytes, start : Int, end : Int) -> (Int, Int) {
+pub fn trim_ascii_space(
+  input : Bytes,
+  start : Int32,
+  end : Int32,
+) -> (Int32, Int32) {
   let mut left = start
   let mut right = end
   while left < right && is_ascii_space(input[left]) {
@@ -151,8 +160,8 @@ pub fn is_ascii_space(value : Byte) -> Bool {
 /// Decode an ASCII byte range as UTF-8; non-ASCII or malformed input fails.
 pub fn ascii_string(
   input : Bytes,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
 ) -> String raise @model.MimeError {
   if start < 0 || end < start || end > input.length() {
     raise @model.InvalidByteRange(start, end, input.length())

@@ -18,7 +18,7 @@ test "10000 deterministic mutations never panic or hang" {
         Bytes::from_array(bytes),
         mode=@model.Compatible,
       )
-      ignore(audit_message(message))
+      ignore(@audit.audit_message(message))
     } catch {
       _ => ()
     }

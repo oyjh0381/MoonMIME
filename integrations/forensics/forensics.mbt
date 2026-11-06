@@ -1,11 +1,11 @@
 ///|
 /// One attachment-like entity bound to its original encoded body bytes.
 pub(all) struct EvidenceAttachment {
-  entity_path : Array[Int]
+  entity_path : Array[Int32]
   filename : String?
   media_type : String
-  body_start : Int
-  body_end : Int
+  body_start : Int32
+  body_end : Int32
   encoded_sha256 : String
 } derive(Debug, Eq)
 
@@ -18,10 +18,10 @@ pub(all) struct EvidenceManifest {
   case_id : String
   source_id : String
   raw_sha256 : String
-  raw_bytes : Int
+  raw_bytes : Int32
   message_id : String?
   subject : String?
-  entity_count : Int
+  entity_count : Int32
   attachments : Array[EvidenceAttachment]
   audit : @audit.AuditReport
 } derive(Debug, Eq)
@@ -32,7 +32,7 @@ pub fn build_manifest(
   input : Bytes,
   case_id : String,
   source_id : String,
-  limits? : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
+  limits~ : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
 ) -> EvidenceManifest raise @model.MimeError {
   require_identifier(case_id, "case_id")
   require_identifier(source_id, "source_id")
@@ -197,16 +197,16 @@ fn write_quoted(builder : StringBuilder, value : String) -> Unit {
 }
 
 ///|
-fn hex(value : Int) -> String {
+fn hex(value : Int32) -> String {
   if value < 10 {
     value.to_string()
   } else {
-    Int::unsafe_to_char('a'.to_int() + value - 10).to_string()
+    Int32::unsafe_to_char('a'.to_int() + value - 10).to_string()
   }
 }
 
 ///|
-fn utf8_width(byte : Byte) -> Int {
+fn utf8_width(byte : Byte) -> Int32 {
   if byte < b'\x80' {
     1
   } else if byte < b'\xe0' {
@@ -217,3 +217,15 @@ fn utf8_width(byte : Byte) -> Int {
     4
   }
 }
+
+///|
+pub extend EvidenceAttachment with @debug.Debug::{to_repr}
+
+///|
+pub extend EvidenceAttachment with Eq::{not_equal, equal}
+
+///|
+pub extend EvidenceManifest with @debug.Debug::{to_repr}
+
+///|
+pub extend EvidenceManifest with Eq::{not_equal, equal}

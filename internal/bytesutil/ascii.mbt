@@ -75,7 +75,7 @@ pub fn lower_string(value : String) -> String {
 
 ///|
 /// Parse one ASCII hexadecimal nibble.
-pub fn hex_value(value : Byte) -> Int? {
+pub fn hex_value(value : Byte) -> Int32? {
   if value >= b'0' && value <= b'9' {
     Some(value.to_int() - b'0'.to_int())
   } else if value >= b'A' && value <= b'F' {

@@ -18,9 +18,9 @@ pub(all) struct GatewayPolicy {
 pub(all) struct GatewayDecision {
   source_id : String
   action : GatewayAction
-  raw_bytes : Int
-  entity_count : Int
-  attachment_count : Int
+  raw_bytes : Int32
+  entity_count : Int32
+  attachment_count : Int32
   triggered_codes : Array[String]
   audit : @audit.AuditReport
 } derive(Debug, Eq)
@@ -44,13 +44,22 @@ pub fn GatewayPolicy::recommended() -> GatewayPolicy {
 pub fn evaluate(
   input : Bytes,
   source_id : String,
-  policy? : GatewayPolicy = GatewayPolicy::recommended(),
+  policy~ : GatewayPolicy = GatewayPolicy::recommended(),
 ) -> GatewayDecision raise @model.MimeError {
   let message = @parser.parse_message(
     input,
     mode=policy.mode,
     limits=policy.limits,
   )
+  evaluate_parsed(message, source_id, policy)
+}
+
+///|
+fn evaluate_parsed(
+  message : @model.InternetMessage,
+  source_id : String,
+  policy : GatewayPolicy,
+) -> GatewayDecision {
   let audit = @audit.audit_message(message)
   let triggered_codes : Array[String] = []
   for finding in audit.findings {
@@ -124,7 +133,7 @@ pub fn GatewayAction::to_string(self : GatewayAction) -> String {
 }
 
 ///|
-fn severity_rank(severity : @audit.AuditSeverity) -> Int {
+fn severity_rank(severity : @audit.AuditSeverity) -> Int32 {
   match severity {
     @audit.Info => 0
     @audit.Low => 1
@@ -191,16 +200,16 @@ fn write_quoted(builder : StringBuilder, value : String) -> Unit {
 }
 
 ///|
-fn hex(value : Int) -> String {
+fn hex(value : Int32) -> String {
   if value < 10 {
     value.to_string()
   } else {
-    Int::unsafe_to_char('a'.to_int() + value - 10).to_string()
+    Int32::unsafe_to_char('a'.to_int() + value - 10).to_string()
   }
 }
 
 ///|
-fn utf8_width(byte : Byte) -> Int {
+fn utf8_width(byte : Byte) -> Int32 {
   if byte < b'\x80' {
     1
   } else if byte < b'\xe0' {
@@ -211,3 +220,21 @@ fn utf8_width(byte : Byte) -> Int {
     4
   }
 }
+
+///|
+pub extend GatewayAction with @debug.Debug::{to_repr}
+
+///|
+pub extend GatewayAction with Eq::{not_equal, equal}
+
+///|
+pub extend GatewayPolicy with @debug.Debug::{to_repr}
+
+///|
+pub extend GatewayPolicy with Eq::{not_equal, equal}
+
+///|
+pub extend GatewayDecision with @debug.Debug::{to_repr}
+
+///|
+pub extend GatewayDecision with Eq::{not_equal, equal}

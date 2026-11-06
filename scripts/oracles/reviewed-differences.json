@@ -1,0 +1,34 @@
+{
+  "base64-invalid": {
+    "signature": "29a7ebf0f23bce82864ae872324fb3013cea1f7e92257812a6b99f99fef24ea9",
+    "rationale": "Python and MailParser discard invalid alphabet byte ! and decode hello. MoonMIME marks decoding unavailable with MOONMIME_BASE64. Deliberate conservative decoding policy."
+  },
+  "base64-unpadded": {
+    "signature": "723d7c822f91440de48595fab941205aa947b6beba4c60afaf52b2643cad40a2",
+    "rationale": "All payload hashes agree. MoonMIME explicitly records recovered padding; this is a policy control, not an observed payload divergence."
+  },
+  "qp-invalid": {
+    "signature": "3aacee31da08952b8be73b58acf4c9c675729b2027625c7d50a679afedaa03a2",
+    "rationale": "Python and MailParser preserve abc=ZZ. MoonMIME returns no decoded payload for a malformed escape. Deliberate conservative decoding policy."
+  },
+  "unknown-transfer": {
+    "signature": "173fa0e3ef2ce76089e5b030dbe9be99dbe20347f6214bfb8217daf072ad36fb",
+    "rationale": "Other parsers expose original bytes as payload. MoonMIME keeps encoded evidence but does not claim an unknown encoding was decoded."
+  },
+  "duplicate-type": {
+    "signature": "f88a9194b1d332474766baeb9ad7327ec636b5d45774bd7035bcdb6a117a189a",
+    "rationale": "Observed type selection and hashes agree on this input. MoonMIME records duplicate-singleton-header; no claim that these parsers diverge on this fixture."
+  },
+  "encoded-message": {
+    "signature": "f4b425e2b924d72860ddbbb4974a9dea0303580ce72b7f318412d7cffdb6d3be",
+    "rationale": "MoonMIME retains an opaque message entity; Python exposes a nested text entity; MailParser exposes a decoded message attachment. A documented structural scope difference, not proof of exploitability."
+  },
+  "bare-lf": {
+    "signature": "86465deafc09ba9bffe2824dca56ab7edff12c849176e7e597c82936ed146387",
+    "rationale": "Observed types and hashes agree. MoonMIME records nine bare-line-feed diagnostics; compatible acceptance is not a strict validity claim."
+  },
+  "missing-close": {
+    "signature": "d2449cb71a98d48d23b7d46deb037bff7531cea166b0728e5689163d35762940",
+    "rationale": "Observed hashes agree; MoonMIME records missing-closing-boundary-accepted. This fixture establishes recovery visibility, not an observed hash divergence."
+  }
+}

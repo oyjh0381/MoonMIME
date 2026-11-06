@@ -6,7 +6,7 @@
 /// MoonBit target without a platform crypto dependency.
 pub fn digest_hex(input : Bytes) -> String {
   let padded = pad(input)
-  let state : Array[UInt] = [
+  let state : Array[UInt32] = [
     0x6a09e667U, 0xbb67ae85U, 0x3c6ef372U, 0xa54ff53aU, 0x510e527fU, 0x9b05688cU,
     0x1f83d9abU, 0x5be0cd19U,
   ]
@@ -45,7 +45,7 @@ pub fn digest_hex(input : Bytes) -> String {
 
 ///|
 fn pad(input : Bytes) -> Bytes {
-  let bit_length = Int::to_uint64(input.length()) * 8UL
+  let bit_length = Int32::to_uint64(input.length()) * 8UL
   let zero_count = (55 - input.length() % 64 + 64) % 64
   let output : Array[Byte] = []
   for byte in input {
@@ -62,8 +62,8 @@ fn pad(input : Bytes) -> Bytes {
 }
 
 ///|
-fn compress(state : Array[UInt], schedule : Array[UInt]) -> Unit {
-  let constants : Array[UInt] = [
+fn compress(state : Array[UInt32], schedule : Array[UInt32]) -> Unit {
+  let constants : Array[UInt32] = [
     0x428a2f98U, 0x71374491U, 0xb5c0fbcfU, 0xe9b5dba5U, 0x3956c25bU, 0x59f111f1U,
     0x923f82a4U, 0xab1c5ed5U, 0xd807aa98U, 0x12835b01U, 0x243185beU, 0x550c7dc3U,
     0x72be5d74U, 0x80deb1feU, 0x9bdc06a7U, 0xc19bf174U, 0xe49b69c1U, 0xefbe4786U,
@@ -111,15 +111,15 @@ fn compress(state : Array[UInt], schedule : Array[UInt]) -> Unit {
 }
 
 ///|
-fn rotate_right(value : UInt, count : Int) -> UInt {
+fn rotate_right(value : UInt32, count : Int32) -> UInt32 {
   (value >> count) | (value << (32 - count))
 }
 
 ///|
-fn hex_digit(value : Int) -> String {
+fn hex_digit(value : Int32) -> String {
   if value < 10 {
     value.to_string()
   } else {
-    Int::unsafe_to_char('a'.to_int() + value - 10).to_string()
+    Int32::unsafe_to_char('a'.to_int() + value - 10).to_string()
   }
 }

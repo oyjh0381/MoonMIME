@@ -31,6 +31,10 @@ Bytes
 - `internal/sha256`: portable evidence hashing with standard-vector tests.
 - `integrations/gateway`: mail-ingestion policy decision and JSONL record.
 - `integrations/forensics`: byte-bound evidence manifest and JSON sidecar.
+- `evidence`: encoded/decoded fingerprint inventory under one shared decode budget.
+- Gateway extensions: caller rules and quota-checked ordered batch decisions.
+- Forensic extensions: recomputed typed/canonical-sidecar verification.
+- `consumers/mailroom`: independent module using public packages through `moon.work`.
 - root package: small high-level API facade.
 - `cmd/*`: Native filesystem/stdio adapters only.
 
@@ -49,4 +53,4 @@ Bytes
 
 Header and boundary scans are linear in the bytes of their bounded region. Because each nested multipart level scans its own enclosing body, recursive parsing is `O(n * d)` in the worst case for `n` input bytes and nesting depth `d`; the default bound fixes `d <= 16`, so ordinary bounded workloads behave linearly. Retained space is `O(n + e)` for raw bytes, fields, and `e` entities. Query traversal is `O(e)`. Base64 and Quoted-Printable decoding are `O(b)` time and output space for a body of `b` bytes.
 
-The complete input is retained intentionally to guarantee byte ranges. Applications needing streaming multi-GiB processing should not use v0.3.
+The complete input is retained intentionally to guarantee byte ranges. Applications needing streaming multi-GiB processing should not use this in-memory design. See [new integration costs and boundaries](DEEPENING.md).

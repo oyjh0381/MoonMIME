@@ -10,7 +10,7 @@ pub fn entities(message : @model.InternetMessage) -> Array[@model.MimeEntity] {
 /// Resolve a stable numeric path such as `[1, 0]` into an entity.
 pub fn find_entity(
   message : @model.InternetMessage,
-  path : Array[Int],
+  path : Array[Int32],
 ) -> @model.MimeEntity? {
   let mut current = message.root
   for component in path {

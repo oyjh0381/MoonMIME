@@ -26,7 +26,7 @@ pub(all) struct AuditFinding {
   code : AuditCode
   severity : AuditSeverity
   message : String
-  entity_path : Array[Int]
+  entity_path : Array[Int32]
   evidence_range : @model.ByteRange
 } derive(Debug, Eq)
 
@@ -34,11 +34,11 @@ pub(all) struct AuditFinding {
 /// Deterministic audit result suitable for CI policy decisions.
 pub(all) struct AuditReport {
   findings : Array[AuditFinding]
-  risk_score : Int
-  high : Int
-  medium : Int
-  low : Int
-  info : Int
+  risk_score : Int32
+  high : Int32
+  medium : Int32
+  low : Int32
+  info : Int32
 } derive(Debug, Eq)
 
 ///|
@@ -293,3 +293,27 @@ fn summarize(findings : Array[AuditFinding]) -> AuditReport {
   }
   { findings, risk_score: score, high, medium, low, info, }
 }
+
+///|
+pub extend AuditSeverity with @debug.Debug::{to_repr}
+
+///|
+pub extend AuditSeverity with Eq::{not_equal, equal}
+
+///|
+pub extend AuditCode with @debug.Debug::{to_repr}
+
+///|
+pub extend AuditCode with Eq::{not_equal, equal}
+
+///|
+pub extend AuditFinding with @debug.Debug::{to_repr}
+
+///|
+pub extend AuditFinding with Eq::{not_equal, equal}
+
+///|
+pub extend AuditReport with @debug.Debug::{to_repr}
+
+///|
+pub extend AuditReport with Eq::{not_equal, equal}

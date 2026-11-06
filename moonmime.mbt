@@ -18,8 +18,8 @@ pub fn parse_with(
 /// Parse and return the stable v1 JSON inspection report.
 pub fn inspect_json(
   input : Bytes,
-  mode? : @model.ParseMode = @model.Strict,
-  limits? : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
+  mode~ : @model.ParseMode = @model.Strict,
+  limits~ : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
 ) -> String raise @model.MimeError {
   @report.render_json(@parser.parse_message(input, mode~, limits~))
 }
@@ -28,8 +28,8 @@ pub fn inspect_json(
 /// Parse and return the human-oriented entity summary.
 pub fn inspect_text(
   input : Bytes,
-  mode? : @model.ParseMode = @model.Strict,
-  limits? : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
+  mode~ : @model.ParseMode = @model.Strict,
+  limits~ : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
 ) -> String raise @model.MimeError {
   @report.render_summary(@parser.parse_message(input, mode~, limits~))
 }
@@ -38,8 +38,8 @@ pub fn inspect_text(
 /// Parse and audit untrusted message structure without decoding attachments.
 pub fn audit(
   input : Bytes,
-  mode? : @model.ParseMode = @model.Compatible,
-  limits? : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
+  mode~ : @model.ParseMode = @model.Compatible,
+  limits~ : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
 ) -> @audit.AuditReport raise @model.MimeError {
   @audit.audit_message(@parser.parse_message(input, mode~, limits~))
 }
@@ -48,8 +48,8 @@ pub fn audit(
 /// Parse and return stable `moonmime.audit.v1` JSON for security pipelines.
 pub fn audit_json(
   input : Bytes,
-  mode? : @model.ParseMode = @model.Compatible,
-  limits? : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
+  mode~ : @model.ParseMode = @model.Compatible,
+  limits~ : @model.ResourceLimits = @model.ResourceLimits::secure_defaults(),
 ) -> String raise @model.MimeError {
   @audit.render_json(audit(input, mode~, limits~))
 }
@@ -58,9 +58,9 @@ pub fn audit_json(
 /// Decode a selected entity body after validating its source range.
 pub fn decode_body(
   message : @model.InternetMessage,
-  path : Array[Int],
-  mode? : @model.ParseMode = @model.Strict,
-  max_output? : Int = 16 * 1024 * 1024,
+  path : Array[Int32],
+  mode~ : @model.ParseMode = @model.Strict,
+  max_output~ : Int32 = 16 * 1024 * 1024,
 ) -> Bytes raise @model.MimeError {
   let entity = match @query.find_entity(message, path) {
     Some(value) => value

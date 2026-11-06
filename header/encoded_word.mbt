@@ -2,14 +2,14 @@
 /// Result of decoding RFC 2047 encoded-words in one unstructured header value.
 pub(all) struct EncodedHeaderResult {
   value : String
-  decoded_words : Int
-  preserved_invalid_words : Int
+  decoded_words : Int32
+  preserved_invalid_words : Int32
 } derive(Debug, Eq)
 
 ///|
 priv struct WordDecode {
   value : String
-  end : Int
+  end : Int32
 }
 
 ///|
@@ -21,7 +21,7 @@ priv struct WordDecode {
 pub fn decode_encoded_words(
   input : String,
   mode : @model.ParseMode,
-  max_output_bytes : Int,
+  max_output_bytes : Int32,
 ) -> EncodedHeaderResult raise @model.MimeError {
   if max_output_bytes <= 0 {
     raise @model.InvalidArgument("max_output_bytes must be greater than zero")
@@ -104,7 +104,7 @@ pub fn decode_encoded_words(
 ///|
 fn try_decode_word(
   input : Bytes,
-  start : Int,
+  start : Int32,
 ) -> WordDecode? raise @model.MimeError {
   if !starts_word(input, start) {
     return None
@@ -193,14 +193,14 @@ fn decode_word_charset(
 }
 
 ///|
-fn starts_word(input : Bytes, offset : Int) -> Bool {
+fn starts_word(input : Bytes, offset : Int32) -> Bool {
   offset + 1 < input.length() &&
   input[offset] == b'=' &&
   input[offset + 1] == b'?'
 }
 
 ///|
-fn find_byte(input : Bytes, wanted : Byte, start : Int) -> Int? {
+fn find_byte(input : Bytes, wanted : Byte, start : Int32) -> Int32? {
   for index in start..<input.length() {
     if input[index] == wanted {
       return Some(index)
@@ -215,7 +215,7 @@ fn is_linear_whitespace(byte : Byte) -> Bool {
 }
 
 ///|
-fn utf8_width(byte : Byte) -> Int {
+fn utf8_width(byte : Byte) -> Int32 {
   if byte < b'\x80' {
     1
   } else if byte < b'\xe0' {
@@ -231,9 +231,9 @@ fn utf8_width(byte : Byte) -> Int {
 fn append_bounded(
   builder : StringBuilder,
   value : String,
-  current : Int,
-  limit : Int,
-) -> Int raise @model.MimeError {
+  current : Int32,
+  limit : Int32,
+) -> Int32 raise @model.MimeError {
   let added = @utf8.encode(value).length()
   if current + added > limit {
     raise @model.DecodedOutputTooLarge(current + added, limit)
@@ -241,3 +241,9 @@ fn append_bounded(
   builder.write_string(value)
   current + added
 }
+
+///|
+pub extend EncodedHeaderResult with @debug.Debug::{to_repr}
+
+///|
+pub extend EncodedHeaderResult with Eq::{not_equal, equal}

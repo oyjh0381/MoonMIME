@@ -15,7 +15,7 @@ test "shared decode budget accumulates successful outputs" {
     max_decoded_leaf_bytes: 4,
     max_total_decoded_bytes: 6,
   }
-  let budget = DecodeBudget::new(limits)
+  let budget = @transfer.DecodeBudget::new(limits)
   let first = budget.decode_entity(
     message,
     message.root.children[0],
@@ -40,7 +40,7 @@ test "shared decode budget rejects cumulative overflow" {
     max_decoded_leaf_bytes: 4,
     max_total_decoded_bytes: 5,
   }
-  let budget = DecodeBudget::new(limits)
+  let budget = @transfer.DecodeBudget::new(limits)
   ignore(budget.decode_entity(message, message.root.children[0], @model.Strict))
   let mut failed = false
   ignore(budget.decode_entity(message, message.root.children[1], @model.Strict)) catch {
@@ -55,7 +55,9 @@ test "shared decode budget rejects cumulative overflow" {
 test "failed transfer decode does not consume shared budget" {
   let raw = @utf8.encode("Content-Transfer-Encoding: base64\r\n\r\n!!!!")
   let message = @parser.parse_message(raw)
-  let budget = DecodeBudget::new(@model.ResourceLimits::secure_defaults())
+  let budget = @transfer.DecodeBudget::new(
+    @model.ResourceLimits::secure_defaults(),
+  )
   ignore(budget.decode_entity(message, message.root, @model.Strict)) catch {
     _ => ()
   }
@@ -65,7 +67,9 @@ test "failed transfer decode does not consume shared budget" {
 ///|
 test "shared decode budget rejects containers" {
   let message = budget_message()
-  let budget = DecodeBudget::new(@model.ResourceLimits::secure_defaults())
+  let budget = @transfer.DecodeBudget::new(
+    @model.ResourceLimits::secure_defaults(),
+  )
   let mut failed = false
   ignore(budget.decode_entity(message, message.root, @model.Strict)) catch {
     @model.InvalidArgument("decode budget accepts leaf entities only") =>

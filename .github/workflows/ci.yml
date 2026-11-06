@@ -18,14 +18,20 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: hustcer/setup-moonbit@v1.22
+        with:
+          version: '0.10.16+b1a0e846e'
+          core-version: '0.10.16+b1a0e846e'
       - name: Resolve dependencies
         run: moon update
       - name: Check formatting
         run: moon fmt --check
       - name: Check every supported target
-        run: moon check --target all --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
+        run: moon check --target all --deny-warn
       - name: Test portable core
-        run: moon test --target wasm-gc --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
+        run: |
+          moon test --target wasm-gc --deny-warn
+          moon test --target wasm --deny-warn
+          moon test --target js --deny-warn
       - name: Verify generated interfaces
         shell: bash
         run: |
@@ -38,11 +44,26 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: hustcer/setup-moonbit@v1.22
+        with:
+          version: '0.10.16+b1a0e846e'
+          core-version: '0.10.16+b1a0e846e'
       - run: moon update
       - name: Native tests and build
         run: |
-          moon test --target native --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
-          moon build --target native --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
+          moon test --target native --deny-warn
+          moon build --target native --deny-warn
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11.8'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24.19.0'
+          cache: npm
+          cache-dependency-path: scripts/oracles/package-lock.json
+      - name: Independent oracles and separate consumer
+        run: |
+          npm ci --prefix scripts/oracles --ignore-scripts --no-audit --no-fund
+          python scripts/validate.py --skip-resources
       - name: CLI smoke tests
         run: |
           moon run --target native cmd/moonmime -- version
@@ -59,13 +80,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: hustcer/setup-moonbit@v1.22
+        with:
+          version: '0.10.16+b1a0e846e'
+          core-version: '0.10.16+b1a0e846e'
       - run: moon update
       - name: Native tests, build, and CLI
         shell: cmd
         run: |
           call "%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64 -host_arch=amd64
-          moon test --target native --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
-          moon build --target native --deny-warn --warn-list=-implicit_impl_as_method-test_unqualified_package
+          moon test --target native --deny-warn
+          moon build --target native --deny-warn
           moon run --target native cmd/moonmime -- version
           moon run --target native cmd/moonmime -- inspect examples\sample.eml --compatible --json
           powershell -NoProfile -ExecutionPolicy Bypass -File scripts\evaluate-security-corpus.ps1
@@ -77,6 +101,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: hustcer/setup-moonbit@v1.22
+        with:
+          version: '0.10.16+b1a0e846e'
+          core-version: '0.10.16+b1a0e846e'
       - run: moon update
       - name: Generate API documentation
         run: moon doc

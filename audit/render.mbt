@@ -74,7 +74,7 @@ pub fn render_json(report : AuditReport) -> String {
 }
 
 ///|
-fn render_path(path : Array[Int]) -> String {
+fn render_path(path : Array[Int32]) -> String {
   if path.is_empty() {
     return "."
   }

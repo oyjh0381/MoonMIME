@@ -143,7 +143,7 @@ fn kind_name(kind : @model.EntityKind) -> String {
 }
 
 ///|
-fn render_path(path : Array[Int]) -> String {
+fn render_path(path : Array[Int32]) -> String {
   if path.is_empty() {
     return "."
   }
@@ -158,7 +158,7 @@ fn render_path(path : Array[Int]) -> String {
 }
 
 ///|
-fn write_path(builder : StringBuilder, path : Array[Int]) -> Unit {
+fn write_path(builder : StringBuilder, path : Array[Int32]) -> Unit {
   builder.write_char('[')
   for index in 0..<path.length() {
     if index > 0 {
@@ -173,7 +173,7 @@ fn write_path(builder : StringBuilder, path : Array[Int]) -> Unit {
 fn json_int(
   builder : StringBuilder,
   name : String,
-  value : Int,
+  value : Int32,
   comma : Bool,
 ) -> Unit {
   if comma {
@@ -261,16 +261,16 @@ fn write_quoted(builder : StringBuilder, value : String) -> Unit {
 }
 
 ///|
-fn hex_digit(value : Int) -> String {
+fn hex_digit(value : Int32) -> String {
   if value < 10 {
     value.to_string()
   } else {
-    Int::unsafe_to_char('a'.to_int() + value - 10).to_string()
+    Int32::unsafe_to_char('a'.to_int() + value - 10).to_string()
   }
 }
 
 ///|
-fn utf8_width(byte : Byte) -> Int {
+fn utf8_width(byte : Byte) -> Int32 {
   if byte < b'\x80' {
     1
   } else if byte < b'\xe0' {
@@ -283,7 +283,7 @@ fn utf8_width(byte : Byte) -> Int {
 }
 
 ///|
-fn pad_right(value : String, width : Int) -> String {
+fn pad_right(value : String, width : Int32) -> String {
   let length = @utf8.encode(value).length()
   if length >= width {
     return value + " "

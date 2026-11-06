@@ -1,5 +1,5 @@
 ///|
-extern "C" fn process_exit(code : Int) = "exit"
+extern "C" fn process_exit(code : Int32) = "exit"
 
 ///|
 async fn main {
@@ -15,7 +15,7 @@ async fn main {
       "text" => run_text(args)
       "attachments" => run_attachments(args)
       "audit" => run_audit(args)
-      "version" | "--version" | "-V" => @stdio.stdout.write("moonmime 0.3.0\n")
+      "version" | "--version" | "-V" => @stdio.stdout.write("moonmime 0.4.0\n")
       "help" | "--help" | "-h" => print_usage()
       command => raise @model.InvalidArgument("unknown command: " + command)
     }
@@ -255,7 +255,7 @@ fn require_command_args(
 }
 
 ///|
-fn render_path(path : Array[Int]) -> String {
+fn render_path(path : Array[Int32]) -> String {
   if path.is_empty() {
     return "."
   }
@@ -295,7 +295,7 @@ async fn fail_mime(error : @model.MimeError) -> Unit {
 }
 
 ///|
-async fn fail_with(code : String, message : String, status : Int) -> Unit {
+async fn fail_with(code : String, message : String, status : Int32) -> Unit {
   @stdio.stderr.write(code + ": " + message + "\n")
   process_exit(status)
 }

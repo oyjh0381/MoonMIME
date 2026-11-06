@@ -1,0 +1,49 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "oyjh0381/moonmime/evidence"
+
+import {
+  "moonbitlang/core/debug",
+  "oyjh0381/moonmime/model",
+}
+
+// Values
+pub fn observe(Bytes, mode? : @model.ParseMode, limits? : @model.ResourceLimits) -> PayloadInventory raise @model.MimeError
+
+pub fn render_json(PayloadInventory) -> String
+
+// Errors
+
+// Types and methods
+pub(all) struct EntityFingerprint {
+  path : Array[Int32]
+  kind : String
+  media_type : String
+  filename : String?
+  disposition : String?
+  transfer_encoding : String
+  body_range : @model.ByteRange
+  encoded_sha256 : String
+  decoded_sha256 : String?
+  decoded_bytes : Int32?
+  decode_status : String
+  decode_error : String?
+} derive(Eq, @debug.Debug)
+pub fn EntityFingerprint::equal(Self, Self) -> Bool
+pub fn EntityFingerprint::not_equal(Self, Self) -> Bool
+pub fn EntityFingerprint::to_repr(Self) -> @debug.Repr
+
+pub(all) struct PayloadInventory {
+  raw_sha256 : String
+  raw_bytes : Int32
+  entities : Array[EntityFingerprint]
+  diagnostics : Array[String]
+  decoded_total : Int32
+  complete : Bool
+} derive(Eq, @debug.Debug)
+pub fn PayloadInventory::equal(Self, Self) -> Bool
+pub fn PayloadInventory::not_equal(Self, Self) -> Bool
+pub fn PayloadInventory::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

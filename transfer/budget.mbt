@@ -1,9 +1,9 @@
 ///|
 /// Mutable decoded-output budget shared across a sequence of leaf decodes.
 pub(all) struct DecodeBudget {
-  per_leaf_limit : Int
-  total_limit : Int
-  mut consumed : Int
+  per_leaf_limit : Int32
+  total_limit : Int32
+  mut consumed : Int32
 } derive(Debug, Eq)
 
 ///|
@@ -21,7 +21,7 @@ pub fn DecodeBudget::new(
 
 ///|
 /// Number of decoded bytes still available across all subsequent calls.
-pub fn DecodeBudget::remaining(self : DecodeBudget) -> Int {
+pub fn DecodeBudget::remaining(self : DecodeBudget) -> Int32 {
   self.total_limit - self.consumed
 }
 
@@ -57,3 +57,9 @@ pub fn DecodeBudget::decode_entity(
   self.consumed = self.consumed + result.bytes.length()
   result
 }
+
+///|
+pub extend DecodeBudget with @debug.Debug::{to_repr}
+
+///|
+pub extend DecodeBudget with Eq::{not_equal, equal}

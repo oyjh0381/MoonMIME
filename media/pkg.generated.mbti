@@ -6,9 +6,9 @@ import {
 }
 
 // Values
-pub fn parse_content_disposition(String, @model.ParseMode, Int) -> @model.ContentDisposition raise @model.MimeError
+pub fn parse_content_disposition(String, @model.ParseMode, Int32) -> @model.ContentDisposition raise @model.MimeError
 
-pub fn parse_media_type(String, @model.ParseMode, Int) -> @model.MediaType raise @model.MimeError
+pub fn parse_media_type(String, @model.ParseMode, Int32) -> @model.MediaType raise @model.MimeError
 
 pub fn parse_transfer_encoding(String) -> @model.TransferEncoding
 

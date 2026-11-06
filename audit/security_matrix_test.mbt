@@ -1,6 +1,6 @@
 ///|
-fn assert_has_code(text : String, code : AuditCode) -> Unit raise {
-  let report = audit_message(parse_compatible(text))
+fn assert_has_code(text : String, code : @audit.AuditCode) -> Unit raise {
+  let report = @audit.audit_message(parse_compatible(text))
   assert_true(report.findings.iter().any(fn(finding) { finding.code == code }))
 }
 
@@ -96,6 +96,6 @@ test "security matrix: 20 benign controls remain finding-free" {
       index.to_string() +
       "\r\nContent-Type: text/plain\r\n\r\nhello",
     )
-    assert_eq(audit_message(message).findings.length(), 0)
+    assert_eq(@audit.audit_message(message).findings.length(), 0)
   }
 }

@@ -1,8 +1,8 @@
 ///|
 priv struct ValueCursor {
   bytes : Bytes
-  mut offset : Int
-  end : Int
+  mut offset : Int32
+  end : Int32
 }
 
 ///|
@@ -10,7 +10,7 @@ priv struct ValueCursor {
 pub fn parse_media_type(
   value : String,
   mode : @model.ParseMode,
-  max_parameters : Int,
+  max_parameters : Int32,
 ) -> @model.MediaType raise @model.MimeError {
   let cursor = new_cursor(value)
   skip_wsp(cursor)
@@ -34,7 +34,7 @@ pub fn parse_media_type(
 pub fn parse_content_disposition(
   value : String,
   mode : @model.ParseMode,
-  max_parameters : Int,
+  max_parameters : Int32,
 ) -> @model.ContentDisposition raise @model.MimeError {
   let cursor = new_cursor(value)
   skip_wsp(cursor)
@@ -73,7 +73,7 @@ fn new_cursor(value : String) -> ValueCursor {
 fn parse_parameters(
   cursor : ValueCursor,
   mode : @model.ParseMode,
-  max_parameters : Int,
+  max_parameters : Int32,
   media_error : Bool,
 ) -> Array[@model.MediaParameter] raise @model.MimeError {
   if max_parameters <= 0 {
@@ -196,7 +196,7 @@ fn parse_quoted_string(
 }
 
 ///|
-fn classify_parameter_name(name : String) -> (String, Int?, Bool, Bool) {
+fn classify_parameter_name(name : String) -> (String, Int32?, Bool, Bool) {
   let bytes = @utf8.encode(name)
   let mut star = -1
   for index in 0..<bytes.length() {

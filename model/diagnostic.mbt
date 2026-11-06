@@ -38,7 +38,7 @@ pub(all) struct ParseDiagnostic {
   code : DiagnosticCode
   message : String
   range : ByteRange
-  entity_path : Array[Int]
+  entity_path : Array[Int32]
 } derive(Debug, Eq)
 
 ///|
@@ -61,3 +61,27 @@ pub fn DiagnosticCode::to_code(self : DiagnosticCode) -> String {
     UnsupportedCharsetPreserved => "unsupported-charset-preserved"
   }
 }
+
+///|
+pub extend ParseMode with @debug.Debug::{to_repr}
+
+///|
+pub extend ParseMode with Eq::{not_equal, equal}
+
+///|
+pub extend DiagnosticLevel with @debug.Debug::{to_repr}
+
+///|
+pub extend DiagnosticLevel with Eq::{not_equal, equal}
+
+///|
+pub extend DiagnosticCode with @debug.Debug::{to_repr}
+
+///|
+pub extend DiagnosticCode with Eq::{not_equal, equal}
+
+///|
+pub extend ParseDiagnostic with @debug.Debug::{to_repr}
+
+///|
+pub extend ParseDiagnostic with Eq::{not_equal, equal}
