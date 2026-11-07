@@ -2,7 +2,7 @@
 
 MoonMIME is a bounded, byte-preserving MIME security inspection and protocol-test foundation written primarily in MoonBit. It accepts a complete RFC 5322-style message as `Bytes`, builds a recursive MIME entity tree, keeps source ranges into the original input, and surfaces ambiguity before a gateway, forensic tool, or test harness interprets content.
 
-> Source status: **0.4.0, local/unpublished**. The registry release remains 0.3.1. This revision adds raw/decoded inventories, manifest verification, caller-owned gateway rules, quota-checked batch decisions and independent parser/consumer validation.
+Version **0.4.0** adds raw/decoded inventories, manifest verification, caller-owned gateway rules, quota-checked batch decisions and independent parser/consumer validation.
 
 Start with the [new capability guide](docs/DEEPENING.md), [3–5 minute demo](docs/DEMO.md) and [independent consumer](consumers/mailroom/README.md). No external adoption or complete mail-platform claim is made.
 
@@ -42,11 +42,11 @@ Published research demonstrates the need for this layer: CCS 2024 reported 180 s
 ## Install
 
 ```text
-moon add oyjh0381/moonmime@0.3.1
+moon add oyjh0381/moonmime@0.4.0
 ```
 
-This installs the existing published API. New 0.4.0 APIs currently require this
-checkout; `moon.work` connects the independent consumer module locally.
+The source checkout includes a `moon.work` connecting the independent consumer
+module for development and integration verification.
 
 ## Library quick start
 

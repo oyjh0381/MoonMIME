@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 - Unreleased
+## 0.4.0 - 2026-11-07
 
 - Add a portable encoded/decoded entity fingerprint inventory with shared output budget and explicit unavailable/unsupported/opaque states.
 - Recompute typed forensic manifests and verify canonical v1 sidecars; untrusted ranges never drive slicing.

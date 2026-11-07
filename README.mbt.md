@@ -9,7 +9,7 @@ let message = @moonmime.parse(
 inspect(message.root.media_type.essence(), content="text/plain")
 ```
 
-Source revision 0.4.0 (local, unpublished) adds raw/decoded fingerprint inventories, forensic manifest verification, custom gateway rules and quota-checked batch decisions. A separate consumer module and development-only CPython/MailParser differential runner make the integration reproducible. The registry release remains 0.3.1.
+Version 0.4.0 adds raw/decoded fingerprint inventories, forensic manifest verification, custom gateway rules and quota-checked batch decisions. A separate consumer module and development-only CPython/MailParser differential runner make the integration reproducible.
 
 The parser and integration packages do no network or filesystem I/O. Separate Native CLIs inspect/audit local `.eml`, evaluate gateway policy and emit/recheck forensic manifests. The new evidence inventory decodes under shared budgets and returns fingerprints, without writing attachment files.
 

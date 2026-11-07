@@ -1,8 +1,7 @@
 # Evidence inventories, verification and gateway policy
 
-The 0.4.0 source is a local, unpublished development revision. Existing 0.3.1
-registry installations do not expose these new APIs. Use root `moon.work` to run
-the independent consumer against this checkout.
+These APIs are introduced in 0.4.0. Use root `moon.work` to run the independent
+consumer against the source checkout.
 
 ## Four reusable capabilities
 
