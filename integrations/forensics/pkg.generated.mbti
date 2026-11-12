@@ -21,6 +21,7 @@ pub fn verify_sidecar(Bytes, String, String, String, limits? : @model.ResourceLi
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct EvidenceAttachment {
   entity_path : Array[Int32]
   filename : String?
@@ -28,11 +29,12 @@ pub(all) struct EvidenceAttachment {
   body_start : Int32
   body_end : Int32
   encoded_sha256 : String
-} derive(Eq, @debug.Debug)
+}
 pub fn EvidenceAttachment::equal(Self, Self) -> Bool
 pub fn EvidenceAttachment::not_equal(Self, Self) -> Bool
 pub fn EvidenceAttachment::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct EvidenceManifest {
   case_id : String
   source_id : String
@@ -43,24 +45,26 @@ pub(all) struct EvidenceManifest {
   entity_count : Int32
   attachments : Array[EvidenceAttachment]
   audit : @audit.AuditReport
-} derive(Eq, @debug.Debug)
+}
 pub fn EvidenceManifest::equal(Self, Self) -> Bool
 pub fn EvidenceManifest::not_equal(Self, Self) -> Bool
 pub fn EvidenceManifest::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ManifestIssue {
   code : String
   attachment_index : Int32?
-} derive(Eq, @debug.Debug)
+}
 pub fn ManifestIssue::equal(Self, Self) -> Bool
 pub fn ManifestIssue::not_equal(Self, Self) -> Bool
 pub fn ManifestIssue::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ManifestVerification {
   valid : Bool
   checked_attachments : Int32
   issues : Array[ManifestIssue]
-} derive(Eq, @debug.Debug)
+}
 pub fn ManifestVerification::equal(Self, Self) -> Bool
 pub fn ManifestVerification::not_equal(Self, Self) -> Bool
 pub fn ManifestVerification::to_repr(Self) -> @debug.Repr

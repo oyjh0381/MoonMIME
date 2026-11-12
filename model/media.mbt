@@ -1,5 +1,6 @@
 ///|
 /// Ordered media parameter preserving its original name and decoded value.
+#derive(Debug, Eq)
 pub(all) struct MediaParameter {
   name : String
   lower_name : String
@@ -7,15 +8,16 @@ pub(all) struct MediaParameter {
   extended : Bool
   section : Int32?
   encoded : Bool
-} derive(Debug, Eq)
+}
 
 ///|
 /// Parsed MIME media type and ordered parameters.
+#derive(Debug, Eq)
 pub(all) struct MediaType {
   top_level : String
   subtype : String
   parameters : Array[MediaParameter]
-} derive(Debug, Eq)
+}
 
 ///|
 /// Default media type for a MIME entity with no Content-Type field.
@@ -59,10 +61,11 @@ pub fn MediaType::parameter(
 
 ///|
 /// Content-Disposition and its ordered parameters.
+#derive(Debug, Eq)
 pub(all) struct ContentDisposition {
   kind : String
   parameters : Array[MediaParameter]
-} derive(Debug, Eq)
+}
 
 ///|
 /// Return the last parameter with a normalized name.
@@ -82,6 +85,7 @@ pub fn ContentDisposition::parameter(
 
 ///|
 /// Standard and extension content-transfer encodings.
+#derive(Debug, Eq)
 pub(all) enum TransferEncoding {
   SevenBit
   EightBit
@@ -89,7 +93,7 @@ pub(all) enum TransferEncoding {
   Base64
   QuotedPrintable
   Extension(String)
-} derive(Debug, Eq)
+}
 
 ///|
 /// Canonical lower-case spelling for reports.

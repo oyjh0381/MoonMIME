@@ -1,9 +1,10 @@
 ///|
 /// Header parser output with non-fatal compatibility observations.
+#derive(Debug, Eq)
 pub(all) struct HeaderParseResult {
   block : @model.HeaderBlock
   diagnostics : Array[@model.ParseDiagnostic]
-} derive(Debug, Eq)
+}
 
 ///|
 priv struct PendingHeader {

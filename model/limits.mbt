@@ -1,5 +1,6 @@
 ///|
 /// Resource limits applied before allocating or recursively parsing content.
+#derive(Debug, Eq)
 pub(all) struct ResourceLimits {
   max_input_bytes : Int32
   max_header_bytes : Int32
@@ -13,7 +14,7 @@ pub(all) struct ResourceLimits {
   max_parameter_count : Int32
   max_boundary_bytes : Int32
   max_diagnostics : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 /// Conservative defaults suitable for untrusted messages in ordinary tools.

@@ -1,5 +1,6 @@
 ///|
 /// No body bytes are returned or extracted; ranges refer to the original input.
+#derive(Eq, Debug)
 pub(all) struct EntityFingerprint {
   path : Array[Int32]
   kind : String
@@ -13,9 +14,10 @@ pub(all) struct EntityFingerprint {
   decoded_bytes : Int32?
   decode_status : String
   decode_error : String?
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct PayloadInventory {
   raw_sha256 : String
   raw_bytes : Int32
@@ -23,7 +25,7 @@ pub(all) struct PayloadInventory {
   diagnostics : Array[String]
   decoded_total : Int32
   complete : Bool
-} derive(Eq, Debug)
+}
 
 ///|
 /// Inventory every entity and decode supported leaf encodings under one shared

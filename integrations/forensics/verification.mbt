@@ -1,15 +1,17 @@
 ///|
+#derive(Eq, Debug)
 pub(all) struct ManifestIssue {
   code : String
   attachment_index : Int32?
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct ManifestVerification {
   valid : Bool
   checked_attachments : Int32
   issues : Array[ManifestIssue]
-} derive(Eq, Debug)
+}
 
 ///|
 /// Reparse and recompute against the supplied original bytes. Case/source IDs

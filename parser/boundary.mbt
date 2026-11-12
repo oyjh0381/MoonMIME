@@ -1,18 +1,20 @@
 ///|
 /// One recognized MIME delimiter line.
+#derive(Debug, Eq)
 pub(all) struct BoundaryDelimiter {
   line_start : Int32
   line_end : Int32
   full_end : Int32
   closing : Bool
-} derive(Debug, Eq)
+}
 
 ///|
 /// Result of a line-anchored multipart boundary scan.
+#derive(Debug, Eq)
 pub(all) struct BoundaryScan {
   delimiters : Array[BoundaryDelimiter]
   closed : Bool
-} derive(Debug, Eq)
+}
 
 ///|
 /// Scan a bounded body for exact, line-anchored MIME delimiter lines.

@@ -1,5 +1,6 @@
 ///|
 /// One attachment-like entity bound to its original encoded body bytes.
+#derive(Debug, Eq)
 pub(all) struct EvidenceAttachment {
   entity_path : Array[Int32]
   filename : String?
@@ -7,13 +8,14 @@ pub(all) struct EvidenceAttachment {
   body_start : Int32
   body_end : Int32
   encoded_sha256 : String
-} derive(Debug, Eq)
+}
 
 ///|
 /// Deterministic sidecar for a preserved `.eml` evidence item.
 ///
 /// Acquisition timestamps, examiner identity, signatures, and evidence-store
 /// locations deliberately remain the responsibility of the case system.
+#derive(Debug, Eq)
 pub(all) struct EvidenceManifest {
   case_id : String
   source_id : String
@@ -24,7 +26,7 @@ pub(all) struct EvidenceManifest {
   entity_count : Int32
   attachments : Array[EvidenceAttachment]
   audit : @audit.AuditReport
-} derive(Debug, Eq)
+}
 
 ///|
 /// Build a byte-bound forensic sidecar without mutating or extracting evidence.

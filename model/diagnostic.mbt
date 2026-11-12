@@ -1,19 +1,22 @@
 ///|
 /// Parser behavior selected for non-standard but recognizable input.
+#derive(Debug, Eq)
 pub(all) enum ParseMode {
   Strict
   Compatible
-} derive(Debug, Eq)
+}
 
 ///|
 /// Severity of a non-fatal parse observation.
+#derive(Debug, Eq)
 pub(all) enum DiagnosticLevel {
   Warning
   Info
-} derive(Debug, Eq)
+}
 
 ///|
 /// Machine-stable diagnostic codes returned in compatible mode.
+#derive(Debug, Eq)
 pub(all) enum DiagnosticCode {
   BareLineFeed
   BareCarriageReturn
@@ -29,17 +32,18 @@ pub(all) enum DiagnosticCode {
   TrailingBytesAfterBoundary
   MissingClosingBoundaryAccepted
   UnsupportedCharsetPreserved
-} derive(Debug, Eq)
+}
 
 ///|
 /// Structured observation about accepted non-standard input.
+#derive(Debug, Eq)
 pub(all) struct ParseDiagnostic {
   level : DiagnosticLevel
   code : DiagnosticCode
   message : String
   range : ByteRange
   entity_path : Array[Int32]
-} derive(Debug, Eq)
+}
 
 ///|
 /// Stable textual spelling used by JSON and CLI reports.

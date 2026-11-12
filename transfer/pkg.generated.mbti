@@ -20,20 +20,22 @@ pub fn decode_transfer(Bytes, @model.TransferEncoding, @model.ParseMode, Int32) 
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct Base64Result {
   bytes : Bytes
   ignored_whitespace : Int32
   unpadded : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn Base64Result::equal(Self, Self) -> Bool
 pub fn Base64Result::not_equal(Self, Self) -> Bool
 pub fn Base64Result::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct DecodeBudget {
   per_leaf_limit : Int32
   total_limit : Int32
   mut consumed : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn DecodeBudget::decode_entity(Self, @model.InternetMessage, @model.MimeEntity, @model.ParseMode) -> TransferDecodeResult raise @model.MimeError
 pub fn DecodeBudget::equal(Self, Self) -> Bool
 pub fn DecodeBudget::new(@model.ResourceLimits) -> Self raise @model.MimeError
@@ -41,22 +43,24 @@ pub fn DecodeBudget::not_equal(Self, Self) -> Bool
 pub fn DecodeBudget::remaining(Self) -> Int32
 pub fn DecodeBudget::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct QuotedPrintableResult {
   bytes : Bytes
   escaped_octets : Int32
   soft_line_breaks : Int32
   bare_lf_soft_breaks : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn QuotedPrintableResult::equal(Self, Self) -> Bool
 pub fn QuotedPrintableResult::not_equal(Self, Self) -> Bool
 pub fn QuotedPrintableResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct TransferDecodeResult {
   bytes : Bytes
   encoding : @model.TransferEncoding
   transformed : Bool
   compatibility_recovery : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn TransferDecodeResult::equal(Self, Self) -> Bool
 pub fn TransferDecodeResult::not_equal(Self, Self) -> Bool
 pub fn TransferDecodeResult::to_repr(Self) -> @debug.Repr

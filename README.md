@@ -10,6 +10,8 @@ For release verification, see [2026-10-01 verification](docs/LOCAL_VERIFICATION_
 
 中文文档：[README_zh_CN.md](README_zh_CN.md)
 
+维护验证使用官方 MoonBit 工具链，`moon` 版本为 `0.1.20261104`，编译器版本为 `v0.10.20+65efd5b93`。源码构建及 CI 请使用此版本或兼容的更新版本。
+
 ## Why MoonMIME
 
 MoonMIME is not another mail-sending or convenience extraction library. It is a pre-interpretation layer for hostile `.eml`: it preserves ordered duplicates and raw byte ranges, rejects or reports parser-differential primitives, and applies independent resource budgets. Two complete, executable upper-layer workflows are documented in [integration cases](docs/INTEGRATION_CASES.md); the threat evidence and competitive boundary are recorded in [primary-source evidence](docs/SECURITY_FORENSICS_EVIDENCE.md) and [related work](docs/RELATED_WORK.md).

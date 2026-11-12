@@ -8,6 +8,7 @@ import {
 // Values
 
 // Errors
+#derive(Eq, @debug.Debug)
 pub(all) suberror MimeError {
   InvalidArgument(String)
   InputTooLarge(Int32, Int32)
@@ -33,7 +34,7 @@ pub(all) suberror MimeError {
   InvalidEncodedWord(String)
   InvalidByteRange(Int32, Int32, Int32)
   IoFailure(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn MimeError::code(Self) -> String
 pub fn MimeError::equal(Self, Self) -> Bool
 pub fn MimeError::exit_code(Self) -> Int32
@@ -42,6 +43,7 @@ pub fn MimeError::not_equal(Self, Self) -> Bool
 pub fn MimeError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct Attachment {
   path : Array[Int32]
   filename : String?
@@ -50,15 +52,16 @@ pub(all) struct Attachment {
   transfer_encoding : String
   raw_size : Int32
   explicit : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn Attachment::equal(Self, Self) -> Bool
 pub fn Attachment::not_equal(Self, Self) -> Bool
 pub fn Attachment::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ByteRange {
   start : Int32
   end : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn ByteRange::contains(Self, Int32) -> Bool
 pub fn ByteRange::equal(Self, Self) -> Bool
 pub fn ByteRange::is_empty(Self) -> Bool
@@ -69,15 +72,17 @@ pub fn ByteRange::to_repr(Self) -> @debug.Repr
 pub fn ByteRange::trusted(Int32, Int32) -> Self
 pub fn ByteRange::validate(Self, Int32) -> Unit raise MimeError
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ContentDisposition {
   kind : String
   parameters : Array[MediaParameter]
-} derive(Eq, @debug.Debug)
+}
 pub fn ContentDisposition::equal(Self, Self) -> Bool
 pub fn ContentDisposition::not_equal(Self, Self) -> Bool
 pub fn ContentDisposition::parameter(Self, StringView) -> String?
 pub fn ContentDisposition::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum DiagnosticCode {
   BareLineFeed
   BareCarriageReturn
@@ -93,34 +98,37 @@ pub(all) enum DiagnosticCode {
   TrailingBytesAfterBoundary
   MissingClosingBoundaryAccepted
   UnsupportedCharsetPreserved
-} derive(Eq, @debug.Debug)
+}
 pub fn DiagnosticCode::equal(Self, Self) -> Bool
 pub fn DiagnosticCode::not_equal(Self, Self) -> Bool
 pub fn DiagnosticCode::to_code(Self) -> String
 pub fn DiagnosticCode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum DiagnosticLevel {
   Warning
   Info
-} derive(Eq, @debug.Debug)
+}
 pub fn DiagnosticLevel::equal(Self, Self) -> Bool
 pub fn DiagnosticLevel::not_equal(Self, Self) -> Bool
 pub fn DiagnosticLevel::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum EntityKind {
   Leaf
   Multipart
   EmbeddedMessage
-} derive(Eq, @debug.Debug)
+}
 pub fn EntityKind::equal(Self, Self) -> Bool
 pub fn EntityKind::not_equal(Self, Self) -> Bool
 pub fn EntityKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct HeaderBlock {
   fields : Array[HeaderField]
   range : ByteRange
   body_start : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn HeaderBlock::all(Self, StringView) -> Array[HeaderField]
 pub fn HeaderBlock::contains(Self, StringView) -> Bool
 pub fn HeaderBlock::equal(Self, Self) -> Bool
@@ -128,6 +136,7 @@ pub fn HeaderBlock::first(Self, StringView) -> HeaderField?
 pub fn HeaderBlock::not_equal(Self, Self) -> Bool
 pub fn HeaderBlock::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct HeaderField {
   name : String
   lower_name : String
@@ -135,21 +144,23 @@ pub(all) struct HeaderField {
   field_range : ByteRange
   value_range : ByteRange
   line_count : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn HeaderField::equal(Self, Self) -> Bool
 pub fn HeaderField::not_equal(Self, Self) -> Bool
 pub fn HeaderField::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct InternetMessage {
   raw : Bytes
   root : MimeEntity
   diagnostics : Array[ParseDiagnostic]
   stats : ParseStats
-} derive(Eq, @debug.Debug)
+}
 pub fn InternetMessage::equal(Self, Self) -> Bool
 pub fn InternetMessage::not_equal(Self, Self) -> Bool
 pub fn InternetMessage::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct MediaParameter {
   name : String
   lower_name : String
@@ -157,16 +168,17 @@ pub(all) struct MediaParameter {
   extended : Bool
   section : Int32?
   encoded : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn MediaParameter::equal(Self, Self) -> Bool
 pub fn MediaParameter::not_equal(Self, Self) -> Bool
 pub fn MediaParameter::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct MediaType {
   top_level : String
   subtype : String
   parameters : Array[MediaParameter]
-} derive(Eq, @debug.Debug)
+}
 pub fn MediaType::equal(Self, Self) -> Bool
 pub fn MediaType::essence(Self) -> String
 pub fn MediaType::is_message_rfc822(Self) -> Bool
@@ -176,6 +188,7 @@ pub fn MediaType::parameter(Self, StringView) -> String?
 pub fn MediaType::text_plain() -> Self
 pub fn MediaType::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct MimeEntity {
   path : Array[Int32]
   depth : Int32
@@ -189,32 +202,35 @@ pub(all) struct MimeEntity {
   preamble_range : ByteRange?
   epilogue_range : ByteRange?
   children : Array[MimeEntity]
-} derive(Eq, @debug.Debug)
+}
 pub fn MimeEntity::equal(Self, Self) -> Bool
 pub fn MimeEntity::filename(Self) -> String?
 pub fn MimeEntity::is_explicit_attachment(Self) -> Bool
 pub fn MimeEntity::not_equal(Self, Self) -> Bool
 pub fn MimeEntity::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ParseDiagnostic {
   level : DiagnosticLevel
   code : DiagnosticCode
   message : String
   range : ByteRange
   entity_path : Array[Int32]
-} derive(Eq, @debug.Debug)
+}
 pub fn ParseDiagnostic::equal(Self, Self) -> Bool
 pub fn ParseDiagnostic::not_equal(Self, Self) -> Bool
 pub fn ParseDiagnostic::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ParseMode {
   Strict
   Compatible
-} derive(Eq, @debug.Debug)
+}
 pub fn ParseMode::equal(Self, Self) -> Bool
 pub fn ParseMode::not_equal(Self, Self) -> Bool
 pub fn ParseMode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ParseStats {
   entities : Int32
   leaf_entities : Int32
@@ -222,11 +238,12 @@ pub(all) struct ParseStats {
   embedded_messages : Int32
   maximum_depth : Int32
   raw_bytes : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn ParseStats::equal(Self, Self) -> Bool
 pub fn ParseStats::not_equal(Self, Self) -> Bool
 pub fn ParseStats::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ResourceLimits {
   max_input_bytes : Int32
   max_header_bytes : Int32
@@ -240,7 +257,7 @@ pub(all) struct ResourceLimits {
   max_parameter_count : Int32
   max_boundary_bytes : Int32
   max_diagnostics : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn ResourceLimits::edge_defaults() -> Self
 pub fn ResourceLimits::equal(Self, Self) -> Bool
 pub fn ResourceLimits::not_equal(Self, Self) -> Bool
@@ -248,16 +265,18 @@ pub fn ResourceLimits::secure_defaults() -> Self
 pub fn ResourceLimits::to_repr(Self) -> @debug.Repr
 pub fn ResourceLimits::validate(Self) -> Unit raise MimeError
 
+#derive(Eq, @debug.Debug)
 pub(all) struct TextSelection {
   path : Array[Int32]
   media_type : String
   charset : String?
   text : String
-} derive(Eq, @debug.Debug)
+}
 pub fn TextSelection::equal(Self, Self) -> Bool
 pub fn TextSelection::not_equal(Self, Self) -> Bool
 pub fn TextSelection::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum TransferEncoding {
   SevenBit
   EightBit
@@ -265,7 +284,7 @@ pub(all) enum TransferEncoding {
   Base64
   QuotedPrintable
   Extension(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn TransferEncoding::equal(Self, Self) -> Bool
 pub fn TransferEncoding::not_equal(Self, Self) -> Bool
 pub fn TransferEncoding::to_repr(Self) -> @debug.Repr

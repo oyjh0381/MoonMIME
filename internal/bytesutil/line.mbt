@@ -1,20 +1,22 @@
 ///|
 /// Line ending observed in the source representation.
+#derive(Debug, Eq)
 pub(all) enum LineEnding {
   CrLf
   Lf
   Cr
   EndOfInput
-} derive(Debug, Eq)
+}
 
 ///|
 /// One physical line with content excluding and range including its ending.
+#derive(Debug, Eq)
 pub(all) struct PhysicalLine {
   content_start : Int32
   content_end : Int32
   full_end : Int32
   ending : LineEnding
-} derive(Debug, Eq)
+}
 
 ///|
 /// Length of the physical line content in bytes.

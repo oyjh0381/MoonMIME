@@ -1,5 +1,6 @@
 ///|
 /// Stable error categories exposed by MoonMIME.
+#derive(Debug, Eq)
 pub(all) suberror MimeError {
   InvalidArgument(String)
   InputTooLarge(Int32, Int32)
@@ -25,7 +26,7 @@ pub(all) suberror MimeError {
   InvalidEncodedWord(String)
   InvalidByteRange(Int32, Int32, Int32)
   IoFailure(String)
-} derive(Debug, Eq)
+}
 
 ///|
 /// Stable machine-readable category for automation and CLI clients.

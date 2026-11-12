@@ -1,20 +1,23 @@
 ///|
 /// Action returned to a mail ingestion pipeline.
+#derive(Debug, Eq)
 pub(all) enum GatewayAction {
   Allow
   Quarantine
-} derive(Debug, Eq)
+}
 
 ///|
 /// Explicit gateway policy. Parsing limits remain enforced independently.
+#derive(Debug, Eq)
 pub(all) struct GatewayPolicy {
   mode : @model.ParseMode
   quarantine_on : @audit.AuditSeverity
   limits : @model.ResourceLimits
-} derive(Debug, Eq)
+}
 
 ///|
 /// Stable, explainable result for one ingestion candidate.
+#derive(Debug, Eq)
 pub(all) struct GatewayDecision {
   source_id : String
   action : GatewayAction
@@ -23,7 +26,7 @@ pub(all) struct GatewayDecision {
   attachment_count : Int32
   triggered_codes : Array[String]
   audit : @audit.AuditReport
-} derive(Debug, Eq)
+}
 
 ///|
 /// Recommended policy for heterogeneous real-world mail: parse recoverable

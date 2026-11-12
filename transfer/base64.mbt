@@ -1,10 +1,11 @@
 ///|
 /// Details retained from MIME Base64 transfer decoding.
+#derive(Debug, Eq)
 pub(all) struct Base64Result {
   bytes : Bytes
   ignored_whitespace : Int32
   unpadded : Bool
-} derive(Debug, Eq)
+}
 
 ///|
 /// Decode MIME Base64 with bounded allocation and canonical tail checks.

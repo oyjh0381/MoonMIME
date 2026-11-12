@@ -14,20 +14,22 @@ pub fn scan_boundaries(Bytes, Int32, Int32, String) -> BoundaryScan raise @model
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct BoundaryDelimiter {
   line_start : Int32
   line_end : Int32
   full_end : Int32
   closing : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn BoundaryDelimiter::equal(Self, Self) -> Bool
 pub fn BoundaryDelimiter::not_equal(Self, Self) -> Bool
 pub fn BoundaryDelimiter::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct BoundaryScan {
   delimiters : Array[BoundaryDelimiter]
   closed : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn BoundaryScan::equal(Self, Self) -> Bool
 pub fn BoundaryScan::not_equal(Self, Self) -> Bool
 pub fn BoundaryScan::to_repr(Self) -> @debug.Repr

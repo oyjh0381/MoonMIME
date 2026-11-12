@@ -12,12 +12,13 @@ pub fn interpret_headers(@model.HeaderBlock, @model.ParseMode, @model.ResourceLi
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct EntityMetadata {
   media_type : @model.MediaType
   disposition : @model.ContentDisposition?
   transfer_encoding : @model.TransferEncoding
   diagnostics : Array[@model.ParseDiagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn EntityMetadata::equal(Self, Self) -> Bool
 pub fn EntityMetadata::not_equal(Self, Self) -> Bool
 pub fn EntityMetadata::to_repr(Self) -> @debug.Repr

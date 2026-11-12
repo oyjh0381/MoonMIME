@@ -32,19 +32,21 @@ pub(all) struct BatchDecision {
   error_message : String?
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum GatewayAction {
   Allow
   Quarantine
-} derive(Eq, @debug.Debug)
+}
 pub fn GatewayAction::equal(Self, Self) -> Bool
 pub fn GatewayAction::not_equal(Self, Self) -> Bool
 pub fn GatewayAction::to_repr(Self) -> @debug.Repr
 pub fn GatewayAction::to_string(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub(all) struct GatewayAssessment {
   decision : GatewayDecision
   policy_findings : Array[PolicyFinding]
-} derive(Eq, @debug.Debug)
+}
 pub fn GatewayAssessment::equal(Self, Self) -> Bool
 pub fn GatewayAssessment::not_equal(Self, Self) -> Bool
 pub fn GatewayAssessment::to_repr(Self) -> @debug.Repr
@@ -57,6 +59,7 @@ pub(all) struct GatewayBatch {
   input_bytes : Int64
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) struct GatewayDecision {
   source_id : String
   action : GatewayAction
@@ -65,7 +68,7 @@ pub(all) struct GatewayDecision {
   attachment_count : Int32
   triggered_codes : Array[String]
   audit : @audit.AuditReport
-} derive(Eq, @debug.Debug)
+}
 pub fn GatewayDecision::equal(Self, Self) -> Bool
 pub fn GatewayDecision::not_equal(Self, Self) -> Bool
 pub fn GatewayDecision::to_repr(Self) -> @debug.Repr
@@ -75,16 +78,18 @@ pub(all) struct GatewayInput {
   input : Bytes
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) struct GatewayPolicy {
   mode : @model.ParseMode
   quarantine_on : @audit.AuditSeverity
   limits : @model.ResourceLimits
-} derive(Eq, @debug.Debug)
+}
 pub fn GatewayPolicy::equal(Self, Self) -> Bool
 pub fn GatewayPolicy::not_equal(Self, Self) -> Bool
 pub fn GatewayPolicy::recommended() -> Self
 pub fn GatewayPolicy::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct GatewayRules {
   allowed_media_types : Array[String]?
   blocked_media_types : Array[String]
@@ -94,17 +99,18 @@ pub(all) struct GatewayRules {
   max_total_attachment_wire_bytes : Int32
   require_attachment_names : Bool
   quarantine_on_recovery : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn GatewayRules::default() -> Self
 pub fn GatewayRules::equal(Self, Self) -> Bool
 pub fn GatewayRules::not_equal(Self, Self) -> Bool
 pub fn GatewayRules::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct PolicyFinding {
   code : String
   entity_path : Array[Int32]
   evidence_range : @model.ByteRange
-} derive(Eq, @debug.Debug)
+}
 pub fn PolicyFinding::equal(Self, Self) -> Bool
 pub fn PolicyFinding::not_equal(Self, Self) -> Bool
 pub fn PolicyFinding::to_repr(Self) -> @debug.Repr

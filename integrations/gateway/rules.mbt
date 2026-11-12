@@ -1,5 +1,6 @@
 ///|
 /// Application policy on declared metadata, not content sniffing or antivirus.
+#derive(Eq, Debug)
 pub(all) struct GatewayRules {
   allowed_media_types : Array[String]?
   blocked_media_types : Array[String]
@@ -9,7 +10,7 @@ pub(all) struct GatewayRules {
   max_total_attachment_wire_bytes : Int32
   require_attachment_names : Bool
   quarantine_on_recovery : Bool
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn GatewayRules::default() -> GatewayRules {
@@ -26,17 +27,19 @@ pub fn GatewayRules::default() -> GatewayRules {
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct PolicyFinding {
   code : String
   entity_path : Array[Int32]
   evidence_range : @model.ByteRange
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct GatewayAssessment {
   decision : GatewayDecision
   policy_findings : Array[PolicyFinding]
-} derive(Eq, Debug)
+}
 
 ///|
 fn validate_rules(rules : GatewayRules) -> Unit raise @model.MimeError {

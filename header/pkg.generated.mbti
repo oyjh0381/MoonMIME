@@ -14,19 +14,21 @@ pub fn parse_header_block(Bytes, Int32, Int32, @model.ParseMode, @model.Resource
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct EncodedHeaderResult {
   value : String
   decoded_words : Int32
   preserved_invalid_words : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn EncodedHeaderResult::equal(Self, Self) -> Bool
 pub fn EncodedHeaderResult::not_equal(Self, Self) -> Bool
 pub fn EncodedHeaderResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct HeaderParseResult {
   block : @model.HeaderBlock
   diagnostics : Array[@model.ParseDiagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn HeaderParseResult::equal(Self, Self) -> Bool
 pub fn HeaderParseResult::not_equal(Self, Self) -> Bool
 pub fn HeaderParseResult::to_repr(Self) -> @debug.Repr

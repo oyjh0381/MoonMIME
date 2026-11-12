@@ -1,13 +1,15 @@
 ///|
 /// Structural interpretation of one MIME Entity body.
+#derive(Debug, Eq)
 pub(all) enum EntityKind {
   Leaf
   Multipart
   EmbeddedMessage
-} derive(Debug, Eq)
+}
 
 ///|
 /// One byte-preserving entity in the recursive MIME tree.
+#derive(Debug, Eq)
 pub(all) struct MimeEntity {
   path : Array[Int32]
   depth : Int32
@@ -21,7 +23,7 @@ pub(all) struct MimeEntity {
   preamble_range : ByteRange?
   epilogue_range : ByteRange?
   children : Array[MimeEntity]
-} derive(Debug, Eq)
+}
 
 ///|
 /// Whether Content-Disposition explicitly marks this entity as an attachment.
@@ -43,15 +45,17 @@ pub fn MimeEntity::filename(self : MimeEntity) -> String? {
 
 ///|
 /// Full parsed message, retaining exact input bytes and all diagnostics.
+#derive(Debug, Eq)
 pub(all) struct InternetMessage {
   raw : Bytes
   root : MimeEntity
   diagnostics : Array[ParseDiagnostic]
   stats : ParseStats
-} derive(Debug, Eq)
+}
 
 ///|
 /// Counts accumulated without re-walking the entity tree.
+#derive(Debug, Eq)
 pub(all) struct ParseStats {
   entities : Int32
   leaf_entities : Int32
@@ -59,10 +63,11 @@ pub(all) struct ParseStats {
   embedded_messages : Int32
   maximum_depth : Int32
   raw_bytes : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 /// Metadata returned when enumerating attachment candidates.
+#derive(Debug, Eq)
 pub(all) struct Attachment {
   path : Array[Int32]
   filename : String?
@@ -71,16 +76,17 @@ pub(all) struct Attachment {
   transfer_encoding : String
   raw_size : Int32
   explicit : Bool
-} derive(Debug, Eq)
+}
 
 ///|
 /// Selected display-body candidate.
+#derive(Debug, Eq)
 pub(all) struct TextSelection {
   path : Array[Int32]
   media_type : String
   charset : String?
   text : String
-} derive(Debug, Eq)
+}
 
 ///|
 pub extend EntityKind with @debug.Debug::{to_repr}

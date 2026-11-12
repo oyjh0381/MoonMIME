@@ -1,11 +1,12 @@
 ///|
 /// Details retained from Quoted-Printable body decoding.
+#derive(Debug, Eq)
 pub(all) struct QuotedPrintableResult {
   bytes : Bytes
   escaped_octets : Int32
   soft_line_breaks : Int32
   bare_lf_soft_breaks : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 /// Decode RFC 2045 Quoted-Printable body content with bounded output.

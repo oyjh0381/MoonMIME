@@ -16,6 +16,7 @@ pub fn render_summary(AuditReport) -> String
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) enum AuditCode {
   DuplicateSingletonHeader
   ConflictingSingletonHeader
@@ -25,23 +26,25 @@ pub(all) enum AuditCode {
   OpaqueEmbeddedMessage
   ParserRecovery
   NonCanonicalLineEnding
-} derive(Eq, @debug.Debug)
+}
 pub fn AuditCode::equal(Self, Self) -> Bool
 pub fn AuditCode::not_equal(Self, Self) -> Bool
 pub fn AuditCode::to_code(Self) -> String
 pub fn AuditCode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct AuditFinding {
   code : AuditCode
   severity : AuditSeverity
   message : String
   entity_path : Array[Int32]
   evidence_range : @model.ByteRange
-} derive(Eq, @debug.Debug)
+}
 pub fn AuditFinding::equal(Self, Self) -> Bool
 pub fn AuditFinding::not_equal(Self, Self) -> Bool
 pub fn AuditFinding::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct AuditReport {
   findings : Array[AuditFinding]
   risk_score : Int32
@@ -49,18 +52,19 @@ pub(all) struct AuditReport {
   medium : Int32
   low : Int32
   info : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn AuditReport::equal(Self, Self) -> Bool
 pub fn AuditReport::has_at_least(Self, AuditSeverity) -> Bool
 pub fn AuditReport::not_equal(Self, Self) -> Bool
 pub fn AuditReport::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum AuditSeverity {
   Info
   Low
   Medium
   High
-} derive(Eq, @debug.Debug)
+}
 pub fn AuditSeverity::equal(Self, Self) -> Bool
 pub fn AuditSeverity::not_equal(Self, Self) -> Bool
 pub fn AuditSeverity::to_repr(Self) -> @debug.Repr

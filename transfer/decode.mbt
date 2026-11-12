@@ -1,11 +1,12 @@
 ///|
 /// Bounded result of applying one Content-Transfer-Encoding.
+#derive(Debug, Eq)
 pub(all) struct TransferDecodeResult {
   bytes : Bytes
   encoding : @model.TransferEncoding
   transformed : Bool
   compatibility_recovery : Bool
-} derive(Debug, Eq)
+}
 
 ///|
 /// Decode a leaf body according to its normalized transfer encoding.

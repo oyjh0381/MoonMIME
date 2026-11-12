@@ -14,6 +14,7 @@ pub fn render_json(PayloadInventory) -> String
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct EntityFingerprint {
   path : Array[Int32]
   kind : String
@@ -27,11 +28,12 @@ pub(all) struct EntityFingerprint {
   decoded_bytes : Int32?
   decode_status : String
   decode_error : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn EntityFingerprint::equal(Self, Self) -> Bool
 pub fn EntityFingerprint::not_equal(Self, Self) -> Bool
 pub fn EntityFingerprint::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct PayloadInventory {
   raw_sha256 : String
   raw_bytes : Int32
@@ -39,7 +41,7 @@ pub(all) struct PayloadInventory {
   diagnostics : Array[String]
   decoded_total : Int32
   complete : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn PayloadInventory::equal(Self, Self) -> Bool
 pub fn PayloadInventory::not_equal(Self, Self) -> Bool
 pub fn PayloadInventory::to_repr(Self) -> @debug.Repr

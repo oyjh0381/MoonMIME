@@ -1,11 +1,12 @@
 ///|
 /// MIME semantics derived from one already parsed header block.
+#derive(Debug, Eq)
 pub(all) struct EntityMetadata {
   media_type : @model.MediaType
   disposition : @model.ContentDisposition?
   transfer_encoding : @model.TransferEncoding
   diagnostics : Array[@model.ParseDiagnostic]
-} derive(Debug, Eq)
+}
 
 ///|
 /// Interpret the singleton MIME fields of one entity.

@@ -1,14 +1,16 @@
 ///|
 /// Severity of a security or forensic audit finding.
+#derive(Debug, Eq)
 pub(all) enum AuditSeverity {
   Info
   Low
   Medium
   High
-} derive(Debug, Eq)
+}
 
 ///|
 /// Machine-stable finding categories. These codes are part of the public API.
+#derive(Debug, Eq)
 pub(all) enum AuditCode {
   DuplicateSingletonHeader
   ConflictingSingletonHeader
@@ -18,20 +20,22 @@ pub(all) enum AuditCode {
   OpaqueEmbeddedMessage
   ParserRecovery
   NonCanonicalLineEnding
-} derive(Debug, Eq)
+}
 
 ///|
 /// One evidence-backed observation tied to an entity and source byte range.
+#derive(Debug, Eq)
 pub(all) struct AuditFinding {
   code : AuditCode
   severity : AuditSeverity
   message : String
   entity_path : Array[Int32]
   evidence_range : @model.ByteRange
-} derive(Debug, Eq)
+}
 
 ///|
 /// Deterministic audit result suitable for CI policy decisions.
+#derive(Debug, Eq)
 pub(all) struct AuditReport {
   findings : Array[AuditFinding]
   risk_score : Int32
@@ -39,7 +43,7 @@ pub(all) struct AuditReport {
   medium : Int32
   low : Int32
   info : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 /// Audit a parsed message without decoding bodies or writing attachments.

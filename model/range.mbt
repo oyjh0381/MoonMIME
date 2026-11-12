@@ -1,9 +1,10 @@
 ///|
 /// Half-open byte range into an Internet Message's Raw Representation.
+#derive(Debug, Eq)
 pub(all) struct ByteRange {
   start : Int32
   end : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 /// Construct a range after validating monotonic non-negative bounds.

@@ -1,10 +1,11 @@
 ///|
 /// Mutable decoded-output budget shared across a sequence of leaf decodes.
+#derive(Debug, Eq)
 pub(all) struct DecodeBudget {
   per_leaf_limit : Int32
   total_limit : Int32
   mut consumed : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 /// Construct a shared budget from validated parser resource limits.

@@ -1,5 +1,6 @@
 ///|
 /// One ordered header field with normalized lookup name and unfolded value.
+#derive(Debug, Eq)
 pub(all) struct HeaderField {
   name : String
   lower_name : String
@@ -7,15 +8,16 @@ pub(all) struct HeaderField {
   field_range : ByteRange
   value_range : ByteRange
   line_count : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 /// Ordered fields and their exact source region.
+#derive(Debug, Eq)
 pub(all) struct HeaderBlock {
   fields : Array[HeaderField]
   range : ByteRange
   body_start : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 /// Return the first field whose name matches ASCII case-insensitively.

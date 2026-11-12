@@ -56,22 +56,24 @@ pub fn trim_wsp(Bytes, Int32, Int32) -> (Int32, Int32)
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) enum LineEnding {
   CrLf
   Lf
   Cr
   EndOfInput
-} derive(Eq, @debug.Debug)
+}
 pub fn LineEnding::equal(Self, Self) -> Bool
 pub fn LineEnding::not_equal(Self, Self) -> Bool
 pub fn LineEnding::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct PhysicalLine {
   content_start : Int32
   content_end : Int32
   full_end : Int32
   ending : LineEnding
-} derive(Eq, @debug.Debug)
+}
 pub fn PhysicalLine::content_length(Self) -> Int32
 pub fn PhysicalLine::equal(Self, Self) -> Bool
 pub fn PhysicalLine::is_empty(Self) -> Bool

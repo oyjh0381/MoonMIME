@@ -1,10 +1,11 @@
 ///|
 /// Result of decoding RFC 2047 encoded-words in one unstructured header value.
+#derive(Debug, Eq)
 pub(all) struct EncodedHeaderResult {
   value : String
   decoded_words : Int32
   preserved_invalid_words : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 priv struct WordDecode {
